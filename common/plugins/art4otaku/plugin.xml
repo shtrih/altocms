@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+	<name>
+		<lang name="default">art4otaku</lang>
+	</name>
+	<author>
+		<lang name="default">shtrih</lang>
+	</author>
+	<homepage>http://4otaku.org/</homepage>
+	<version>1.0.0</version>
+	<requires>
+		<livestreet>1.0.3</livestreet>
+		<plugins>
+		</plugins>
+	</requires>
+	<description>
+		<lang name="default">Block with pictures from art.4otaku.org</lang>
+		<lang name="russian">Блок с артом c art.4otaku.org</lang>
+	</description>
+</plugin>

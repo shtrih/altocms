@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+	<name>
+		<lang name="default">BlogContent</lang>
+	</name>
+	<author>
+		<lang name="default">Ilya Shlykov (tih)</lang>
+	</author>
+	<homepage></homepage>
+	<version>1.0</version>
+    <settings>{blogcontent}</settings>
+	<requires>
+		<livestreet>0.4.2</livestreet>
+		<plugins>
+		</plugins>
+	</requires>
+	<description>
+		<lang name="default">Filter blogs by content</lang>
+		<lang name="russian">Ограничивает публикацию контента определенного типа в конкретные блоги.</lang>
+	</description>
+	<delegate>
+		<module></module>
+		<action></action>
+		<template></template>
+		<entity></entity>
+	</delegate>
+</plugin>

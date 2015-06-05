@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+	<name>
+		<lang name="default">Audio records light version</lang>
+	</name>
+	<author>
+		<lang name="default">PSNet</lang>
+	</author>
+	<homepage>http://psnet.lookformp3.net</homepage>
+	<version>2.0.0</version>
+	<requires>
+		<livestreet>1.0.2</livestreet>
+		<plugins></plugins>
+	</requires>
+	<description>
+		<lang name="default">Allows to upload mp3 files into topics, comments, PM and on the wall of users and shows players for each mp3 file, also adds audio players into posts with attaches mp3 files (via Attachments plugin) or if topic has links on mp3s.</lang>
+		<lang name="russian">Плагин позволяет загружать в топики, комментарии, личные сообщения и на стену пользователей mp3 файлы и при публикации выводит аудио плееры для них. Также добавляет аудио плееры в топики с загруженными mp3 файлами через плагин Attachments (http://livestreetcms.com/addons/view/79/) или если в тексте топиков есть ссылки на mp3 файлы.</lang>
+	</description>
+</plugin>

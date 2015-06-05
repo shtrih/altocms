@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+	<name>
+		<lang name="default">Vkontakte Wall To Topics Plugin</lang>
+	</name>
+	<author>
+		<lang name="default">shtrih</lang>
+	</author>
+	<homepage>http://4otaku.org</homepage>
+	<version>1.0.0</version>
+	<requires>
+		<livestreet>1.0.3</livestreet>
+		<plugins>
+
+		</plugins>
+	</requires>
+	<description>
+		<lang name="default">Repost vk wall posts to specified blog from specified user.</lang>
+		<lang name="russian">Репостим сообщения со стены вконтакте в указанный блог от имени указанного пользователя.</lang>
+	</description>
+</plugin>

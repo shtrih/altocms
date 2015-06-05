@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+	<name>
+		<lang name="default">Commentreport</lang>
+		<lang name="russian">Commentreport - сообщения о нарушениях в комментариях</lang>
+	</name>
+	<author>
+		<lang name="default">extravert (support@lsmods.ru) </lang>
+	</author>
+	<homepage>http://altocms.ru</homepage>
+	<version>1.0</version>
+	<requires>
+		<livestreet>1.*</livestreet>
+		<plugins></plugins>
+	</requires>
+	<description>
+		<lang name="default">Позволяет юзерам сообщать администратору о неуместных/нарушающих правила комментариях</lang>
+	</description>
+</plugin>

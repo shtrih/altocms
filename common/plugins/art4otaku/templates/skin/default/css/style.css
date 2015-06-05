@@ -1,0 +1,53 @@
+.block-content.art-slider {
+	position: relative;
+	overflow: hidden;
+	height: 150px;
+	width: 240px;
+}
+
+.block-content.art-slider ul {
+	position: absolute;
+	margin: 0;
+	list-style: none;
+
+}
+
+.block-content.art-slider li {
+	display: block;
+	float: left;
+}
+
+.block-content.art-slider li > a {
+	display: block;
+	width: 240px;
+	height: 150px;
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	margin: 0 10px;
+}
+
+.block-content.art-slider .controls a {
+	position: absolute;
+	top: 50%;
+	margin-top: -16px;
+	outline: 0;
+	width: 32px;
+	height: 32px;
+	text-indent: -9999px;
+	z-index: 9999;
+}
+.block-content.art-slider .controls a.prev {
+	left: 10px;
+	background: url(../images/controls.png) no-repeat 0 -32px;
+}
+.block-content.art-slider .controls a.next {
+	right: 10px;
+	background: url(../images/controls.png) no-repeat -43px -32px;
+}
+.block-content.art-slider .controls a.prev:hover {
+	background-position: 0 0;
+}
+
+.block-content.art-slider .controls a.next:hover {
+	background-position: -43px 0;
+}

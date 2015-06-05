@@ -1,0 +1,153 @@
+/*
+	Audiorecordslight plugin
+	(P) PSNet, 2008 - 2013
+	http://psnet.lookformp3.net/
+	http://livestreet.ru/profile/PSNet/
+	https://catalog.livestreetcms.com/profile/PSNet/
+	http://livestreetguide.com/developer/PSNet/
+*/
+/*
+div.AudioPlayersLightContainer {
+	margin-bottom: 15px;
+}
+
+div.AudioPlayersLightContainer div.OneAudioPlayerLight {
+	margin-bottom: 5px;
+}
+
+div#AudioNewTopicInfoTip {
+	background: #F7F8F9;
+	border: 1px solid #A55;
+	font-family: Verdana;
+	margin: 5px 0 15px;
+	padding: 4px 5px;
+	display: none;
+}
+
+/* button on panel */
+/*
+.markItUp .editor-audiorecordslight {}
+
+.markItUp .editor-audiorecordslight a {
+	background-image: url("../images/mp3.png");
+	border: 1px solid #CCCCCC;
+	border-radius: 2px 2px 2px 2px;
+	width: 32px;
+}
+
+/* upload window */
+/*
+#ARL_Upload_Mp3 {
+	margin-left: -200px;
+	width: 400px;
+}
+
+#ARL_Upload_Mp3 form {
+	overflow: hidden;
+	padding: 15px 30px 25px;
+}
+
+/* select file field */
+/*
+#ARL_Upload_Mp3 div.FileField {
+	height: 27px;
+	margin-bottom: 20px;
+	position: relative;
+	width: 100%;
+}
+
+#ARL_Upload_Mp3 div.FileField > * {
+	left: 0;
+	position: absolute;
+	top: 0;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+
+#ARL_Upload_Mp3 div.FileField div.FWrapper input {
+	font-size: 200px;
+	margin-top: -20px;
+	opacity: 0;
+	position: absolute;
+	right: 0;
+}
+
+#ARL_Upload_Mp3 div.FileField div.Cover {
+	background: #EEEEEE;
+	background: -moz-linear-gradient(top,	rgba(229,229,229,1) 0%, rgba(238,238,238,1) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(229,229,229,1)), color-stop(100%,rgba(238,238,238,1)));
+	background: -webkit-linear-gradient(top,	rgba(229,229,229,1) 0%,rgba(238,238,238,1) 100%);
+	background: -o-linear-gradient(top,	rgba(229,229,229,1) 0%,rgba(238,238,238,1) 100%);
+	background: -ms-linear-gradient(top,	rgba(229,229,229,1) 0%,rgba(238,238,238,1) 100%);
+	background: linear-gradient(to bottom,	rgba(229,229,229,1) 0%,rgba(238,238,238,1) 100%);
+	border-radius: 2px 2px 2px 2px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.11) inset;
+	font: bold 12px/26px Tahoma,Verdana;
+	text-align: center;
+	text-shadow: 0 1px 0 #FFFFFF;
+	white-space: pre;
+}
+
+#ARL_Upload_Mp3 div.FileField .ProgressBar {
+	background: none repeat scroll 0 0 rgba(0, 158, 5, 0.32);
+	background: -moz-linear-gradient(top,	rgba(52,226,0,0.23) 0%, rgba(0,158,5,0.55) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(52,226,0,0.23)), color-stop(100%,rgba(0,158,5,0.55)));
+	background: -webkit-linear-gradient(top,	rgba(52,226,0,0.23) 0%,rgba(0,158,5,0.55) 100%);
+	background: -o-linear-gradient(top,	rgba(52,226,0,0.23) 0%,rgba(0,158,5,0.55) 100%);
+	background: -ms-linear-gradient(top,	rgba(52,226,0,0.23) 0%,rgba(0,158,5,0.55) 100%);
+	background: linear-gradient(to bottom,	rgba(52,226,0,0.23) 0%,rgba(0,158,5,0.55) 100%);
+	box-shadow: 0 1px 3px rgba(15, 99, 42, 0.82) inset;
+	transition: width 0.4s ease 0s;
+	width: 0%;
+}
+
+/* delimiter */
+/*
+#ARL_Upload_Mp3 .Delimiter:before {
+	background: -moz-linear-gradient(left,	rgba(255,255,255,0.25) 0%, rgba(0,0,0,1) 50%, rgba(255,255,255,0.25) 100%);
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,255,255,0.25)), color-stop(50%,rgba(0,0,0,1)), color-stop(100%,rgba(255,255,255,0.25)));
+	background: -webkit-linear-gradient(left,	rgba(255,255,255,0.25) 0%,rgba(0,0,0,1) 50%,rgba(255,255,255,0.25) 100%);
+	background: -o-linear-gradient(left,	rgba(255,255,255,0.25) 0%,rgba(0,0,0,1) 50%,rgba(255,255,255,0.25) 100%);
+	background: -ms-linear-gradient(left,	rgba(255,255,255,0.25) 0%,rgba(0,0,0,1) 50%,rgba(255,255,255,0.25) 100%);
+	background: linear-gradient(to right,	rgba(255,255,255,0.25) 0%,rgba(0,0,0,1) 50%,rgba(255,255,255,0.25) 100%);
+	content: "";
+	display: block;
+	height: 1px;
+	margin: 30px 0 -9px;
+	width: 100%;
+}
+
+#ARL_Upload_Mp3 .Delimiter {
+	font-size: 12px;
+	line-height: 16px;
+	margin-bottom: 24px !important;
+	text-align: center;
+}
+
+#ARL_Upload_Mp3 .Delimiter span {
+	background: none repeat scroll 0 0 #FBFCFC;
+	padding: 3px;
+	text-transform: uppercase;
+}
+
+/* misc */
+/*
+mp3 {
+	display: block;
+}
+
+mp3:not(.player-active):before {
+	background: none repeat scroll 0 0 #EEEEEE;
+	border-radius: 2px 2px 2px 2px;
+	content: "Audio";
+	cursor: default;
+	padding: 5px;
+	text-shadow: 0 1px 1px #FFFFFF;
+}
+*/
+
+.audio_preview {
+	position: relative;
+	bottom: 2px;
+}
