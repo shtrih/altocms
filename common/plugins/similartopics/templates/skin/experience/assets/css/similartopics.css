@@ -1,0 +1,77 @@
+.widget-type-similartopics {
+
+}
+
+.widget-type-similartopics .similartopics-avatar {
+    width: 20px;
+    float: left;
+    margin-top: 4px;
+}
+
+.widget-type-similartopics .similartopics-topic-title {
+    display: block;
+    min-height: 24px;
+}
+
+.widget .similartopics-topic-intro {
+}
+
+.simtopics hr {
+    margin: 18px 0 10px;
+}
+.simtopics-header {
+    position: absolute;
+}
+.simtopics-title {
+    position: relative;
+    margin: 0;
+    top: -10px;
+    padding-right: 6px;
+    font-size: 16px;
+}
+
+.simtopics-content {
+    margin-top: 14px;
+    font-size: 12px;
+}
+
+.simtopics-content a {
+    font-weight: bold;
+}
+
+.simtopics-more {
+    margin-left: -30px;
+    text-align: center;
+}
+.simtopics-topic-title {
+    white-space: nowrap;       /* Перво-наперво, запретим перенос строк */
+    overflow: hidden;          /* Скрываем текст, который не помещается в блок */
+    text-overflow: ellipsis;   /* Уводим текст в многоточие */
+    display: block;            /* Элемент обязательно должен быть блочным */
+}
+.simitopics-topic-intro {
+    margin-bottom: 10px;
+    height: 70px;
+    overflow: hidden;
+}
+.simtopics-topic-preview {
+    display: block;
+    float: left;
+    width: 50px;
+    height: 50px;
+    border: 1px solid #CCCCCC;
+    background-color: #EEEEEE;
+    margin-top: 3px;
+}
+.simtopics-topic-preview img {
+    position: relative;
+    top: -1px;
+    left: -1px;
+}
+.simtopics-preview-on .simtopics-topic-title {
+    margin-left: 60px;
+}
+
+.simtopics-preview-on .simitopics-topic-intro {
+    margin-left: 60px;
+}

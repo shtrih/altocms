@@ -1,0 +1,49 @@
+.widget-type-similartopics {
+
+}
+
+.widget-type-similartopics .similartopics-avatar {
+    width: 20px;
+    float: left;
+    margin-top: 4px;
+}
+
+.widget-type-similartopics .similartopics-topic-title {
+    display: block;
+    min-height: 24px;
+}
+
+.widget .similartopics-topic-intro {
+}
+
+.simtopics hr {
+    margin: 18px 0 10px;
+}
+.simtopics-header {
+    position: absolute;
+    height: 1px;
+}
+
+.simtopics-title {
+    position: relative;
+    margin: 0;
+    top: -25px;
+    background-color: #fff;
+    padding-right: 6px;
+    font-size: 16px;
+}
+
+.simtopics-content {
+    margin-left: 30px;
+    font-size: 12px;
+    z-index: 1;
+}
+
+.simtopics-content a {
+    font-weight: bold;
+}
+
+.simtopics-more {
+    margin-left: -30px;
+    text-align: center;
+}
