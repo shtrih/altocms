@@ -973,6 +973,8 @@ return array(
     'search_err_minword'                        => 'Длина искомого слова не может быть меньше %%num%% знаков',
     'search_err_length'                         => 'Длина запроса не может быть меньше %%min%% и больше %%max%% знаков',
     'search_err_length_word'                    => 'Длина каждого слова в запросе не может быть меньше %%min%% и больше %%max%% знаков',
+    'search_err_frequency'                      => 'Вы можете сделать не более %%num%% запросов в %%sec%% секунд',
+    'search_err_interval'                       => 'Интервал между запросами не может быть менее %%sec%% секунд',
 
     /***
      * Почта
@@ -1190,8 +1192,8 @@ return array(
     'prev_page'           => 'Предыдущая страница',
     'insertimg_page'      => 'страница',
     'insertimg_from'      => 'из',
-    'insertimg_not_found'      => 'Изображения не найдены',
-    'insertimg_images'      => 'Изображения',
+    'insertimg_not_found' => 'Изображения не найдены или не доступны для просмотра',
+    'insertimg_images'    => 'Изображения',
 
     'aim_target_type_blog_avatar'            => 'Блоги',
     'aim_target_type_user'                   => 'Аватары',
