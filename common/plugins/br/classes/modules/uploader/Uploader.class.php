@@ -36,16 +36,16 @@ class PluginBr_ModuleUploader extends PluginBr_Inherit_ModuleUploader {
      * то метод возвращает целевой объект, иначе значение FALSE.
      *
      * @param $sTarget
-     * @param $sTargetId
+     * @param $iTargetId
      * @return bool
      */
-    public function CheckAccessAndGetTarget($sTarget, $sTargetId) {
+    public function CheckAccessAndGetTarget($sTarget, $iTargetId) {
         if ($sTarget == 'blog-branding') {
             if (Config::Get('plugin.br.blog.allow_blog') == FALSE) {
                 return FALSE;
             }
 
-            if (!$oBlog = $this->Blog_GetBlogById($sTargetId)) {
+            if (!$oBlog = $this->Blog_GetBlogById($iTargetId)) {
                 return FALSE;
             }
 
@@ -62,8 +62,7 @@ class PluginBr_ModuleUploader extends PluginBr_Inherit_ModuleUploader {
             return $oBlog;
         }
 
-//        return parent::CheckAccess($sTarget, $sTargetId);
-        return FALSE;
+        return parent::CheckAccessAndGetTarget($sTarget, $iTargetId);
     }
 
     /**
