@@ -1,0 +1,2 @@
+<option value="checkbox" {if $_aRequest.field_type=='checkbox'}selected{/if} title="{$aLang.plugin.checkbox.contenttypes_field_checkbox_notice}">
+	{$aLang.plugin.checkbox.contenttypes_field_checkbox}</option>

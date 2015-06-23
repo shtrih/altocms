@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+	<id>checkbox</id>
+    <name>
+        <lang name="default">Checkbox</lang>
+        <lang name="russian">Checkbox</lang>
+    </name>
+    <author>
+        <lang name="default">shtrih</lang>
+        <lang name="russian">shtrih</lang>
+    </author>
+    <homepage>http://4otaku.org/</homepage>
+    <version>1.0.0</version>
+    <dirname>checkbox</dirname>
+    <requires>
+        <alto>
+             <version>1.1.x</version>
+        </alto>
+		<system>
+            <php>5.3.0</php>
+        </system>
+    </requires>
+    <description>
+        <lang name="default">It allows to create the "checkbox" fields for content types.</lang>
+        <lang name="russian">Позволяет в админке создавать простое поле «чекбокс» для типов контента.</lang>
+    </description>
+</plugin>
