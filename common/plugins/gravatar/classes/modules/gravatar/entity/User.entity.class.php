@@ -23,13 +23,14 @@ class PluginGravatar_ModuleGravatar_EntityUser extends PluginGravatar_Inherit_Mo
                 $xSize = $sRealSize;
             }
             $sUrl = $this->_getProfileImageUrl('profile_avatar', $xSize);
-            // Old version compatibility
-            $sUrl = $this->getProfileAvatar();
-            if ($sUrl) {
-                if ($xSize) {
+            if (!$sUrl) {
+                // Old version compatibility
+                $sUrl = $this->getProfileAvatar();
+                if ($sUrl && $xSize) {
                     $sUrl = E::ModuleUploader()->ResizeTargetImage($sUrl, $xSize);
                 }
-            } else {
+            }
+            if (!$sUrl) {
                 $sUrl = "http://www.gravatar.com/avatar/".md5(strtolower($this->getMail())).".png?size=".$xSize."&d=identicon";
             }
             $this->setProp($sPropKey, $sUrl);
