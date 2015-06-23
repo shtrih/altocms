@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
-	<name>
-		<lang name="default">Gravatar</lang>
-	</name>
-	<author>
-		<lang name="default">rafrica.net</lang>
-	</author>
-	<homepage>http://we.rafrica.net/</homepage>
-	<version>1.1.0</version>
-	<requires>
-		<livestreet>0.4.2</livestreet>
-		<plugins>
-
-		</plugins>
-	</requires>
-	<description>
-		<lang name="default">User avatars from Gravatar</lang>
-		<lang name="russian">Аватары пользователя с Gravatar</lang>
-	</description>
-
+    <id>gravatar</id>
+    <name>
+        <lang name="default">Gravatar</lang>
+        <lang name="russian">Gravatar</lang>
+    </name>
+    <author>
+        <lang name="default">shtrih</lang>
+        <lang name="russian">shtrih</lang>
+    </author>
+    <homepage>http://4otaku.org/</homepage>
+    <version>1.0.0</version>
+    <dirname>checkbox</dirname>
+    <requires>
+        <alto>
+             <version>1.1.x</version>
+        </alto>
+        <system>
+            <php>5.3.0</php>
+        </system>
+    </requires>
+    <description>
+        <lang name="default">Takes the user avatar from the service gravatar.com, if the user has not uploaded it into his profile.</lang>
+        <lang name="russian">Берёт аватар пользователя с сервиса gravatar.com, если пользователь не загрузил его в профиле.</lang>
+    </description>
 </plugin>
