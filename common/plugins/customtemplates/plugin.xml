@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+	<id>customtemplates</id>
+    <name>
+        <lang name="default">Customtemplates</lang>
+        <lang name="russian">Customtemplates</lang>
+    </name>
+    <author>
+        <lang name="default">shtrih</lang>
+        <lang name="russian">shtrih</lang>
+    </author>
+    <homepage>http://4otaku.org</homepage>
+    <version>1.0.0</version>
+    <dirname>customtemplates</dirname>
+    <requires>
+        <alto>
+             <version>1.1.x</version>
+        </alto>
+		<system>
+            <php>5.3.0</php>
+        </system>
+        <plugins>
+            <plugin>contentfieldsx</plugin>
+        </plugins>
+    </requires>
+    <description>
+        <lang name="default">Description of plugin Customtemplates</lang>
+        <lang name="russian">Переопределяем шаблоны стандартных тем в этом плагине.</lang>
+    </description>
+</plugin>
