@@ -35,13 +35,14 @@ class PluginContentfieldsx_ActionAdmin extends PluginContentfieldsx_Inherits_Act
             $oField->setFieldType(F::GetRequest('field_type'));
         }
         $oField->setFieldName(F::GetRequest('field_name'));
-        $oField->setFieldUniqueName(F::GetRequest('field_unique_name'));
         $oField->setFieldDescription(F::GetRequest('field_description'));
         $oField->setFieldRequired(F::GetRequest('field_required'));
         if ($oField->getFieldType() == 'select') {
             $oField->setOptionValue('select', F::GetRequest('field_values'));
         }
 
+        $sOldFieldUniqueName = $oField->getFieldUniqueName();
+        $oField->setFieldUniqueName(F::GetRequest('field_unique_name'));
         try {
             if (E::ModuleTopic()->UpdateContentField($oField)) {
                 E::ModuleMessage()->AddNoticeSingle(E::ModuleLang()->Get('action.admin.contenttypes_success_fieldedit'), null, true);
@@ -50,8 +51,15 @@ class PluginContentfieldsx_ActionAdmin extends PluginContentfieldsx_Inherits_Act
         }
         catch (Exception $e) {
             // Если ошибка дублирования уникального ключа, то выводим соответствующее сообщение
-            if (1062 == $e->getCode())
-                E::ModuleMessage()->AddErrorSingle("Поле с таким уникальным именем уже существует", null, false);
+            if (1062 == $e->getCode()) {
+                $oField->setFieldUniqueName($sOldFieldUniqueName);
+                E::ModuleMessage()->AddErrorSingle(
+                    E::ModuleLang()->Get('plugin.contentfieldsx.error_field_unique_name_duplicate', array('unique_name' => htmlspecialchars(F::GetRequest('field_unique_name')))),
+                    null,
+                    false
+                );
+
+            }
         }
 
         return false;

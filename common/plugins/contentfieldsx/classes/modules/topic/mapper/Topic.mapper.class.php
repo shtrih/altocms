@@ -27,7 +27,7 @@ class PluginContentfieldsx_ModuleTopic_MapperTopic extends PluginContentfieldsx_
 				field_id = ?d
 		";
 
-        set_error_handler(array($this, 'SqlErrorHandler'));
+        $cOldErrorHandler = $this->oDb->setErrorHandler(array($this, 'SqlErrorHandler'));
         $bResult = $this->oDb->query(
             $sql,
             $oField->getContentId(),
@@ -41,7 +41,7 @@ class PluginContentfieldsx_ModuleTopic_MapperTopic extends PluginContentfieldsx_
             $oField->getFieldPostfix(),
             $oField->getFieldId()
         );
-        restore_error_handler();
+        $this->oDb->setErrorHandler($cOldErrorHandler);
 
         return $bResult !== false;
     }

@@ -71,12 +71,12 @@ function selectfield(f){
 
             <div class="control-group">
                 <label for="field_name" class="control-label">
-                    {$aLang.action.admin.contenttypes_unique_name}Служебное название поля:
+                    {$aLang.plugin.contentfieldsx.contenttypes_unique_name}
                 </label>
 
                 <div class="controls">
                     <input type="text" name="field_unique_name" value="{$_aRequest.field_unique_name}" class="input-text">
-                    <span class="help-block">Позволяет выбрать поле по уникальному имени. Предназначено для использования в шаблонах и плагинах.</span>
+                    <span class="help-block">{$aLang.plugin.contentfieldsx.contenttypes_unique_name_help}</span>
                 </div>
             </div>
 
