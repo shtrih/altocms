@@ -11,34 +11,21 @@ class PluginContentfieldsx_ModuleTopic_MapperTopic extends PluginContentfieldsx_
      * @throws Exception
      */
     public function UpdateContentField(ModuleTopic_EntityField $oField) {
+        $bResult = parent::UpdateContentField($oField);
 
         $sql = "UPDATE ?_content_field
 			SET
 				content_id=?d,
-				field_unique_name=?,
-				field_name=?,
-				field_sort=?d,
-				field_type=?,
-				field_description=?,
-				field_options=?,
-				field_required=?d,
-				field_postfix=?
+				field_unique_name=?
 			WHERE
 				field_id = ?d
 		";
 
         $cOldErrorHandler = $this->oDb->setErrorHandler(array($this, 'SqlErrorHandler'));
-        $bResult = $this->oDb->query(
+        $this->oDb->query(
             $sql,
             $oField->getContentId(),
             $oField->getFieldUniqueName(),
-            $oField->getFieldName(),
-            $oField->getFieldSort(),
-            $oField->getFieldType(),
-            $oField->getFieldDescription(),
-            $oField->getFieldOptions(),
-            $oField->getFieldRequired() ? 1 : 0,
-            $oField->getFieldPostfix(),
             $oField->getFieldId()
         );
         $this->oDb->setErrorHandler($cOldErrorHandler);
