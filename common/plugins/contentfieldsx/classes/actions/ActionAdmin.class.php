@@ -7,7 +7,7 @@ class PluginContentfieldsx_ActionAdmin extends PluginContentfieldsx_Inherits_Act
 
         if (empty($_REQUEST['submit_field'])) {
             $oField = E::ModuleViewer()->getTemplateVars('oField');
-            $_REQUEST['field_unique_name'] = $oField->getUniqueName();
+            $_REQUEST['field_unique_name'] = $oField->getFieldUniqueName();
         }
     }
 

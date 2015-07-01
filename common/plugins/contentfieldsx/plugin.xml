@@ -2,8 +2,8 @@
 <plugin>
 	<id>contentfieldsx</id>
     <name>
-        <lang name="default">Contentfieldsx</lang>
-        <lang name="russian">Contentfieldsx</lang>
+        <lang name="default">ContentFieldsX</lang>
+        <lang name="russian">ContentFieldsX</lang>
     </name>
     <author>
         <lang name="default">shtrih</lang>
