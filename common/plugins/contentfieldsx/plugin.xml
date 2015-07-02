@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
-	<id>contentfieldsx</id>
+    <id>contentfieldsx</id>
     <name>
         <lang name="default">ContentFieldsX</lang>
         <lang name="russian">ContentFieldsX</lang>
@@ -14,9 +14,9 @@
     <dirname>contentfieldsx</dirname>
     <requires>
         <alto>
-             <version>1.0.0</version>
+             <version>1.1.0</version>
         </alto>
-		<system>
+        <system>
             <php>5.3.0</php>
         </system>
     </requires>
