@@ -14,13 +14,13 @@
     <dirname>customtemplates</dirname>
     <requires>
         <alto>
-             <version>1.1.x</version>
+             <version>1.1.0-b2</version>
         </alto>
 		<system>
             <php>5.3.0</php>
         </system>
         <plugins>
-            <plugin>contentfieldsx</plugin>
+            <plugin name="ContentFieldsX">contentfieldsx</plugin>
         </plugins>
     </requires>
     <description>

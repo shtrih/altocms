@@ -14,7 +14,7 @@
     <dirname>contentfieldsx</dirname>
     <requires>
         <alto>
-             <version>1.1.0</version>
+             <version>1.1.0-b2</version>
         </alto>
         <system>
             <php>5.3.0</php>
