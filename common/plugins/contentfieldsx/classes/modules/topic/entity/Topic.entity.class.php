@@ -32,7 +32,11 @@ class PluginContentfieldsx_ModuleTopic_EntityTopic extends PluginContentfieldsx_
      */
     public function getFieldValueByName($sFieldUniqueName) {
         $oContentType = $this->getContentType();
-        return $this->getField($oContentType->getFieldByName($sFieldUniqueName)->getFieldId());
+        $oField = $oContentType->getFieldByName($sFieldUniqueName);
+        if ($oField)
+            return $this->getField($oField->getFieldId());
+
+        return null;
     }
 
 } 
