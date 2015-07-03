@@ -1,0 +1,6 @@
+.label-nsfw,
+.label-publish-index {
+	text-transform: uppercase;
+	font-size: 50%;
+	vertical-align: text-top;
+}

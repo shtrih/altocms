@@ -9,9 +9,11 @@
 {$oVote=$oTopic->getVote()}
 {$oFavourite=$oTopic->getFavourite()}
 {$oContentType=$oTopic->getContentType()}
+{$oNsfw = $oTopic->getFieldValueByName('nsfw')}
+{$oNsfwPictures = $oTopic->getFieldValueByName('nsfw-pictures')}
 
 <!-- Блок топика -->
-<div class="panel panel-default topic flat topic-type_{$oTopic->getType()} js-topic">
+<div class="panel panel-default topic flat topic-type_{$oTopic->getType()} js-topic{if $oNsfw} nsfw-list{/if}{if $oNsfwPictures} nsfw-pictures{/if}">
 
     <div class="panel-body">
         {block name="topic_header"}
@@ -24,6 +26,13 @@
 
                 {if $oTopic->getType() == 'link'}
                     &nbsp;<span class="fa fa-globe" title="{$aLang.topic_link}"></span>
+                {/if}
+
+                {if $oNsfw}
+                    &nbsp;<span class="label label-danger label-nsfw" title="Not Safe For Work">nsfw</span>
+                {/if}
+                {if $oTopic->getPublishIndex()}
+                    &nbsp;<span class="label label-success label-publish-index" title="">Одобрено</span>
                 {/if}
             </h2>
 
@@ -77,24 +86,31 @@
 
         {block name="topic_content"}
             <div class="topic-text">
-                {hook run='topic_content_begin' topic=$oTopic bTopicList=true}
+                {* Топики, которых нет на главной, не показываем неавторизованным юзерам *}
+                {if !$oTopic->getPublishIndex() && !E::IsUser()}
+                    <div class="topic-text">
+                        <p>{$aLang.plugin.customtemplates.topic_text_dummy_short}</p>
+                    </div>
+                {else}
+                    {hook run='topic_content_begin' topic=$oTopic bTopicList=true}
 
-                {$sImagePath=$oTopic->getPhotosetMainPhotoUrl(false, '682pad')}
-                {if $sImagePath}
-                    <img src="{$sImagePath}" alt="image" align="left"/>
-                    <br/>
+                    {$sImagePath=$oTopic->getPhotosetMainPhotoUrl(false, '682pad')}
+                    {if $sImagePath}
+                        <img src="{$sImagePath}" alt="image" align="left"/>
+                        <br/>
+                    {/if}
+
+                    {$oTopic->getTextShort()}
+    {*
+                    {if $oContentType}
+                        {$oField=$oContentType->getField($iPosterId)}
+                        {foreach from=$oContentType->getFields() item=oField}
+                            {include file="fields/customs/field.custom.`$oField->getFieldType()`-show.tpl" oField=$oField}
+                        {/foreach}
+                    {/if}
+    *}
+                    {hook run='topic_content_end' topic=$oTopic bTopicList=true}
                 {/if}
-
-                {$oTopic->getTextShort()}
-
-                {if $oContentType}
-                    {$oField=$oContentType->getField($iPosterId)}
-                    {foreach from=$oContentType->getFields() item=oField}
-                        {include file="fields/customs/field.custom.`$oField->getFieldType()`-show.tpl" oField=$oField}
-                    {/foreach}
-                {/if}
-
-                {hook run='topic_content_end' topic=$oTopic bTopicList=true}
             </div>
         {/block}
 

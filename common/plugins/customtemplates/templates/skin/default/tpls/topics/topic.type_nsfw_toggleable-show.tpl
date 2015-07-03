@@ -6,12 +6,13 @@
 {$oVote=$oTopic->getVote()}
 {$oFavourite=$oTopic->getFavourite()}
 {$oContentType=$oTopic->getContentType()}
+{$oNsfw = $oTopic->getFieldValueByName('nsfw')}
 
-{if $oContentType}
+{*{if $oContentType}*}
     {*{$oField = $oContentType->getFieldByName('nsfw')}*}
     {*{if $oField}*}
         {*{$oTopicField = $oTopic->getField($oField->getFieldId())}*}
-        {var_dump($oTopic->getFieldValueByName('nsfw'))}
+
         {*{if $oTopicField}*}
             {*<p>*}
                 {*<strong>{$oField->getFieldName()}</strong>:*}
@@ -19,9 +20,9 @@
             {*</p>*}
         {*{/if}*}
     {*{/if}*}
-{/if}
+{*{/if}*}
 <!-- Блок топика -->
-<div class="panel panel-default topic flat topic-type_{$oTopic->getType()} js-topic">
+<div class="panel panel-default topic flat topic-type_{$oTopic->getType()} js-topic{if $oNsfw} nsfw-show{/if}">
 
     <div class="panel-body">
         {block name="topic_header"}
@@ -34,6 +35,13 @@
 
                 {if $oTopic->getType() == 'link'}
                     &nbsp;<span class="fa fa-globe" title="{$aLang.topic_link}"></span>
+                {/if}
+
+                {if $oNsfw}
+                    &nbsp;<span class="label label-danger label-nsfw" title="Not Safe For Work">nsfw</span>
+                {/if}
+                {if $oTopic->getPublishIndex()}
+                    &nbsp;<span class="label label-success label-publish-index" title="">Одобрено</span>
                 {/if}
             </h2>
 
@@ -66,40 +74,48 @@
         {/block}
 
 
-        {block name="topic_content"}
+        {* Топики, которых нет на главной, не показываем неавторизованным юзерам *}
+        {if !$oTopic->getPublishIndex() && !E::IsUser()}
             <div class="topic-text">
-                {hook run='topic_content_begin' topic=$oTopic bTopicList=false}
-
-                {$sImagePath=$oTopic->getPhotosetMainPhotoUrl(false, '682pad')}
-                {if $sImagePath}
-                    <img src="{$sImagePath}" alt="image" align="left"/>
-                    <br/>
-                {/if}
-
-                {$oTopic->getText()}
-
-                {hook run='topic_content_end' topic=$oTopic bTopicList=false}
+                <p>{$aLang.plugin.customtemplates.topic_text_dummy}</p>
             </div>
-        {/block}
+        {else}
+            {block name="topic_content"}
+                <div class="topic-text">
+                    {hook run='topic_content_begin' topic=$oTopic bTopicList=false}
 
-        {if $oTopic->isShowPhotoset()}
-            {include file="fields/field.photoset-show.tpl"}
-        {/if}
+                    {$sImagePath=$oTopic->getPhotosetMainPhotoUrl(false, '682pad')}
+                    {if $sImagePath}
+                        <img src="{$sImagePath}" alt="image" align="left"/>
+                        <br/>
+                    {/if}
 
-        {if $oContentType AND $oContentType->isAllow('poll') AND $oTopic->getQuestionAnswers()}
-            {include file="fields/field.poll-show.tpl"}
-        {/if}
+                    {$oTopic->getText()}
 
-        {if $oContentType AND $oContentType->isAllow('link') AND $oTopic->getSourceLink()}
-            {include file="fields/field.link-show.tpl"}
-        {/if}
+                    {hook run='topic_content_end' topic=$oTopic bTopicList=false}
+                </div>
+            {/block}
 
+            {if $oTopic->isShowPhotoset()}
+                {include file="fields/field.photoset-show.tpl"}
+            {/if}
+
+            {if $oContentType AND $oContentType->isAllow('poll') AND $oTopic->getQuestionAnswers()}
+                {include file="fields/field.poll-show.tpl"}
+            {/if}
+
+            {if $oContentType AND $oContentType->isAllow('link') AND $oTopic->getSourceLink()}
+                {include file="fields/field.link-show.tpl"}
+            {/if}
+
+{*
         {if $oContentType}
             {foreach from=$oContentType->getFields() item=oField}
                 {include file="fields/customs/field.custom.`$oField->getFieldType()`-show.tpl" oField=$oField}
             {/foreach}
         {/if}
-
+*}
+        {/if}
 
         {include file="fields/field.tags-show.tpl"}
 
