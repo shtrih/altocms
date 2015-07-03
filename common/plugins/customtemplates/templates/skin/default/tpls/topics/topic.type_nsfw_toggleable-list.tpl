@@ -9,7 +9,7 @@
 {$oVote=$oTopic->getVote()}
 {$oFavourite=$oTopic->getFavourite()}
 {$oContentType=$oTopic->getContentType()}
-{$oNsfw = $oTopic->getFieldValueByName('nsfw')}
+{$oNsfw = !!$oTopic->getFieldValueByName('nsfw')}
 {$oNsfwPictures = $oTopic->getFieldValueByName('nsfw-pictures')}
 
 <!-- Блок топика -->
@@ -86,8 +86,14 @@
 
         {block name="topic_content"}
             <div class="topic-text">
-                {* Топики, которых нет на главной, не показываем неавторизованным юзерам *}
-                {if !$oTopic->getPublishIndex() && !E::IsUser()}
+                {* Топики, которых нет на главной, не показываем неавторизованным юзерам.
+                   Показывать ли одобренные нсфв-топики, зависит от опции. *}
+                {if !E::IsUser() && (
+                    !$oTopic->getPublishIndex()
+                    OR $oTopic->getPublishIndex() && $oNsfw
+                        && C::Get('plugin.customtemplates.hide_nsfw_topics_4guests')
+                    )
+                }
                     <div class="topic-text">
                         <p>{$aLang.plugin.customtemplates.topic_text_dummy_short}</p>
                     </div>

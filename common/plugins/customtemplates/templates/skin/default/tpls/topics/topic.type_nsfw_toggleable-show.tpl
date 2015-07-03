@@ -74,8 +74,14 @@
         {/block}
 
 
-        {* Топики, которых нет на главной, не показываем неавторизованным юзерам *}
-        {if !$oTopic->getPublishIndex() && !E::IsUser()}
+        {* Топики, которых нет на главной, не показываем неавторизованным юзерам.
+           Показывать ли одобренные нсфв-топики, зависит от опции. *}
+        {if !E::IsUser() && (
+            !$oTopic->getPublishIndex()
+            OR $oTopic->getPublishIndex() && $oNsfw
+                && C::Get('plugin.customtemplates.hide_nsfw_topics_4guests')
+            )
+        }
             <div class="topic-text">
                 <p>{$aLang.plugin.customtemplates.topic_text_dummy}</p>
             </div>
