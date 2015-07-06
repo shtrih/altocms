@@ -1,0 +1,23 @@
+#topic-tags-help {
+	padding: 0 0 10px 15px;
+	color: #667388;
+}
+
+#topic-tags-help ul {
+	list-style: none;
+}
+
+#topic-tags-help h5 + ul {
+	display: none;
+}
+
+#topic-tags-help a {
+	text-decoration: none;
+	border-bottom: 1px dotted;
+}
+
+#topic-tags-help h5 {
+	cursor: pointer;
+	font-size: 0.9em;
+	margin: 4px 0;
+}

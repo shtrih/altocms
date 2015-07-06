@@ -192,13 +192,15 @@
                           class="form-control js-editor-wysiwyg js-editor-markitup">{$_aRequest.topic_text}</textarea>
             </div>
 
-            {* ТЕГИ *}
-            {include file="fields/field.tags-edit.tpl"}
-
             {* ПОЯСНЕНИЯ К РЕДАКТОРУ *}
             {if !Config::Get('view.wysiwyg')}
                 {include file='fields/field.tags_help.tpl' sTagsTargetId="topic_text"}
             {/if}
+
+            {* ТЕГИ *}
+            {include file="fields/field.tags-edit.tpl"}
+            {* Подсказки к тегам *}
+            {include file='fields/field.nonhtml_tags_help.tpl'}
 
             {* ССЫЛКА *}
             {if $oContentType->isAllow('link')}
