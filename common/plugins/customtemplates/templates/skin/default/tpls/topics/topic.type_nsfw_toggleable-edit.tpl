@@ -237,7 +237,7 @@
             </div>
 
 
-            {if E::IsAdmin()}
+            {if E::IsAdmin() || E::IsModerator()}
                 <div class="form-group checkbox">
                     <div class="input-group">
                         <label for="public_topic">
