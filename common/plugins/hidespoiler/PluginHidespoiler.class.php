@@ -25,13 +25,18 @@ class PluginHidespoiler extends Plugin {
          */
         'template' => array(
             'editors/editor.markitup.tpl' => '_editors/editor.markitup.tpl',
+            'comments/comment.single.tpl' => '_comments/comment.single.tpl',
         )
     );
 
     protected $aInherits = array(
         'modules' => array(
-            'ModuleTopic' => '_ModuleTopic',
-            'ModuleText' => '_ModuleText',
+            'ModuleTopic'  => '_ModuleTopic',
+            'ModuleText'   => '_ModuleText',
+            'ModuleViewer' => '_ModuleViewer',
+        ),
+        'actions' => array(
+            'ActionAjax' => '_ActionAjax',
         ),
     );
 

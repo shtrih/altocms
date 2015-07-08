@@ -15,8 +15,12 @@
 	opacity: 0;
 	margin: 0 0 -20px;
 }
-.hidespoiler > input + .box > span.trigger { background: url('../img/arrow_down.png') left center no-repeat; display:block }
-.hidespoiler > input:checked + .box > span.trigger { background: url('../img/arrow_up.png') left center no-repeat }
+.hidespoiler > input + .box span {
+	background: transparent left center no-repeat;
+}
+
+.hidespoiler > input + .box > span.trigger { background-image: url('../img/arrow_down.png'); display:block }
+.hidespoiler > input:checked + .box > span.trigger { background-image: url('../img/arrow_up.png'); }
 
 
 .hidespoiler > input[type="checkbox"]:focus { outline:none }
@@ -28,25 +32,35 @@
 }
 
 /* строчный спойлер */
-.topic-text .hidetext {
+.topic-text .hidetext,
+.comment-preview .hidetext,
+.comment-text .hidetext {
 	background: none repeat scroll 0 0 #CCCCCC;
 	color: #CCCCCC !important;
 }
 
-.topic-text .hidetext a {
+.topic-text .hidetext a,
+.comment-preview .hidetext a,
+.comment-text .hidetext a {
 	color: #CCCCCC !important;
 }
 
-.topic-text .hidetext:hover {
+.topic-text .hidetext:hover,
+.comment-preview .hidetext:hover,
+.comment-text .hidetext:hover {
 	background: inherit;
 	color: inherit !important;
 }
 
-.topic-text .hidetext:hover a {
+.topic-text .hidetext:hover a,
+.comment-preview .hidetext:hover a,
+.comment-text .hidetext:hover a {
 	color: #068fd5 !important;
 }
 
-.topic-text .hidetext:hover a:visited {
+.topic-text .hidetext:hover a:visited,
+.comment-preview .hidetext:hover a:visited,
+.comment-text .hidetext:hover a:visited {
 	color: #993399 !important;
 }
 
