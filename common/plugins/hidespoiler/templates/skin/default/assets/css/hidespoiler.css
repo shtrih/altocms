@@ -15,10 +15,12 @@
 	opacity: 0;
 	margin: 0 0 -20px;
 }
-.hidespoiler > input + .box span {
-	background: transparent left center no-repeat;
+.hidespoiler > input + .box > span.trigger span {
+	background: transparent;
 }
-
+.hidespoiler > input + .box > span.trigger {
+	background: left center no-repeat;
+}
 .hidespoiler > input + .box > span.trigger { background-image: url('../img/arrow_down.png'); display:block }
 .hidespoiler > input:checked + .box > span.trigger { background-image: url('../img/arrow_up.png'); }
 
