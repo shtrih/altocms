@@ -159,11 +159,11 @@ class PluginHidespoiler_ModuleHidespoiler extends Module {
 				$length = ($end - $start + 10 /* "</spoiler>" length */);
 				preg_match('|^<spoiler(?:\s+name="([^"]+)"\s*)?>(.+?)<\/spoiler>$|is', substr($sText, $start, $length), $m);
 
-				$oLocalViewer = $this->Viewer_GetLocalViewer();
+				$oLocalViewer = E::ModuleViewer()->GetLocalViewer();
 				$oLocalViewer->Assign('sText', $m[2]);
 				$oLocalViewer->Assign('sTitle', $m[1]);
 
-				$sSpoilerParsed = $oLocalViewer->Fetch(Plugin::GetTemplatePath(__CLASS__) . 'spoiler.tpl');
+				$sSpoilerParsed = $oLocalViewer->Fetch(Plugin::GetTemplatePath(__CLASS__) . 'tpls/spoiler.tpl');
 				$sText = substr_replace($sText, $sSpoilerParsed, $start, $length);
 			} while($spoilers_positions = $get_spoilers_positions($sText));
 		}
@@ -192,11 +192,7 @@ class PluginHidespoiler_ModuleHidespoiler extends Module {
 				$this->Cache_Set($dimensions, 'fullimg_' . md5($filename), array(), 60*60*24*30);
 			}
 			if ($dimensions) {
-				/* FIXME: Warning: Class 'PluginAttachments_ModuleAttachments_EntityTopic' not found in social\plugins\aceadminpanel\include\adm_helper.php on line 753
-				 */
-				$oTopic = Engine::GetEntity('PluginAttachments_ModuleAttachments_EntityTopic');
-				$filesize = $oTopic->humanizeAttachmentSize(filesize($file));
-
+				$filesize = $this->getHumanizedSize(filesize($file));
 				$sText = str_replace($Match[0], '<a class="unfoldable" href="' . $filename . '" rel="' . $dimensions . '" title="'.$filesize.'">' . $Match[0] . '</a>', $sText);
 			}
 		}
@@ -204,4 +200,13 @@ class PluginHidespoiler_ModuleHidespoiler extends Module {
 		return $sText;
 	}
 
+    protected function getHumanizedSize($iSizeBytes) {
+        $aSizes = array('B', 'KB', 'MB', 'GB', 'TB');
+        $i = 0;
+        while ($iSizeBytes > 1000) {
+            $iSizeBytes /= 1024;
+            $i++;
+        }
+        return sprintf('%.2f %s', $iSizeBytes, $aSizes[$i]);
+    }
 }

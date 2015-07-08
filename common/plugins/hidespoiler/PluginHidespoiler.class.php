@@ -11,9 +11,27 @@ class PluginHidespoiler extends Plugin {
 
     public static $aUserComments = 0;
 
+    // Объявление делегирований (нужны для того, чтобы назначить свои экшны и шаблоны)
+    public $aDelegates = array(
+        /**
+         * 'action' => array('ActionIndex'=>'_ActionSomepage'),
+         * Замена экшна ActionIndex на ActionSomepage из папки плагина
+         *
+         * 'template' => array('index.tpl'=>'_my_plugin_index.tpl'),
+         * Замена index.tpl из корня скина файлом /common/plugins/abcplugin/templates/skin/default/my_plugin_index.tpl
+         *
+         * 'template'=>array('actions/ActionIndex/index.tpl'=>'_actions/ActionTest/index.tpl'),
+         * Замена index.tpl из скина из папки actions/ActionIndex/ файлом /common/plugins/abcplugin/templates/skin/default/actions/ActionTest/index.tpl
+         */
+        'template' => array(
+            'editors/editor.markitup.tpl' => '_editors/editor.markitup.tpl',
+        )
+    );
+
     protected $aInherits = array(
         'modules' => array(
             'ModuleTopic' => '_ModuleTopic',
+            'ModuleText' => '_ModuleText',
         ),
     );
 
@@ -29,10 +47,9 @@ class PluginHidespoiler extends Plugin {
 
     // Инициализация плагина
     public function Init() {
-        parent::Init();
-
         self::$aUserComments = $this->PluginHidespoiler_ModuleHidespoiler_GetCommentsCountByUser();
 
-        $this->Viewer_AppendStyle(Plugin::GetTemplateWebPath('HideSpoiler') . "/css/hidespoler.css");
+        E::ModuleViewer()->AppendScript(Plugin::GetTemplateDir(__CLASS__) . "/assets/js/hidespoiler.js");
+        E::ModuleViewer()->AppendStyle(Plugin::GetTemplateDir(__CLASS__) . "/assets/css/hidespoiler.css");
     }
 }

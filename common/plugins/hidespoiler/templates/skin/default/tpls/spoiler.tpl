@@ -1,5 +1,5 @@
-<div class="spoiler">
-    <input class="spoiler_chb" type="checkbox" tabindex="-1" >
+<div class="hidespoiler">
+    <input type="checkbox" tabindex="-1" >
     <div class="box">
         <span class="trigger">
             <span style="padding-left:23px">

@@ -10,6 +10,7 @@ class PluginHidespoiler_HookHidespoiler extends Hook {
      */
     public function RegisterHook() {
         $this->AddHook('topic_show', 'correctTopic');
+        $this->AddHook('template_markitup_before_init', 'markitupBeforeInit');
     }
 
     /**
@@ -25,4 +26,7 @@ class PluginHidespoiler_HookHidespoiler extends Hook {
         }
     }
 
+    public function markitupBeforeInit() {
+        return E::ModuleViewer()->Fetch('markitup_before_init.tpl');
+    }
 }
