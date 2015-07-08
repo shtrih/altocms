@@ -16,7 +16,12 @@
             }
         ]);
 
-        {hook run="markitup_before_init"}
+        {if false === strrpos($sSettingsMarkitup, 'Comment')}
+            {$bCommentSettings = false}
+        {else}
+            {$bCommentSettings = true}
+        {/if}
+        //{hook run="markitup_before_init" bCommentSettings=$bCommentSettings}
 
         // Подключаем редактор
         $('.js-editor-markitup').markItUp(settings);

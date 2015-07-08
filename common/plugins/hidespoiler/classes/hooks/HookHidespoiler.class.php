@@ -26,7 +26,7 @@ class PluginHidespoiler_HookHidespoiler extends Hook {
         }
     }
 
-    public function markitupBeforeInit() {
-        return E::ModuleViewer()->Fetch('markitup_before_init.tpl');
+    public function markitupBeforeInit($aParams) {
+        return E::ModuleViewer()->Fetch('markitup_before_init.tpl', $aParams);
     }
 }
