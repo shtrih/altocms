@@ -54,7 +54,8 @@ class PluginHidespoiler extends Plugin {
     public function Init() {
         self::$aUserComments = $this->PluginHidespoiler_ModuleHidespoiler_GetCommentsCountByUser();
 
-        E::ModuleViewer()->AppendScript(Plugin::GetTemplateDir(__CLASS__) . "/assets/js/hidespoiler.js");
-        E::ModuleViewer()->AppendStyle(Plugin::GetTemplateDir(__CLASS__) . "/assets/css/hidespoiler.css");
+        E::ModuleViewer()->AppendScript(Plugin::GetTemplateDir(__CLASS__) . "assets/js/hidespoiler.js");
+        E::ModuleViewer()->AppendStyle(Plugin::GetTemplateDir(__CLASS__) . "assets/css/hidespoiler.backward.css");
+        E::ModuleViewer()->AppendStyle(Plugin::GetTemplateDir(__CLASS__) . "assets/css/hidespoiler.css");
     }
 }
