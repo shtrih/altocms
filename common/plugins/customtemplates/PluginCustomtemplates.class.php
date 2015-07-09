@@ -77,11 +77,13 @@ class PluginCustomtemplates extends Plugin {
 
     // Инициализация плагина
     public function Init() {
-        E::ModuleViewer()->AppendStyle(Plugin::GetTemplateDir(__CLASS__)."assets/css/styles.css"); // Добавление своего CSS
-        E::ModuleViewer()->AppendStyle(Plugin::GetTemplateDir(__CLASS__)."assets/css/field-nonhtml-tags-help.css"); // Добавление своего CSS
-        E::ModuleViewer()->AppendScript(Plugin::GetTemplateDir(__CLASS__)."assets/js/field-nonhtml-tags-help.js"); // Добавление своего JS
+        $sTemplateDir = Plugin::GetTemplateDir(__CLASS__);
+        E::ModuleViewer()->AppendStyle($sTemplateDir . "assets/css/styles.css");
+        E::ModuleViewer()->AppendStyle($sTemplateDir . "assets/css/field-nonhtml-tags-help.css");
+        E::ModuleViewer()->AppendScript($sTemplateDir . "assets/js/field-nonhtml-tags-help.js");
+        E::ModuleViewer()->AppendScript($sTemplateDir . "assets/js/youtube.js");
 
-        //E::ModuleViewer()->AddMenu('blog',Plugin::GetTemplateDir(__CLASS__).'menu.blog.tpl'); // например, задаем свой вид меню
+        //E::ModuleViewer()->AddMenu('blog',Plugin::GetTemplateDir(__CLASS__).'/menu.blog.tpl'); // например, задаем свой вид меню
     }
 }
 ?>

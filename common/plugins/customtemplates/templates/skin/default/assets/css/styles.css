@@ -4,3 +4,28 @@
 	font-size: 50%;
 	vertical-align: text-top;
 }
+
+/* youtube thumbnails */
+[data-youtube-id] {
+	max-width: 560px;
+	height: 315px;
+	cursor: pointer;
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+[data-youtube-id] > div {
+	height: 100%;
+	background: url(../img/youtube_preload_blank.png) no-repeat center center;
+}
+[data-youtube-id],
+iframe {
+	/*background-color: #000;*/
+	margin: 5px auto;
+	display: block;
+}
+iframe[src=""] {
+	display: none;
+}
+video {
+	max-width: 100%;
+}
