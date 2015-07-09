@@ -9,8 +9,6 @@ if (!class_exists('Plugin')) {
 
 class PluginHidespoiler extends Plugin {
 
-    public static $aUserComments = 0;
-
     // Объявление делегирований (нужны для того, чтобы назначить свои экшны и шаблоны)
     public $aDelegates = array(
         /**

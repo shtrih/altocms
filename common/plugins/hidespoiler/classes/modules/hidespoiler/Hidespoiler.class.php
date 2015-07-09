@@ -2,48 +2,14 @@
 
 /**
  * Class PluginHidespoiler_ModuleHidespoiler
- * @method ModuleUser_EntityUser User_GetUserCurrent
- * @method int Comment_GetCountCommentsByUserId
- * @method string Lang_Get
- * @method ModuleViewer Viewer_GetLocalViewer
  */
 class PluginHidespoiler_ModuleHidespoiler extends Module {
-	/**
-	 * Текущий пользователь
-	 *
-	 * @var ModuleUser_EntityUser
-	 */
-	protected $oUserCurrent = NULL;
-
-	/**
-	 * Маппер
-	 *
-	 * @var PluginHidespoiler_ModuleHidespoiler_MapperHidespoiler
-	 */
-	protected $oMapper;
-
 
 	/**
 	 * Абстрактный метод инициализации модуля, должен быть переопределен в модуле
 	 */
 	public function Init() {
-		// Получение мапперов
-		$this->oMapper = Engine::GetMapper('PluginHidespoiler_ModuleHidespoiler', 'Hidespoiler');
-
-		// Получение текущего пользователя
-		$this->oUserCurrent = $this->User_GetUserCurrent();
 	}
-
-	/**
-	 * @return array
-	 */
-	public function GetCommentsCountByUser() {
-		if (!$this->oUserCurrent) {
-			return array();
-		}
-		return $this->oMapper->GetCommentsCountByUser($this->oUserCurrent->getId());
-	}
-
 
 	/**
 	 * Смена содержимого на спойлер
@@ -52,7 +18,7 @@ class PluginHidespoiler_ModuleHidespoiler extends Module {
 	 * @param  int   $oTopicId Автор топика
 	 * @return string
 	 */
-	public function MakeCorrection($sText, $oTopicId) {
+	public function MakeCorrection($sText) {
 		$aMatches = array();
 		/*
 		preg_match_all('|<spoiler(?:\s+name="([^"]+)"\s*)?>(.+?)<\/spoiler>|is', $sText, $aMatches, PREG_SET_ORDER);

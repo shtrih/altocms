@@ -22,7 +22,7 @@ class PluginHidespoiler_HookHidespoiler extends Hook {
         /** @var ModuleTopic_EntityTopic $oTopic Открываемый топик */
         if (Config::Get('plugin.hidespoiler.use_hook')) {
             $oTopic = $params['oTopic'];
-            $oTopic->setText($this->PluginHidespoiler_ModuleHidespoiler_MakeCorrection($oTopic->getText(), $oTopic->getUser()));
+            $oTopic->setText($this->PluginHidespoiler_ModuleHidespoiler_MakeCorrection($oTopic->getText()));
         }
     }
 
