@@ -74,10 +74,10 @@ class PluginPixelatensfw extends Plugin {
 
     // Инициализация плагина
     public function Init() {
-        $this->Viewer_AppendStyle(Plugin::GetTemplatePath(__CLASS__)."css/style.css"); // Добавление своего CSS
-        $this->Viewer_AppendScript(Plugin::GetTemplatePath(__CLASS__)."js/pixelate.js"); // Добавление своего JS
-        $this->Viewer_AppendScript(Plugin::GetTemplatePath(__CLASS__)."js/init.js"); 
-
+        $sTemplateDir = Plugin::GetTemplateDir(__CLASS__);
+        E::ModuleViewer()->AppendStyle($sTemplateDir . "css/style.css"); // Добавление своего CSS
+        E::ModuleViewer()->AppendScript($sTemplateDir . "js/pixelate.js"); // Добавление своего JS
+        E::ModuleViewer()->AppendScript($sTemplateDir . "js/init.js");
         //$this->Viewer_AddMenu('blog',Plugin::GetTemplatePath(__CLASS__).'menu.blog.tpl'); // например, задаем свой вид меню
     }
 }

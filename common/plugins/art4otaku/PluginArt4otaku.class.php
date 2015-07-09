@@ -17,9 +17,9 @@ class PluginArt4otaku extends Plugin {
 	 * Инициализация плагина
 	 */
 	public function Init() {
-		$sPath = Plugin::GetTemplatePath(__CLASS__);
-		$this->Viewer_AppendScript($sPath . 'js/jquery.jcarousellite-1.0.1.js');
-		$this->Viewer_AppendStyle($sPath . 'css/style.css');
+        $sTemplateDir = Plugin::GetTemplateDir(__CLASS__);
+        E::ModuleViewer()->AppendScript($sTemplateDir . 'js/jquery.jcarousellite-1.0.1.js');
+        E::ModuleViewer()->AppendStyle($sTemplateDir . 'css/style.css');
 	}
 
 	/**

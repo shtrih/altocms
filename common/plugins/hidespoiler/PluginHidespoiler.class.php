@@ -52,10 +52,9 @@ class PluginHidespoiler extends Plugin {
 
     // Инициализация плагина
     public function Init() {
-        self::$aUserComments = $this->PluginHidespoiler_ModuleHidespoiler_GetCommentsCountByUser();
-
-        E::ModuleViewer()->AppendScript(Plugin::GetTemplateDir(__CLASS__) . "assets/js/hidespoiler.js");
-        E::ModuleViewer()->AppendStyle(Plugin::GetTemplateDir(__CLASS__) . "assets/css/hidespoiler.backward.css");
-        E::ModuleViewer()->AppendStyle(Plugin::GetTemplateDir(__CLASS__) . "assets/css/hidespoiler.css");
+        $sTemplateDir = Plugin::GetTemplateDir(__CLASS__);
+        E::ModuleViewer()->AppendScript($sTemplateDir . "assets/js/hidespoiler.js");
+        E::ModuleViewer()->AppendStyle($sTemplateDir . "assets/css/hidespoiler.backward.css");
+        E::ModuleViewer()->AppendStyle($sTemplateDir . "assets/css/hidespoiler.css");
     }
 }
