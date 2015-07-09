@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <id>betterspoilers</id>
+    <name>
+        <lang name="default">BetterSpoilers</lang>
+        <lang name="russian">BetterSpoilers</lang>
+    </name>
+    <author>
+        <lang name="default">shtrih</lang>
+        <lang name="russian">shtrih</lang>
+    </author>
+    <homepage>http://4otaku.org</homepage>
+    <version>1.0.0</version>
+    <dirname>betterspoilers</dirname>
+    <requires>
+        <alto>
+            <version>1.1.0-b2</version>
+        </alto>
+        <system>
+            <php>5.3.0</php>
+        </system>
+        <plugins>
+        </plugins>
+    </requires>
+    <description>
+        <lang name="default">Replaces design [hide] Hidden Text [/hide] on spoler.</lang>
+        <lang name="russian">Заменяет конструкцию {hide}Скрытый текст{/hide} на спойлер, расширяет стандартные спойлеры, добавляя неограниченную вложенность. На основе плагина «HideSpoiler» для LS, за авторством Konstantine.</lang>
+    </description>
+</plugin>
