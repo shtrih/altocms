@@ -8,7 +8,7 @@ class PluginGravatar_ModuleGravatar_EntityUser extends PluginGravatar_Inherit_Mo
      *
      * @return  string
      */
-    public function getAvatarUrl($xSize) {
+    public function getAvatarUrl($xSize = NULL) {
         if (!$xSize) {
             $xSize = Config::Get('module.user.profile_avatar_size');
             if (!$xSize) {
