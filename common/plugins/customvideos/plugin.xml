@@ -2,19 +2,17 @@
 <plugin>
     <id>customvideos</id>
     <name>
-        <lang name="default">Customvideos</lang>
-        <lang name="russian">Customvideos</lang>
+        <lang name="default">CustomVideos</lang>
     </name>
     <author>
-        <lang name="default">author</lang>
-        <lang name="russian">автор</lang>
+        <lang name="default">shtrih</lang>
     </author>
-    <homepage>http://altocms.ru</homepage>
+    <homepage>http://4otaku.org</homepage>
     <version>1.0.0</version>
     <dirname>customvideos</dirname>
     <requires>
         <alto>
-             <version>1.0.0</version>
+             <version>1.1.0-b2</version>
         </alto>
         <system>
             <php>5.3.0</php>
@@ -26,7 +24,6 @@
         </plugins>
     </requires>
     <description>
-        <lang name="default">Description of plugin Customvideos</lang>
-        <lang name="russian">Описание плагина Customvideos</lang>
+        <lang name="russian">Добавляет поддержку вставки видео с сайтов coub.com и amvnews.ru, в диалоге вставки ссылки на видео выводит список поддерживаемых сервисов.</lang>
     </description>
 </plugin>
