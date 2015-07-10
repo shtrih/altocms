@@ -15,7 +15,6 @@ class PluginBetterspoilers_ModuleBetterspoilers extends Module {
 	 * Смена содержимого на спойлер
 	 *
 	 * @param string $sText    Редактируемый текст
-	 * @param  int   $oTopicId Автор топика
 	 * @return string
 	 */
 	public function MakeCorrection($sText) {
