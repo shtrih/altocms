@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Скрывает часть текста топика для пользователей у которых мало комментариев
- */
 class PluginBetterspoilers_HookBetterspoilers extends Hook {
 
     /**
@@ -19,10 +16,10 @@ class PluginBetterspoilers_HookBetterspoilers extends Hook {
      *
      * @param array() $params
      */
-    public function correctTopic($params) {
+    public function correctTopic($aParams) {
         /** @var ModuleTopic_EntityTopic $oTopic Открываемый топик */
         if (Config::Get('plugin.betterspoilers.use_hook')) {
-            $oTopic = $params['oTopic'];
+            $oTopic = $aParams['oTopic'];
             $oTopic->setText(E::Module('PluginBetterspoilers_ModuleBetterspoilers')->MakeCorrection($oTopic->getText()));
         }
     }

@@ -122,13 +122,17 @@ class PluginBetterspoilers_ModuleBetterspoilers extends Module {
 				$end = reset($spoilers_positions);
 				$start = key($spoilers_positions);
 				$length = ($end - $start + 10 /* "</spoiler>" length */);
-				preg_match('|^<spoiler(?:\s+name="([^"]+)"\s*)?>(.+?)<\/spoiler>$|is', substr($sText, $start, $length), $m);
+				preg_match('#^<spoiler(?:\s+name="([^"]+|)"\s*)?>(.+?)</spoiler>$#is', substr($sText, $start, $length), $m);
 
-				$oLocalViewer = E::ModuleViewer()->GetLocalViewer();
-				$oLocalViewer->Assign('sText', $m[2]);
-				$oLocalViewer->Assign('sTitle', $m[1]);
-
-				$sSpoilerParsed = $oLocalViewer->Fetch(Plugin::GetTemplatePath(__CLASS__) . 'tpls/spoiler.tpl');
+				$sSpoilerParsed = E::ModuleViewer()->GetLocalViewer()->Fetch(
+					'tpls/snippets/snippet.spoiler.tpl',
+					array(
+						'aParams' => array(
+							'title'        => $m[1],
+							'snippet_text' => $m[2],
+						)
+					)
+				);
 				$sText = substr_replace($sText, $sSpoilerParsed, $start, $length);
 			} while($spoilers_positions = $get_spoilers_positions($sText));
 		}
@@ -139,39 +143,41 @@ class PluginBetterspoilers_ModuleBetterspoilers extends Module {
 		$diff_time = $end - $start;
 		var_dump(sprintf("Память: было %0.2f, стало %0.2f, разница %0.2f\nВремя: %0.4f", $before / 1024 / 1024, $after / 1024 / 1024, $diff, $diff_time / 100));
 */
-		preg_match_all('|<hide>(.+?)<\/hide>|is', $sText, $aMatches, PREG_SET_ORDER);
-
-		foreach($aMatches as $Match){
+		preg_match_all('#<hide>(.+?|)</hide>#is', $sText, $aMatches, PREG_SET_ORDER);
+		foreach($aMatches as $Match) {
 			$sText = str_replace($Match[0], '<span class="hidetext">'.$Match[1].'</span>', $sText);
 		}
 
+		// Если остались теги <hide>, удаляем их
+		$sText = str_replace(array('<hide>', '</hide>'), '', $sText);
+
 		preg_match_all('|(?!<a[^>]*>)\s*<img src="'.str_replace('.', '\.', Config::Get('path.root.web')).'(/uploads/images/[^"]+)\.([^"]+)"[^>]*>\s*(?!</a>)|is', $sText, $aMatches, PREG_SET_ORDER);
 
-		foreach($aMatches as $Match){			
-			$filename = $Match[1] . '_full.' . $Match[2];
-			$file = rtrim(Config::Get('path.root.server'),"/").$Match[1].'_full.'.$Match[2];
+		foreach ($aMatches as $Match) {
+			$filename   = $Match[1] . '_full.' . $Match[2];
+			$file       = rtrim(Config::Get('path.root.server'), "/") . $Match[1] . '_full.' . $Match[2];
 			$dimensions = $this->Cache_Get('fullimg_' . md5($filename));
 			if (!$dimensions && file_exists($file)) {
-				$size = getimagesize($file);
+				$size       = getimagesize($file);
 				$dimensions = $size[0] . 'x' . $size[1];
-				$this->Cache_Set($dimensions, 'fullimg_' . md5($filename), array(), 60*60*24*30);
+				$this->Cache_Set($dimensions, 'fullimg_' . md5($filename), array(), 60 * 60 * 24 * 30);
 			}
 			if ($dimensions) {
 				$filesize = $this->getHumanizedSize(filesize($file));
-				$sText = str_replace($Match[0], '<a class="unfoldable" href="' . $filename . '" rel="' . $dimensions . '" title="'.$filesize.'">' . $Match[0] . '</a>', $sText);
+				$sText    = str_replace($Match[0], '<a class="unfoldable" href="' . $filename . '" rel="' . $dimensions . '" title="' . $filesize . '">' . $Match[0] . '</a>', $sText);
 			}
 		}
 
 		return $sText;
 	}
 
-    protected function getHumanizedSize($iSizeBytes) {
-        $aSizes = array('B', 'KB', 'MB', 'GB', 'TB');
-        $i = 0;
-        while ($iSizeBytes > 1000) {
-            $iSizeBytes /= 1024;
-            $i++;
-        }
-        return sprintf('%.2f %s', $iSizeBytes, $aSizes[$i]);
-    }
+	protected function getHumanizedSize($iSizeBytes) {
+		$aSizes = array('B', 'KB', 'MB', 'GB', 'TB');
+		$i = 0;
+		while ($iSizeBytes > 1000) {
+			$iSizeBytes /= 1024;
+			$i++;
+		}
+		return sprintf('%.2f %s', $iSizeBytes, $aSizes[$i]);
+	}
 }
