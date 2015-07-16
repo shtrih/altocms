@@ -8,10 +8,10 @@
 
 settings.markupSet.splice({$iIndex1}, 0, {literal}{ name: 'Скрытый текст', className: 'editor-hide', openWith: '<hide>', closeWith: '</hide>' }{/literal});
 settings.markupSet.splice({$iIndex2}, 0, {literal}{
-    name: 'Спойлер',
+    name: ls.lang.get('panel_spoiler'),
     className:'editor-hidespoiler',
     replaceWith: function(m) {
-        return '<spoiler name="">'+(m.selectionOuter || m.selection)+'</spoiler>';
+        return '<alto:spoiler title="Нажмите для просмотра содержимого">'+(m.selectionOuter || m.selection)+'</alto:spoiler>';
     }
 }{/literal});
 //
