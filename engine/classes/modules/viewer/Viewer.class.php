@@ -201,11 +201,7 @@ class ModuleViewer extends Module {
      */
     protected $aMenuFetch = array();
 
-    /**
-     * Локальный вьюер
-     *
-     * @var bool
-     */
+    /** @var bool Local viewer */
     protected $bLocal = false;
 
     /** @var  string Current skin */
@@ -223,6 +219,9 @@ class ModuleViewer extends Module {
     protected $nMuteErrorsCnt = 0;
 
     protected $aResponseHeaders = array();
+
+    /** @var bool To prevent double initialization  */
+    protected $bInitRender = false;
 
     /**
      * Константа для компиляции LESS-файлов
@@ -537,7 +536,11 @@ class ModuleViewer extends Module {
         }
 
         if (F::File_Exists($sFile = Config::Get('path.smarty.template') . '/settings/config/menu.php')) {
-            $aConfig = F::Array_MergeCombo($aConfig, F::IncludeFile($sFile, false, true));
+            if (isset($aConfig['menu'])) {
+                $aConfig['menu'] = F::Array_MergeCombo($aConfig['menu'], F::IncludeFile($sFile, false, true));
+            } else {
+                $aConfig['menu'] = F::IncludeFile($sFile, false, true);
+            }
         }
 
 //        $aConfigLoad = F::Str2Array(Config::Get('config_load'));
@@ -596,8 +599,16 @@ class ModuleViewer extends Module {
 
     /**
      * Initialization of render before Fetch() or Display()
+     *
+     * @param bool $bForce
      */
-    protected function _initRender() {
+    protected function _initRender($bForce = false) {
+
+        if ($this->bInitRender && !$bForce) {
+            return;
+        }
+
+        $nTimer = microtime(true);
 
         E::ModuleHook()->Run('render_init_start', array('bLocal' => $this->bLocal));
 
@@ -622,6 +633,9 @@ class ModuleViewer extends Module {
         }
 
         E::ModuleHook()->Run('render_init_done', array('bLocal' => $this->bLocal));
+
+        $this->bInitRender = true;
+        self::$_preprocessTime += microtime(true) - $nTimer;
     }
 
     /**
@@ -863,7 +877,7 @@ class ModuleViewer extends Module {
          * Но предварительно проверяем наличие делегата
          */
         if ($sTemplate) {
-            $this->_initTemplator();
+            $this->_initRender();
 
             $sTemplate = E::ModulePlugin()->GetDelegate('template', $sTemplate);
             if ($this->TemplateExists($sTemplate, true)) {
@@ -896,7 +910,7 @@ class ModuleViewer extends Module {
      */
     public function Fetch($sTemplate, $aVars = array(), $aOptions = array()) {
 
-        $this->_initTemplator();
+        $this->_initRender();
 
         // * Проверяем наличие делегата
         $sTemplate = E::ModulePlugin()->GetDelegate('template', $sTemplate);
@@ -2330,9 +2344,10 @@ class ModuleViewer extends Module {
      */
     public function Shutdown() {
 
-        $timer = microtime(true);
-
+        // Calculation of preprocess time is inside this method
         $this->_initRender();
+
+        $nTimer = microtime(true);
 
         // * Создаются списки виджетов для вывода
         $this->MakeWidgetsLists();
@@ -2347,7 +2362,7 @@ class ModuleViewer extends Module {
         $this->BuildMenu();
         $this->MenuVarAssign();
 
-        self::$_preprocessTime += microtime(true) - $timer;
+        self::$_preprocessTime += microtime(true) - $nTimer;
     }
 
 }
