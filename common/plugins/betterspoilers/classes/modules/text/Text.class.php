@@ -11,9 +11,70 @@ class PluginBetterspoilers_ModuleText extends PluginBetterspoilers_Inherit_Modul
     public function LoadJevixConfig($sType = 'default', $bClear = true) {
         parent::LoadJevixConfig($sType, $bClear);
         if ('default' == $sType) {
+            // добавляем теги визуального редактора
             $this->oJevix->cfgAllowTags(array('spoiler', 'hide'));
-            $this->oJevix->cfgAllowTagParams('spoiler', array('name'));
+            $this->JevixAppendAllowTagParam('spoiler', 'name');
+            $this->oJevix->cfgSetTagBlockType('spoiler');
+
+
+            // добавляем правила для шаблонов tpls/snippets/snippet.*.tpl
+            //region snippet.spoiler.tpl
+            $this->oJevix->cfgAllowTags(array('input', 'span'));
+            $this->oJevix->cfgSetTagShort(array('input'));
+            $this->JevixAppendAllowTagParam('input', 'type', 'checkbox');
+            $this->JevixAppendAllowTagParam('input', 'tabindex', '-1');
+
+            $this->JevixAppendAllowTagParam('span', 'class', array('btrsplr-text', 'btrsplr-trigger'));
+            $this->JevixAppendAllowTagParam('div', 'class', array('betterspoiler', 'btrsplr-box'));
+            $this->oJevix->cfgSetTagBlockType(array('div'));
+            //endregion
+            //region snippet.hide.tpl
+            $this->JevixAppendAllowTagParam('span', 'class', 'hidetext');
+            //endregion
         }
+    }
+
+    /**
+     * Получить разрешённые значения атрибута тега
+     * @param $sTag
+     * @param $sParam
+     * @return array
+     */
+    private function JevixGetAllowTagParam($sTag, $sParam) {
+        $result = array();
+
+        if (isset($this->oJevix->tagsRules[$sTag][Jevix::STATE_TAG_PARAM_VALUE][$sParam])) {
+            $result = $this->oJevix->tagsRules[$sTag][Jevix::STATE_TAG_PARAM_VALUE][$sParam];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Добавить в список разрешённыз значений атрибута свои значения
+     * @param $sTag    string
+     * @param $sParam  string
+     * @param $saValue string|array Строка или несколько строк в массиве
+     */
+    private function JevixAppendAllowTagParam($sTag, $sParam, $saValue = null) {
+        static $aParams = array();
+
+        if (empty($aParams[$sTag][$sParam])) {
+            $aParams[$sTag][$sParam] = $this->JevixGetAllowTagParam($sTag, $sParam);
+        }
+
+        if (empty($saValue)) {
+            $saValue = array();
+        }
+
+        if (is_array($saValue)) {
+            $aParams[$sTag][$sParam] = array_merge($aParams[$sTag][$sParam], $saValue);
+        }
+        else {
+            array_unshift($aParams[$sTag][$sParam], $saValue);
+        }
+
+        $this->oJevix->cfgAllowTagParams($sTag, $aParams[$sTag]);
     }
 
     /**

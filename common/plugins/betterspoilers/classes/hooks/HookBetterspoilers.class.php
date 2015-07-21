@@ -31,26 +31,25 @@ class PluginBetterspoilers_HookBetterspoilers extends Hook {
     public function snippetSpoiler($aParams) {
         $sText = $aParams['params']['target_text'];
 
-        $spoilers_positions = $this->getSpoilersPositions($sText);
-        if ($spoilers_positions) {
+        $aSpoilersPositions = $this->getSpoilersPositions($sText);
+        if ($aSpoilersPositions) {
             do {
-                $end = reset($spoilers_positions);
-                $start = key($spoilers_positions);
-                $length = ($end - $start + 15 /* "</alto:spoiler>" length */);
-                preg_match('|^<alto:spoiler(?:\s+title=[\'"]([^\'"]*)[\'"]\s*)?>(.+?)</alto:spoiler>$|is', substr($sText, $start, $length), $m);
+                $iEndPos = reset($aSpoilersPositions);
+                $iStartPos = key($aSpoilersPositions);
+                $iLength = ($iEndPos - $iStartPos + 15 /* 15 — это длина </alto:spoiler> */);
+                preg_match('|^<alto:spoiler(?:\s+title=[\'"]([^\'"]*)[\'"]\s*)?>(.+?)</alto:spoiler>$|is', substr($sText, $iStartPos, $iLength), $aMatches);
 
-                //$sSpoilerParsed = $oLocalViewer->Fetch(Plugin::GetTemplatePath(__CLASS__) . 'tpls/spoiler.tpl');
                 $sSpoilerParsed = E::ModuleViewer()->GetLocalViewer()->Fetch(
                     'tpls/snippets/snippet.spoiler.tpl',
                     array(
                         'aParams' => array(
-                            'title'        => $m[1],
-                            'snippet_text' => $m[2],
+                            'title'        => $aMatches[1],
+                            'snippet_text' => $aMatches[2],
                         )
                     )
                 );
-                $sText = substr_replace($sText, $sSpoilerParsed, $start, $length);
-            } while($spoilers_positions = $this->getSpoilersPositions($sText));
+                $sText = substr_replace($sText, $sSpoilerParsed, $iStartPos, $iLength);
+            } while($aSpoilersPositions = $this->getSpoilersPositions($sText));
         }
         $aParams['result'] = $sText;
 

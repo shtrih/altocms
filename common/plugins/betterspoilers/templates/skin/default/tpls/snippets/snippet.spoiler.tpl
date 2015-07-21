@@ -10,13 +10,12 @@
         {$aParams.snippet_text}
     </div>
 </div>
-{/strip}*}
-{strip}
+{/strip}*}{strip}
 <div class="betterspoiler">
-    <input type="checkbox" tabindex="-1" >
-    <div class="box">
-        <span class="trigger">
-            <span style="padding-left:23px">
+    <input type="checkbox" tabindex="-1" />
+    <div class="btrsplr-box">
+        <span class="btrsplr-trigger">
+            <span>
                 {if $aParams.title}
                     {$aParams.title}
                 {else}
@@ -24,7 +23,7 @@
                 {/if}
             </span>
         </span>
-        <span class="text">
+        <span class="btrsplr-text">
             <span>{$aParams.snippet_text}</span>
         </span>
     </div>

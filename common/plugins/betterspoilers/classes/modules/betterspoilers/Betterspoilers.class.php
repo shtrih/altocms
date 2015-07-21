@@ -12,7 +12,7 @@ class PluginBetterspoilers_ModuleBetterspoilers extends Module {
 	}
 
 	/**
-	 * Смена содержимого на спойлер
+	 * Смена содержимого на спойлер. Для старых тегов <spoiler> и <hide>
 	 *
 	 * @param string $sText    Редактируемый текст
 	 * @return string
