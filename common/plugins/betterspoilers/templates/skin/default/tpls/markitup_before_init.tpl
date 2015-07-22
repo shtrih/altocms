@@ -11,7 +11,7 @@ settings.markupSet.splice({$iIndex2}, 0, {literal}{
     name: ls.lang.get('panel_spoiler'),
     className:'editor-hidespoiler',
     replaceWith: function(m) {
-        return '<alto:spoiler title="Нажмите для просмотра содержимого">'+(m.selectionOuter || m.selection)+'</alto:spoiler>';
+        return '<alto:spoiler title="Нажмите для просмотра содержимого">\n' +(m.selectionOuter || m.selection)+'\n</alto:spoiler>';
     }
 }{/literal});
 //
