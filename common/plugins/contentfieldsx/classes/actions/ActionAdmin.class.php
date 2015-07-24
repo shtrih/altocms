@@ -42,7 +42,11 @@ class PluginContentfieldsx_ActionAdmin extends PluginContentfieldsx_Inherits_Act
         }
 
         $sOldFieldUniqueName = $oField->getFieldUniqueName();
-        $oField->setFieldUniqueName(F::GetRequest('field_unique_name'));
+        if (F::GetRequest('field_unique_name_translit'))
+            $oField->setFieldUniqueName(F::TranslitUrl(F::GetRequest('field_name')));
+        else
+            $oField->setFieldUniqueName(F::TranslitUrl(F::GetRequest('field_unique_name')));
+
         try {
             if (E::ModuleTopic()->UpdateContentField($oField)) {
                 E::ModuleMessage()->AddNoticeSingle(E::ModuleLang()->Get('action.admin.contenttypes_success_fieldedit'), null, true);

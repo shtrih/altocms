@@ -25,7 +25,7 @@ class PluginContentfieldsx_ModuleTopic_MapperTopic extends PluginContentfieldsx_
         $this->oDb->query(
             $sql,
             $oField->getContentId(),
-            $oField->getFieldUniqueName(),
+            $oField->getFieldUniqueName() ?: null,
             $oField->getFieldId()
         );
         $this->oDb->setErrorHandler($cOldErrorHandler);
