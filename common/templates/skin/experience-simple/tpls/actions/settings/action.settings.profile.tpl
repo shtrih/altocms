@@ -41,7 +41,7 @@
                              data-title         ="{$aLang.settings_profile_avatar_resize_title}"
                              data-help          ="{$aLang.settings_profile_avatar_resize_text}"
                              data-aspect-ratio  ="{E::ModuleUploader()->GetConfigAspectRatio('*', 'profile_avatar')}"
-                             data-empty         ="{E::User()->getAvatarUrl('large')}"
+                             data-empty         ="{E::User()->getDefaultAvatarUrl('large')}"
                              data-preview-crop  ="128x128crop"
                              data-crop          ="yes">
 
@@ -224,7 +224,7 @@
                     </div>
                 </div>
 
-                <div class="panel-header">{$aLang.settings_profile_section_base}</div>
+                <div class="panel-header">{$aLang.settings_profile_section_contacts}</div>
 
                 <div class="mab12">
                     {$aUserFieldContactValues=E::User()->getUserFieldValues(true,array('contact','social'))}
