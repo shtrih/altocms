@@ -23,19 +23,19 @@ class PluginBetterspoilers extends Plugin {
          */
         'template' => array(
             'editors/editor.markitup.tpl' => '_editors/editor.markitup.tpl',
-            'comments/comment.single.tpl' => '_comments/comment.single.tpl',
             'tpls/snippets/snippet.spoiler.tpl' => '_tpls/snippets/snippet.spoiler.tpl',
         )
     );
 
     protected $aInherits = array(
         'modules' => array(
-            'ModuleTopic'  => '_ModuleTopic',
-            'ModuleText'   => '_ModuleText',
-            'ModuleViewer' => '_ModuleViewer',
+            'ModuleTopic',
+            'ModuleText',
+            'ModuleViewer',
+            'ModuleComment_EntityComment',
         ),
         'actions' => array(
-            'ActionAjax' => '_ActionAjax',
+            'ActionAjax',
         ),
     );
 

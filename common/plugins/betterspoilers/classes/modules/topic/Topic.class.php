@@ -1,7 +1,7 @@
 <?php
 
 class PluginBetterspoilers_ModuleTopic extends PluginBetterspoilers_Inherit_ModuleTopic {
-
+/*
     public function GetTopicsByArrayId($aTopicId) {
         $aTopics = parent::GetTopicsByArrayId($aTopicId);
         foreach ($aTopics as $k => $oTopic) {
@@ -9,5 +9,18 @@ class PluginBetterspoilers_ModuleTopic extends PluginBetterspoilers_Inherit_Modu
             $aTopics[$k]->setTextShort(E::Module('PluginBetterspoilers_ModuleBetterspoilers')->MakeCorrection($oTopic->getTextShort()));
         }
         return $aTopics;
+    }
+*/
+
+    public function getText() {
+        return E::Module('PluginBetterspoilers_ModuleBetterspoilers')->MakeCorrection(
+            parent::getText()
+        );
+    }
+
+    public function getTextShort() {
+        return E::Module('PluginBetterspoilers_ModuleBetterspoilers')->MakeCorrection(
+            parent::getTextShort()
+        );
     }
 }
