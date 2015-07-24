@@ -8,25 +8,25 @@
 <script>
 
 function selectfield(f){
-	$('#select_inputval').css({'display':'none'});
-	$('#daoobj_select').css({'display':'none'});
-	//для типа выпадающий список
-	if(f=='select'){
-		$('#select_inputval').css({'display':'block'});
-	}
-	//для ДАОсвязей
-	if(f=='daoobj'){
-		$('#daoobj_select').css({'display':'block'});
-	}
-	return false;
+    $('#select_inputval').css({'display':'none'});
+    $('#daoobj_select').css({'display':'none'});
+    //для типа выпадающий список
+    if(f=='select'){
+        $('#select_inputval').css({'display':'block'});
+    }
+    //для ДАОсвязей
+    if(f=='daoobj'){
+        $('#daoobj_select').css({'display':'block'});
+    }
+    return false;
 }
 </script>
 {/literal}
 
 
 <form action="" method="post" id="popup-login-form" class="form-horizontal uniform">
-	<input type="hidden" name="security_key" value="{$ALTO_SECURITY_KEY}" />
-		{*<input type="hidden" name="topic_type" value="{$oContentType->getContentId()}"/>*}
+    <input type="hidden" name="security_key" value="{$ALTO_SECURITY_KEY}" />
+        {*<input type="hidden" name="topic_type" value="{$oContentType->getContentId()}"/>*}
 
     <div class="b-wbox">
         <div class="b-wbox-header">
@@ -65,7 +65,7 @@ function selectfield(f){
                         <option value="single-image-uploader" {if $_aRequest.field_type=='single-image-uploader'}selected{/if} title="{$aLang.action.admin.contenttypes_field_image_notice}">
                             {$aLang.action.admin.contenttypes_field_image}</option>
                         {hook run='admin_content_add_field_list'}
-					</select>
+                    </select>
                 </div>
             </div>
 
@@ -130,7 +130,7 @@ function selectfield(f){
         </div>
     </div>
 
-	</form>
+    </form>
 
 
 </div>
