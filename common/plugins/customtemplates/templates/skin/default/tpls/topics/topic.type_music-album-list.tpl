@@ -9,11 +9,11 @@
 {$oVote=$oTopic->getVote()}
 {$oFavourite=$oTopic->getFavourite()}
 {$oContentType=$oTopic->getContentType()}
-{$oNsfw = !!$oTopic->getFieldValueByName('nsfw')}
-{$oNsfwPictures = $oTopic->getFieldValueByName('nsfw-pictures')}
+{$bNsfw = !!$oTopic->getFieldValueByName('nsfw')}
+{$bNsfwPictures = !!$oTopic->getFieldValueByName('nsfw-pictures')}
 
 <!-- Блок топика -->
-<div class="panel panel-default topic flat topic-type_{$oTopic->getType()} js-topic{if $oNsfw} nsfw-list{/if}{if $oNsfwPictures} nsfw-pictures{/if}">
+<div class="panel panel-default topic flat topic-type_{$oTopic->getType()} js-topic{if $bNsfw} nsfw-list{/if}{if $bNsfwPictures} nsfw-pictures{/if}">
 
     <div class="panel-body">
         {block name="topic_header"}
@@ -28,7 +28,7 @@
                     &nbsp;<span class="fa fa-globe" title="{$aLang.topic_link}"></span>
                 {/if}
 
-                {if $oNsfw}
+                {if $bNsfw}
                     &nbsp;<span class="label label-danger label-nsfw" title="Not Safe For Work">nsfw</span>
                 {/if}
                 {if $oTopic->getPublishIndex()}
@@ -90,7 +90,7 @@
                    Показывать ли одобренные нсфв-топики, зависит от опции. *}
                 {if !E::IsUser() && (
                     !$oTopic->getPublishIndex()
-                    OR $oTopic->getPublishIndex() && $oNsfw
+                    OR $oTopic->getPublishIndex() && $bNsfw
                         && C::Get('plugin.customtemplates.hide_nsfw_topics_4guests')
                     )
                 }
@@ -106,15 +106,23 @@
                         <br/>
                     {/if}
 
-                    {$oTopic->getTextShort()}
-    {*
-                    {if $oContentType}
-                        {$oField=$oContentType->getField($iPosterId)}
-                        {foreach from=$oContentType->getFields() item=oField}
+                    {$sTemplateDir = Plugin::GetTemplateDir('customtemplates')}
+                    {foreach from=$oContentType->getFields() item=oField}
+                        {* Пропускаем некоторые поля *}
+                        {if in_array($oField->getFieldUniqueName(), ['nsfw', 'nsfw-pictures'])}
+                            {continue}
+                        {/if}
+
+                        {$sFieldPath = "`$sTemplateDir`tpls/fields/`$oContentType->getContentUrl()`/field.custom.`$oField->getFieldType()`-show.tpl"}
+                        {if file_exists($sFieldPath)}
+                            {include file=$sFieldPath oField=$oField}
+                        {else}
                             {include file="fields/customs/field.custom.`$oField->getFieldType()`-show.tpl" oField=$oField}
-                        {/foreach}
-                    {/if}
-    *}
+                        {/if}
+                    {/foreach}
+
+                    {$oTopic->getTextShort()}
+
                     {hook run='topic_content_end' topic=$oTopic bTopicList=true}
                 {/if}
             </div>

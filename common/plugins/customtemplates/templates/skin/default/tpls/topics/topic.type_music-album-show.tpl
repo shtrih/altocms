@@ -86,6 +86,21 @@
                 <p>{$aLang.plugin.customtemplates.topic_text_dummy}</p>
             </div>
         {else}
+            {$sTemplateDir = Plugin::GetTemplateDir('customtemplates')}
+            {foreach from=$oContentType->getFields() item=oField}
+                {* Пропускаем некоторые поля *}
+                {if in_array($oField->getFieldUniqueName(), ['nsfw', 'nsfw-pictures'])}
+                    {continue}
+                {/if}
+
+                {$sFieldPath = "`$sTemplateDir`tpls/fields/`$oContentType->getContentUrl()`/field.custom.`$oField->getFieldType()`-show.tpl"}
+                {if file_exists($sFieldPath)}
+                    {include file=$sFieldPath oField=$oField}
+                {else}
+                    {include file="fields/customs/field.custom.`$oField->getFieldType()`-show.tpl" oField=$oField}
+                {/if}
+            {/foreach}
+
             {block name="topic_content"}
                 <div class="topic-text">
                     {hook run='topic_content_begin' topic=$oTopic bTopicList=false}
@@ -113,18 +128,9 @@
             {if $oContentType AND $oContentType->isAllow('link') AND $oTopic->getSourceLink()}
                 {include file="fields/field.link-show.tpl"}
             {/if}
-
-{*
-        {if $oContentType}
-            {foreach from=$oContentType->getFields() item=oField}
-                {include file="fields/customs/field.custom.`$oField->getFieldType()`-show.tpl" oField=$oField}
-            {/foreach}
-        {/if}
-*}
         {/if}
 
         {include file="fields/field.tags-show.tpl"}
-
     </div>
 
 

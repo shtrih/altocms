@@ -21,7 +21,7 @@
          data-title         ="uploader_single_upload_resize_title"
          data-help          ="uploader_single_upload_resize_help"
          data-empty         ="{asset file="images/empty_image.png" theme=true}"
-         data-preview-crop  ="400fit"
+         data-preview-crop  ="250fit"
          data-crop          ="yes">
 
         {* Картинка *}
@@ -30,7 +30,7 @@
                 'alt'           => "image",
                 'class'         => "thumbnail js-uploader-image",
                 'target-type'   => $sTargetType,
-                'crop'          => '400fit',
+                'crop'          => '250fit',
                 'target-id'     => "{if $oTarget}{$oTarget->getId()}{else}0{/if}"
         ]}
 

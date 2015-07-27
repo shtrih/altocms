@@ -4,3 +4,11 @@
 	font-size: 50%;
 	vertical-align: text-top;
 }
+
+.topic-type_music-album img[align="left"] {
+	margin: 0 16px 6px 0;
+}
+
+.topic-type_music-album img[align="right"] {
+	margin: 0 0 6px 10px;
+}

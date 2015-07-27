@@ -225,11 +225,16 @@
                 {include file="fields/field.photoset-edit.tpl" sFormId='#form-topic-add'}
             {/if}
 
-            {if $oContentType}
-                {foreach from=$oContentType->getFields() item=oField}
+            {* Кастомные поля *}
+            {$sTemplateDir = Plugin::GetTemplateDir('customtemplates')}
+            {foreach from=$oContentType->getFields() item=oField}
+                {$sFieldPath = "`$sTemplateDir`tpls/fields/`$oContentType->getContentUrl()`/field.custom.`$oField->getFieldType()`-edit.tpl"}
+                {if file_exists($sFieldPath)}
+                    {include file=$sFieldPath oField=$oField}
+                {else}
                     {include file="fields/customs/field.custom.`$oField->getFieldType()`-edit.tpl" oField=$oField}
-                {/foreach}
-            {/if}
+                {/if}
+            {/foreach}
 
             <br/><br/>
 

@@ -114,13 +114,19 @@
                 {include file="fields/field.link-show.tpl"}
             {/if}
 
-{*
-        {if $oContentType}
             {foreach from=$oContentType->getFields() item=oField}
-                {include file="fields/customs/field.custom.`$oField->getFieldType()`-show.tpl" oField=$oField}
+                {* Пропускаем некоторые поля *}
+                {if in_array($oField->getFieldUniqueName(), ['nsfw', 'nsfw-pictures'])}
+                    {continue}
+                {/if}
+
+                {$sFieldPath = "`$sTemplateDir`tpls/fields/`$oContentType->getContentUrl()`/field.custom.`$oField->getFieldType()`-show.tpl"}
+                {if file_exists($sFieldPath)}
+                    {include file=$sFieldPath oField=$oField}
+                {else}
+                    {include file="fields/customs/field.custom.`$oField->getFieldType()`-show.tpl" oField=$oField}
+                {/if}
             {/foreach}
-        {/if}
-*}
         {/if}
 
         {include file="fields/field.tags-show.tpl"}

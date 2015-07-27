@@ -140,7 +140,7 @@
             <div class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="fa fa-header"></i></span>
-                    <input type="text" id="topic_title" name="topic_title" value="{$_aRequest.topic_title}" class="form-control"/>
+                    <input type="text" id="topic_title" name="topic_title" value="{if $_aRequest.topic_title}{$_aRequest.topic_title}{else}Альбом «Название_Альбома» от Название группы/кружка{/if}" class="form-control"/>
                 </div>
             </div>
 
@@ -215,6 +215,17 @@
                 {include file="fields/field.link-edit.tpl"}
             {/if}
 
+            {* Кастомные поля *}
+            {$sTemplateDir = Plugin::GetTemplateDir('customtemplates')}
+            {foreach from=$oContentType->getFields() item=oField}
+                {$sFieldPath = "`$sTemplateDir`tpls/fields/`$oContentType->getContentUrl()`/field.custom.`$oField->getFieldType()`-edit.tpl"}
+                {if file_exists($sFieldPath)}
+                    {include file=$sFieldPath oField=$oField}
+                {else}
+                    {include file="fields/customs/field.custom.`$oField->getFieldType()`-edit.tpl" oField=$oField}
+                {/if}
+            {/foreach}
+
             {* ОПРОС *}
             {if $oContentType->isAllow('poll')}
                 {include file="fields/field.poll-edit.tpl"}
@@ -223,12 +234,6 @@
             {* ФОТОСЕТ *}
             {if $oContentType->isAllow('photoset')}
                 {include file="fields/field.photoset-edit.tpl" sFormId='#form-topic-add'}
-            {/if}
-
-            {if $oContentType}
-                {foreach from=$oContentType->getFields() item=oField}
-                    {include file="fields/customs/field.custom.`$oField->getFieldType()`-edit.tpl" oField=$oField}
-                {/foreach}
             {/if}
 
             <br/><br/>
