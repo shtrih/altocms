@@ -12,3 +12,7 @@
 .topic-type_music-album img[align="right"] {
 	margin: 0 0 6px 10px;
 }
+
+.topic-type_music-album p {
+	margin-bottom: 4px;
+}
