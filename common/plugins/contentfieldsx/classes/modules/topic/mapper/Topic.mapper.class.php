@@ -3,6 +3,42 @@
 class PluginContentfieldsx_ModuleTopic_MapperTopic extends PluginContentfieldsx_Inherits_ModuleTopic_MapperTopic {
 
     /**
+     * Добавляет поле
+     *
+     * @param ModuleTopic_EntityField $oField    Объект поля
+     *
+     * @return int|bool
+     */
+    public function AddContentField(ModuleTopic_EntityField $oField) {
+        $this->oDb->transaction();
+
+        $iId = parent::AddContentField($oField);
+
+        if ($iId) {
+            $sql = "UPDATE ?_content_field
+                SET
+                    content_id=?d,
+                    field_unique_name=?
+                WHERE
+                    field_id = ?d
+            ";
+
+            $cOldErrorHandler = $this->oDb->setErrorHandler(array($this, 'SqlErrorHandler'));
+            $this->oDb->query(
+                $sql,
+                $oField->getContentId(),
+                $oField->getFieldUniqueName() ?: null,
+                $iId
+            );
+            $this->oDb->setErrorHandler($cOldErrorHandler);
+        }
+
+        $this->oDb->commit();
+
+        return $iId;
+    }
+
+    /**
      * Обновляет поле
      *
      * @param ModuleTopic_EntityField $oField    Объект поля
@@ -14,12 +50,12 @@ class PluginContentfieldsx_ModuleTopic_MapperTopic extends PluginContentfieldsx_
         $bResult = parent::UpdateContentField($oField);
 
         $sql = "UPDATE ?_content_field
-			SET
-				content_id=?d,
-				field_unique_name=?
-			WHERE
-				field_id = ?d
-		";
+            SET
+                content_id=?d,
+                field_unique_name=?
+            WHERE
+                field_id = ?d
+        ";
 
         $cOldErrorHandler = $this->oDb->setErrorHandler(array($this, 'SqlErrorHandler'));
         $this->oDb->query(
@@ -71,6 +107,8 @@ class PluginContentfieldsx_ModuleTopic_MapperTopic extends PluginContentfieldsx_
      * @throws Exception
      */
     function SqlErrorHandler($sMessage, $aInfo) {
+        $this->oDb->rollback();
+
         throw new Exception($sMessage, $aInfo['code']);
     }
 }

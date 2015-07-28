@@ -2,6 +2,65 @@
 
 class PluginContentfieldsx_ActionAdmin extends PluginContentfieldsx_Inherits_ActionAdmin {
 
+    protected function EventAddField() {
+        parent::EventAddField();
+
+        if (empty($_REQUEST['submit_field'])) {
+            $_REQUEST['field_unique_name'] = F::TranslitUrl(F::GetRequest('field_name'));
+
+            if (!F::GetRequest('field_unique_name_translit'))
+                $_REQUEST['field_unique_name'] = F::TranslitUrl(F::GetRequest('field_unique_name'));
+        }
+    }
+
+    protected function SubmitAddField($oContentType) {
+
+        // * Проверяем отправлена ли форма с данными
+        if (!F::isPost('submit_field')) {
+            return false;
+        }
+
+        // * Проверка корректности полей формы
+        if (!$this->CheckFieldsField($oContentType)) {
+            return false;
+        }
+
+        $oField = E::GetEntity('Topic_Field');
+        $oField->setFieldType(F::GetRequest('field_type'));
+        $oField->setContentId($oContentType->getContentId());
+        $oField->setFieldName(F::GetRequest('field_name'));
+        $oField->setFieldDescription(F::GetRequest('field_description'));
+        $oField->setFieldRequired(F::GetRequest('field_required'));
+        if (F::GetRequest('field_type') == 'select') {
+            $oField->setOptionValue('select', F::GetRequest('field_values'));
+        }
+
+        $sFieldUniqueName = F::TranslitUrl(F::GetRequest('field_unique_name'));
+        if (F::GetRequest('field_unique_name_translit'))
+            $sFieldUniqueName = F::TranslitUrl(F::GetRequest('field_name'));
+
+        $oField->setFieldUniqueName($sFieldUniqueName);
+
+        try {
+            if (E::ModuleTopic()->AddContentField($oField)) {
+                E::ModuleMessage()->AddNoticeSingle(E::ModuleLang()->Get('action.admin.contenttypes_success_fieldadd'), null, true);
+                R::Location('admin/settings-contenttypes/edit/' . $oContentType->getContentId() . '/');
+            }
+        }
+        catch (Exception $e) {
+            // Если ошибка дублирования уникального ключа, то выводим соответствующее сообщение
+            if (1062 == $e->getCode()) {
+                E::ModuleMessage()->AddErrorSingle(
+                    E::ModuleLang()->Get('plugin.contentfieldsx.error_field_unique_name_duplicate', array('unique_name' => htmlspecialchars($sFieldUniqueName))),
+                    null,
+                    false
+                );
+            }
+        }
+
+        return false;
+    }
+
     protected function EventEditField() {
         parent::EventEditField();
 
@@ -56,9 +115,10 @@ class PluginContentfieldsx_ActionAdmin extends PluginContentfieldsx_Inherits_Act
         catch (Exception $e) {
             // Если ошибка дублирования уникального ключа, то выводим соответствующее сообщение
             if (1062 == $e->getCode()) {
+                $sNewFieldUniqueName = $oField->getFieldUniqueName();
                 $oField->setFieldUniqueName($sOldFieldUniqueName);
                 E::ModuleMessage()->AddErrorSingle(
-                    E::ModuleLang()->Get('plugin.contentfieldsx.error_field_unique_name_duplicate', array('unique_name' => htmlspecialchars(F::GetRequest('field_unique_name')))),
+                    E::ModuleLang()->Get('plugin.contentfieldsx.error_field_unique_name_duplicate', array('unique_name' => htmlspecialchars($sNewFieldUniqueName))),
                     null,
                     false
                 );
