@@ -84,20 +84,35 @@
         {/block}
 
 
-        {block name="topic_content"}
+        {* Топики, которых нет на главной, не показываем неавторизованным юзерам.
+           Показывать ли одобренные нсфв-топики, зависит от опции. *}
+        {if !E::IsUser() && (
+            !$oTopic->getPublishIndex()
+            OR $oTopic->getPublishIndex() && $bNsfw
+                && C::Get('plugin.customtemplates.hide_nsfw_topics_4guests')
+            )
+        }
             <div class="topic-text">
-                {* Топики, которых нет на главной, не показываем неавторизованным юзерам.
-                   Показывать ли одобренные нсфв-топики, зависит от опции. *}
-                {if !E::IsUser() && (
-                    !$oTopic->getPublishIndex()
-                    OR $oTopic->getPublishIndex() && $bNsfw
-                        && C::Get('plugin.customtemplates.hide_nsfw_topics_4guests')
-                    )
-                }
-                    <div class="topic-text">
-                        <p>{$aLang.plugin.customtemplates.topic_text_dummy_short}</p>
-                    </div>
+                <p>{$aLang.plugin.customtemplates.topic_text_dummy_short}</p>
+            </div>
+        {else}
+            {$sTemplateDir = Plugin::GetTemplateDir('customtemplates')}
+            {foreach from=$oContentType->getFields() item=oField}
+                {* Пропускаем некоторые поля *}
+                {if in_array($oField->getFieldUniqueName(), ['nsfw', 'nsfw-pictures'])}
+                    {continue}
+                {/if}
+
+                {$sFieldPath = "`$sTemplateDir`tpls/fields/`$oContentType->getContentUrl()`/field.custom.`$oField->getFieldType()`-show.tpl"}
+                {if file_exists($sFieldPath)}
+                    {include file=$sFieldPath oField=$oField}
                 {else}
+                    {include file="fields/customs/field.custom.`$oField->getFieldType()`-show.tpl" oField=$oField}
+                {/if}
+            {/foreach}
+
+            {block name="topic_content"}
+                <div class="topic-text">
                     {hook run='topic_content_begin' topic=$oTopic bTopicList=true}
 
                     {$sImagePath=$oTopic->getPhotosetMainPhotoUrl(false, '682pad')}
@@ -106,27 +121,13 @@
                         <br/>
                     {/if}
 
-                    {$sTemplateDir = Plugin::GetTemplateDir('customtemplates')}
-                    {foreach from=$oContentType->getFields() item=oField}
-                        {* Пропускаем некоторые поля *}
-                        {if in_array($oField->getFieldUniqueName(), ['nsfw', 'nsfw-pictures'])}
-                            {continue}
-                        {/if}
-
-                        {$sFieldPath = "`$sTemplateDir`tpls/fields/`$oContentType->getContentUrl()`/field.custom.`$oField->getFieldType()`-show.tpl"}
-                        {if file_exists($sFieldPath)}
-                            {include file=$sFieldPath oField=$oField}
-                        {else}
-                            {include file="fields/customs/field.custom.`$oField->getFieldType()`-show.tpl" oField=$oField}
-                        {/if}
-                    {/foreach}
 
                     {$oTopic->getTextShort()}
 
                     {hook run='topic_content_end' topic=$oTopic bTopicList=true}
-                {/if}
-            </div>
-        {/block}
+                </div>
+            {/block}
+        {/if}
 
         {*{include file="fields/field.tags-show.tpl"}*}
 

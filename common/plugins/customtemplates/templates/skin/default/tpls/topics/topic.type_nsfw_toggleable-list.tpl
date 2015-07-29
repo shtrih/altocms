@@ -84,20 +84,20 @@
         {/block}
 
 
-        {block name="topic_content"}
+        {* Топики, которых нет на главной, не показываем неавторизованным юзерам.
+           Показывать ли одобренные нсфв-топики, зависит от опции. *}
+        {if !E::IsUser() && (
+            !$oTopic->getPublishIndex()
+            OR $oTopic->getPublishIndex() && $bNsfw
+                && C::Get('plugin.customtemplates.hide_nsfw_topics_4guests')
+            )
+        }
             <div class="topic-text">
-                {* Топики, которых нет на главной, не показываем неавторизованным юзерам.
-                   Показывать ли одобренные нсфв-топики, зависит от опции. *}
-                {if !E::IsUser() && (
-                    !$oTopic->getPublishIndex()
-                    OR $oTopic->getPublishIndex() && $bNsfw
-                        && C::Get('plugin.customtemplates.hide_nsfw_topics_4guests')
-                    )
-                }
-                    <div class="topic-text">
-                        <p>{$aLang.plugin.customtemplates.topic_text_dummy_short}</p>
-                    </div>
-                {else}
+                <p>{$aLang.plugin.customtemplates.topic_text_dummy_short}</p>
+            </div>
+        {else}
+            {block name="topic_content"}
+                <div class="topic-text">
                     {hook run='topic_content_begin' topic=$oTopic bTopicList=true}
 
                     {$sImagePath=$oTopic->getPhotosetMainPhotoUrl(false, '682pad')}
@@ -124,9 +124,9 @@
                     {/foreach}
 
                     {hook run='topic_content_end' topic=$oTopic bTopicList=true}
-                {/if}
-            </div>
-        {/block}
+                </div>
+            {/block}
+        {/if}
 
         {*{include file="fields/field.tags-show.tpl"}*}
 
