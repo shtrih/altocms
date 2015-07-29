@@ -159,7 +159,7 @@ class ModuleUser extends Module {
      * @param array|int $aUsersId   - Список ID пользователей
      * @param array     $aAllowData - Список типоd дополнительных данных для подгрузки у пользователей
      *
-     * @return array
+     * @return ModuleUser_EntityUser[]
      */
     public function GetUsersAdditionalData($aUsersId, $aAllowData = null) {
 
@@ -260,7 +260,7 @@ class ModuleUser extends Module {
      *
      * @param array $aUsersId - Список ID пользователей
      *
-     * @return array
+     * @return ModuleUser_EntityUser[]
      */
     public function GetUsersByArrayId($aUsersId) {
 
@@ -328,7 +328,7 @@ class ModuleUser extends Module {
      *
      * @param array $aUsersId - Список ID пользователей
      *
-     * @return array
+     * @return ModuleUser_EntityUser[]
      */
     public function GetUserItemsByArrayId($aUsersId) {
 
@@ -340,7 +340,7 @@ class ModuleUser extends Module {
      *
      * @param array $aUsersId    Список ID пользователей
      *
-     * @return array
+     * @return ModuleUser_EntityUser[]
      */
     public function GetUsersByArrayIdSolid($aUsersId) {
 
@@ -370,7 +370,7 @@ class ModuleUser extends Module {
      *
      * @param array $aUsersId    Список ID пользователей
      *
-     * @return array
+     * @return ModuleUser_EntitySession[]
      */
     public function GetSessionsByArrayId($aUsersId) {
 
@@ -440,7 +440,7 @@ class ModuleUser extends Module {
      *
      * @param array $aUsersId    Список ID пользователей
      *
-     * @return array
+     * @return ModuleUser_EntitySession[]
      */
     public function GetSessionsByArrayIdSolid($aUsersId) {
 
@@ -929,7 +929,7 @@ class ModuleUser extends Module {
      *
      * @param int $nLimit Количество
      *
-     * @return array
+     * @return ModuleUser_EntityUser[]
      */
     public function GetUsersByDateLast($nLimit = 20) {
 
@@ -976,7 +976,7 @@ class ModuleUser extends Module {
      *
      * @param int $nLimit    Количество
      *
-     * @return array
+     * @return ModuleUser_EntityUser[]
      */
     public function GetUsersByDateRegister($nLimit = 20) {
 
@@ -1012,7 +1012,7 @@ class ModuleUser extends Module {
      * @param string $sUserLogin - Логин
      * @param int    $nLimit     - Количество
      *
-     * @return array
+     * @return ModuleUser_EntityUser[]
      */
     public function GetUsersByLoginLike($sUserLogin, $nLimit) {
 
@@ -1033,7 +1033,7 @@ class ModuleUser extends Module {
      * @param   int|array $aUsersId - Список ID пользователей проверяемых на дружбу
      * @param   int       $iUserId  - ID пользователя у которого проверяем друзей
      *
-     * @return array
+     * @return ModuleUser_EntityFriend[]
      */
     public function GetFriendsByArray($aUsersId, $iUserId) {
 
@@ -1107,7 +1107,7 @@ class ModuleUser extends Module {
      * @param  array $aUsersId    Список ID пользователей проверяемых на дружбу
      * @param  int   $nUserId    ID пользователя у которого проверяем друзей
      *
-     * @return array
+     * @return ModuleUser_EntityFriend[]
      */
     public function GetFriendsByArraySolid($aUsersId, $nUserId) {
 
@@ -1628,7 +1628,7 @@ class ModuleUser extends Module {
      *
      * @param array|null $aType Типы полей, null - все типы
      *
-     * @return array
+     * @return ModuleUser_EntityField[]
      */
     public function getUserFields($aType = null) {
 
@@ -1638,11 +1638,11 @@ class ModuleUser extends Module {
     /**
      * Получить значения дополнительных полей профиля пользователя
      *
-     * @param int   $nUserId      - ID пользователя
-     * @param bool  $bOnlyNoEmpty - Загружать только непустые поля
+     * @param int          $nUserId      - ID пользователя
+     * @param bool         $bOnlyNoEmpty - Загружать только непустые поля
      * @param array|string $xType        - Типы полей, null - все типы
      *
-     * @return array
+     * @return ModuleUser_EntityField[]
      */
     public function getUserFieldsValues($nUserId, $bOnlyNoEmpty = true, $xType = array()) {
 
@@ -1926,7 +1926,7 @@ class ModuleUser extends Module {
      *
      * @param int $nPrefixLength    Длина префикса
      *
-     * @return array
+     * @return string[]
      */
     public function GetGroupPrefixUser($nPrefixLength = 1) {
 
@@ -2111,6 +2111,56 @@ class ModuleUser extends Module {
         return $this->oMapper->IpIsBanned($sIp);
     }
 
+    /**
+     * Returns stats of user publications and favourites
+     *
+     * @param int|object $xUser
+     *
+     * @return int[]
+     */
+    public function GetUserProfileStats($xUser) {
+
+        if (is_object($xUser)) {
+            $iUserId = $xUser->getId();
+        } else {
+            $iUserId = intval($xUser);
+        }
+
+        $iCountTopicFavourite = E::ModuleTopic()->GetCountTopicsFavouriteByUserId($iUserId);
+        $iCountCommentFavourite = E::ModuleComment()->GetCountCommentsFavouriteByUserId($iUserId);
+        $iCountTopics = E::ModuleTopic()->GetCountTopicsPersonalByUser($iUserId, 1);
+        $iCountComments = E::ModuleComment()->GetCountCommentsByUserId($iUserId, 'topic');
+        $iCountWallRecords = E::ModuleWall()->GetCountWall(array('wall_user_id' => $iUserId, 'pid' => null));
+        $iImageCount = E::ModuleMresource()->GetCountImagesByUserId($iUserId);
+
+        $iCountUserNotes = $this->GetCountUserNotesByUserId($iUserId);
+        $iCountUserFriends = $this->GetCountUsersFriend($iUserId);
+
+        $aUserPublicationStats = array(
+            'favourite_topics' => $iCountTopicFavourite,
+            'favourite_comments' => $iCountCommentFavourite,
+            'count_topics' => $iCountTopics,
+            'count_comments' => $iCountComments,
+            'count_usernotes' => $iCountUserNotes,
+            'count_wallrecords' => $iCountWallRecords,
+            'count_images' => $iImageCount,
+            'count_friends' => $iCountUserFriends,
+        );
+        $aUserPublicationStats['count_created'] =
+            $aUserPublicationStats['count_topics']
+            + $aUserPublicationStats['count_comments']
+            + $aUserPublicationStats['count_images'];
+
+        if ($iUserId == E::UserId()) {
+            $aUserPublicationStats['count_created'] += $aUserPublicationStats['count_usernotes'];
+        }
+
+        $aUserPublicationStats['count_favourites'] =
+            $aUserPublicationStats['favourite_topics']
+            + $aUserPublicationStats['favourite_comments'];
+
+        return $aUserPublicationStats;
+    }
 }
 
 // EOF
