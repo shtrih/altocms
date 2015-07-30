@@ -18,7 +18,7 @@ class PluginArt4otaku_WidgetLast extends Widget {
 			$artList = new Client4otaku\ReadArtList();
 			$artList
 				//->setSortBy('random')
-				->setPerPage(Config::Get('art4otaku.slider.limit'))
+				->setPerPage(Config::Get('plugin.art4otaku.slider-limit'))
 				->getFilter()
 				->not(Client4otaku\FilterList::FILTER_NAME_TAG, 'nsfw')
 				->is(Client4otaku\FilterList::FILTER_NAME_STATE, 'approved')
