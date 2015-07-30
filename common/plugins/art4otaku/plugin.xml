@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
+	<id>art4otaku</id>
 	<name>
 		<lang name="default">art4otaku</lang>
 	</name>
 	<author>
 		<lang name="default">shtrih</lang>
 	</author>
-	<homepage>http://4otaku.org/</homepage>
-	<version>1.0.0</version>
+	<homepage>http://4otaku.org</homepage>
+	<version>1.0.1</version>
+	<dirname>art4otaku</dirname>
 	<requires>
-		<livestreet>1.0.3</livestreet>
 		<plugins>
 		</plugins>
+		<alto>
+			<version>1.1.0-b2</version>
+		</alto>
+		<system>
+			<php>5.4.0</php>
+		</system>
 	</requires>
 	<description>
 		<lang name="default">Block with pictures from art.4otaku.org</lang>

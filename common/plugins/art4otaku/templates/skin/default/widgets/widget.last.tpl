@@ -7,8 +7,8 @@
 	<script>
 		$(function () {
 			$(".art-slider").jCarouselLite({
-				btnNext: ".next",
-				btnPrev: ".prev",
+				btnNext: ".art-slider .next",
+				btnPrev: ".art-slider .prev",
 				visible: 1
 			});
 		});
