@@ -279,8 +279,6 @@ class ModuleViewer extends Module {
 
         $this->bLocal = (bool)$bLocal;
 
-        //$this->InitSkin($this->bLocal);
-
         if (($iTitleMax = Config::Get('view.html.title_max')) && ($iTitleMax > 0)) {
             $this->iHtmlTitlesMax = Config::Get('view.html.title_max');
         }
@@ -530,35 +528,39 @@ class ModuleViewer extends Module {
 
         // Load skin's config
         $aConfig = array();
+        Config::ResetLevel(Config::LEVEL_SKIN);
 
-        if (F::File_Exists($sFile = Config::Get('path.smarty.template') . '/settings/config/config.php')) {
-            $aConfig = F::IncludeFile($sFile, FALSE, TRUE);
-        }
+        $aSkinConfigPaths['sSkinConfigCommonPath'] = Config::Get('path.smarty.template') . '/settings/config/';
+        $aSkinConfigPaths['sSkinConfigAppPath']    = Config::Get('path.dir.app')
+            . F::File_LocalPath(
+                $aSkinConfigPaths['sSkinConfigCommonPath'],
+                Config::Get('path.dir.common')
+            )
+        ;
+        // Может загружаться основной конфиг скина, так и внешние секции конфига,
+        // которые задаются ключом 'config_load'
+        // (обычно это 'classes', 'assets', 'jevix', 'widgets', 'menu')
+        $aConfigNames = array('config') + F::Str2Array(Config::Get('config_load'));
 
-        if (F::File_Exists($sFile = Config::Get('path.smarty.template') . '/settings/config/menu.php')) {
-            if (isset($aConfig['menu'])) {
-                $aConfig['menu'] = F::Array_MergeCombo($aConfig['menu'], F::IncludeFile($sFile, false, true));
-            } else {
-                $aConfig['menu'] = F::IncludeFile($sFile, false, true);
+        // Load configs from paths
+        foreach ($aConfigNames as $sConfigName) {
+            foreach ($aSkinConfigPaths as $sPath) {
+                $sFile = $sPath . $sConfigName . '.php';
+                if (F::File_Exists($sFile)) {
+                    $aSubConfig = F::IncludeFile($sFile, false, true);
+                    if ($sConfigName !='config' && !isset($aSubConfig[$sConfigName])) {
+                        $aSubConfig = array($sConfigName => $aSubConfig);
+                    }
+                    // загружаем конфиг, что позволяет сразу использовать значения
+                    // в остальных конфигах скина (assets и кастомном config.php) через Config::Get()
+                    Config::Load($aSubConfig, false, null, null, $sFile);
+                }
             }
         }
 
-//        $aConfigLoad = F::Str2Array(Config::Get('config_load'));
-//        if ($aConfigLoad) {
-//            foreach ($aConfigLoad as $sConfigName) {
-//                if (F::File_Exists($sFile = Config::Get('path.smarty.template') . "/settings/config/$sConfigName.php")) {
-//                    $aConfig = array_merge($aConfig, F::IncludeFile($sFile, false, true));
-//                }
-//            }
-//        }
-
-        // Checks skin's config in app dir
-        $sFile = Config::Get('path.dir.app') . F::File_LocalPath($sFile, Config::Get('path.dir.common'));
-        if (F::File_Exists($sFile)) {
-            $aConfig = F::Array_MergeCombo($aConfig, F::IncludeFile($sFile, false, true));
-        }
         // Checks skin's config from users settings
-        $aUserConfig = Config::Get('skin.' . $this->sViewSkin . '.config');
+        $sUserConfigKey = 'skin.' . $this->sViewSkin . '.config';
+        $aUserConfig = Config::Get($sUserConfigKey);
         if ($aUserConfig) {
             if (!$aConfig) {
                 $aConfig = $aUserConfig;
@@ -567,9 +569,8 @@ class ModuleViewer extends Module {
             }
         }
 
-        Config::ResetLevel(Config::LEVEL_SKIN);
         if ($aConfig) {
-            Config::Load($aConfig, false, null, null, 'skin');
+            Config::Load($aConfig, false, null, null, $sUserConfigKey);
         }
 
         // Check skin theme and set one in config if it was changed
@@ -580,17 +581,6 @@ class ModuleViewer extends Module {
         // Load lang files for skin
         E::ModuleLang()->LoadLangFileTemplate(E::ModuleLang()->GetLang());
 
-        // Skip skin widgets for local viewer
-        if (!$this->bLocal) {
-            // * Load skin widgets
-            if (F::File_Exists($sFile = Config::Get('path.smarty.template') . '/settings/config/widgets.php')) {
-                $aSkinWidgets = F::IncludeFile($sFile, false, true);
-                if (isset($aSkinWidgets['widgets']) && is_array($aSkinWidgets['widgets']) && count($aSkinWidgets['widgets'])) {
-                    $aWidgets = array_merge(Config::Get('widgets'), $aSkinWidgets['widgets']);
-                    Config::Set('widgets', $aWidgets);
-                }
-            }
-        }
         // Load template variables from config
         if (($aVars = Config::Get('view.assign')) && is_array($aVars)) {
             $this->Assign($aVars);
@@ -1601,7 +1591,12 @@ class ModuleViewer extends Module {
             $this->aFilesPrepend = array();
         }
 
-        E::ModuleViewerAsset()->AddAssetFiles(Config::Get('head.default'));
+        // Compatibility with old style skins
+        if ($aAssets = Config::Get('head.default')) {
+            E::ModuleViewerAsset()->AddAssetFiles($aAssets);
+        } else {
+            E::ModuleViewerAsset()->AddAssetFiles(Config::Get('assets.default'));
+        }
 
         if ($this->aFilesAppend['js'] || $this->aFilesAppend['css']) {
             E::ModuleViewerAsset()->AddAssetFiles($this->aFilesAppend);
@@ -1930,13 +1925,21 @@ class ModuleViewer extends Module {
     }
 
     /**
-     * Добавляет тег для вывода в хидере страницы
+     * Добавляет тег для вывода в <HEAD>
      *
      * @param string $sTag
      */
     public function AddHtmlHeadTag($sTag) {
 
-        $sTag = substr($sTag, 1, strlen($sTag) - 2);
+        if ($sTag[0] == '<') {
+            $sTag = substr($sTag, 1);
+        }
+        if (substr($sTag, -2) == '/>') {
+            $sTag = substr($sTag, 0, strlen($sTag) - 2);
+        } elseif (substr($sTag, -1) == '>') {
+            $sTag = substr($sTag, 0, strlen($sTag) - 1);
+        }
+
         if (strpos($sTag, ' ')) {
             list($sTagName, $sAttributes) = explode(' ', $sTag, 2);
         } else {
