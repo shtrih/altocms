@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <id>multiplefileupload</id>
+    <name>
+        <lang name="default">Multiple File Upload</lang>
+    </name>
+    <author>
+        <lang name="default">shtrih</lang>
+    </author>
+    <homepage>http://4otaku.org</homepage>
+    <version>1.0.0</version>
+    <dirname>multiplefileupload</dirname>
+    <requires>
+        <alto>
+             <version>1.1.0</version>
+        </alto>
+        <system>
+            <php>5.3.0</php>
+        </system>
+    </requires>
+    <description>
+        <lang name="default">It allows to create the "multiple-file-upload" fields for content types.</lang>
+        <lang name="russian">Позволяет в админке создавать поле «Множественная загрузка файлов» для типов контента.</lang>
+    </description>
+</plugin>
