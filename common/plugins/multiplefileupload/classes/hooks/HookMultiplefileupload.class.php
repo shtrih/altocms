@@ -34,7 +34,7 @@ class PluginMultiplefileupload_HookMultiplefileupload extends Hook {
     }
 
     public function RenderSelectOption(array $aVars) {
-        return E::ModuleViewer()->Fetch('tpls/content-field-select-option.tpl', $aVars);
+        return E::ModuleViewer()->Fetch(Plugin::GetTemplateFile(__CLASS__, 'tpls/content-field-select-option.tpl'), $aVars);
     }
 
     public function SaveValue(array &$aVars) {

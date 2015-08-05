@@ -23,8 +23,8 @@ class PluginMultiplefileupload extends Plugin {
              */
 
         'template' => array(
-            'tpls/fields/customs/field.custom.checkbox-edit.tpl'=>'_tpls/fields/customs/field.custom.checkbox-edit.tpl',
-            'tpls/fields/customs/field.custom.checkbox-show.tpl'=>'_tpls/fields/customs/field.custom.checkbox-show.tpl',
+            'tpls/fields/customs/field.custom.multiple-file-upload-edit.tpl'=>'_tpls/fields/customs/field.custom.multiple-file-upload-edit.tpl',
+            'tpls/fields/customs/field.custom.multiple-file-upload-show.tpl'=>'_tpls/fields/customs/field.custom.multiple-file-upload-show.tpl',
         ),
     );
 
@@ -69,6 +69,16 @@ class PluginMultiplefileupload extends Plugin {
 
     // Инициализация плагина
     public function Init() {
+        $sPluginLibDir = Plugin::GetDir(__CLASS__) . 'templates/vendor/';
+        $sTemplateDir = Plugin::GetTemplateDir(__CLASS__);
+        E::ModuleViewer()->AppendScript($sPluginLibDir . 'JavaScript-Templates-2.5.5/js/tmpl.js');
+        E::ModuleViewer()->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload.js');
+        E::ModuleViewer()->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload-process.js');
+        E::ModuleViewer()->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload-image.js');
+        E::ModuleViewer()->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload-ui.js');
+        E::ModuleViewer()->AppendScript($sTemplateDir . 'assets/js/fileupload-init.js');
+        E::ModuleViewer()->AppendStyle($sPluginLibDir . 'jQuery-File-Upload-9.10.5/css/jquery.fileupload.css');
+        E::ModuleViewer()->AppendStyle($sPluginLibDir . 'jQuery-File-Upload-9.10.5/css/jquery.fileupload-ui.css');
     }
 }
 
