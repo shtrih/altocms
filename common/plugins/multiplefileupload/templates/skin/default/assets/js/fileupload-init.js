@@ -13,18 +13,25 @@ $(function () {
     upload.fileupload({
         autoUpload: false,
 //        disableImageResize: true,
-//        disableImagePreview: true,
-//        disableVideoPreview: true,
-//        disableAudioPreview: true,
+        disableImagePreview: false,
+        disableVideoPreview: false,
+        disableAudioPreview: false,
         maxFileSize: 2048 * 1024 * 1024,
-        url: DIR_WEB_ROOT + '/attachments/receive',
-        formData: [{
-            name: 'form_id',
-            value: formId
-        }, {
-            name: 'topic_id',
-            value: topicId
-        }],
+        url: DIR_WEB_ROOT + '/multiplefileupload/upload',
+        formData: [
+            {
+                name: 'form_id',
+                value: formId
+            },
+            {
+                name: 'topic_id',
+                value: topicId
+            },
+            {
+                name: 'security_key',
+                value: ALTO_SECURITY_KEY
+            }
+        ],
         added: function (e, data) {
             if ($(this).find('table tr').length > 1)
                 btn_start.removeClass('hide');
@@ -41,24 +48,15 @@ $(function () {
 
     $('#form-topic-add').append('<input name="form_id_topic" type="hidden" value="' + formId + '" />');
 
-//    var fileList = [
-//        {
-//            name: 'Filename.jpg',
-//            size: '10kb',
-//            url: '/file/down',
-//            id: 1
-//        }
-//    ];
-//    console.log(fileList);
     if (typeof fileList != 'undefined') {
         upload.fileupload('option', 'done')
             .call(upload[0], $.Event('done'), {result: {files: fileList}});
     }
-
+/*
     window.linkfile = function(id, size, name) {
         var url = DIR_WEB_ROOT + (topicId
-            ? '/attachments/linkto/' + id + '/' + topicId
-            : '/attachments/link/' + id + '/' + formId
+            ? '/multiplefileupload/linkto/' + id + '/' + topicId
+            : '/multiplefileupload/link/' + id + '/' + formId
             );
         $.ajax ({
             url: url,
@@ -72,17 +70,17 @@ $(function () {
             .call(upload[0], $.Event('done'), {result: {files: [{
                 name: name,
                 size: size,
-                url: DIR_WEB_ROOT + '/attachments/get/' + id,
+                url: DIR_WEB_ROOT + '/multiplefileupload/get/' + id,
                 id: id
             }]}});
     };
-
+*/
     window.deletefile = function(id, name) {
         if (confirm('Удалить файл ' + name + '?')) {
             $.ajax ({
-                url: DIR_WEB_ROOT + '/attachments/delete/' + id + '/' + formId,
+                url: DIR_WEB_ROOT + '/multiplefileupload/remove/' + id + '/' + formId,
                 data: {
-                    security_ls_key: ALTO_SECURITY_KEY
+                    security_key: ALTO_SECURITY_KEY
                 },
                 dataType: 'json',
                 type: 'GET'
@@ -92,7 +90,7 @@ $(function () {
         return false;
     };
 
-    $('#uploadFromUrl').on('click', function(){
+    $('#uploadFromUrl').on('click', function() {
         var url = prompt("Укажите адрес файла: ", "http://");
         if (url) {
             var filename = url.match(/.*\/(.*)$/)[1];
@@ -125,12 +123,12 @@ $(function () {
                 ids.push($(this).data('id'));
             });
             $.ajax ({
-                url: DIR_WEB_ROOT + '/attachments/sort/',
+                url: DIR_WEB_ROOT + '/multiplefileupload/sort/',
                 data: {
                     form: formId,
                     topic: topicId ? topicId : '',
                     sort: ids,
-                    security_ls_key: ALTO_SECURITY_KEY
+                    security_key: ALTO_SECURITY_KEY
                 },
                 dataType: 'json',
                 type: 'POST'

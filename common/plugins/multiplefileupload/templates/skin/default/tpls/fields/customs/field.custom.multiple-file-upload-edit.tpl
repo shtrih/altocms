@@ -1,14 +1,15 @@
 {if $oField}
     {$iFieldId=$oField->getFieldId()}
 
-    <label for="">Файлы:</label>
+    <div class="form-group">
+    <label>{$oField->getFieldName()}</label>
     <div class="fileupload-wrapper">
         <div id="multiple-file-upload" rel="{$_aRequest.topic_id}" class="uneditable-input">
             <div class="fileupload-buttonbar">
                 <span class="span5">
                     <span class="btn btn-success fileinput-button">
                         <span>Добавить</span>
-                        <input type="file" name="fields[{$iFieldId}]" multiple />
+                        <input type="file" name="multiple-file-upload[]" multiple />
                     </span>
                     <button type="button" class="btn" id="uploadFromUrl">
                         <span>Указать url</span>
@@ -32,9 +33,10 @@
             <table role="presentation" class="table table-striped table-files"><tbody class="files"></tbody></table>
         </div>
     </div>
-    <span class="help-block"><small>Максимальный размер файла: <strong>{min((int)ini_get("post_max_size"), (int)ini_get("upload_max_filesize"))} Мб</strong>.
-            Если прикрепить mp3-файл, то его можно будет прослушать в плеере на странице топика.</small></span>
+        <small class="control-notice">Максимальный размер файла: <strong>{min((int)ini_get("post_max_size"), (int)ini_get("upload_max_filesize"))} Мб</strong>.
+        <br />{$oField->getFieldDescription()}</small>
 
+    </div>
 {literal}
     <script>
         var fileList = [
@@ -66,13 +68,13 @@
 		<td>
 			{% if (!i && !o.options.autoUpload) { %}
 				<button class="btn btn-primary start" disabled>
-					<i class="glyphicon glyphicon-upload"></i>
+					<span class="fa fa-upload"></span>
 					<span>Загрузить</span>
 				</button>
 			{% } %}
 			{% if (!i) { %}
 				<button class="btn btn-warning cancel">
-					<i class="glyphicon glyphicon-ban-circle"></i>
+					<span class="fa fa-ban-circle"></span>
 					<span>Отменить</span>
 				</button>
 			{% } %}
@@ -104,7 +106,7 @@
 		</td>
 		<td>
 			<button type="button" class="btn btn-danger" onclick="if (deletefile({%=file.id%}, '{%=file.name.replace(/\'/g, "\\'")%}')) $(this).parents('.template-download').remove(); return false;">
-				<i class="glyphicon glyphicon-ban-circle"></i>
+				<span class="fa fa-ban-circle"></span>
 				<span>Удалить</span>
 			</button>
 		</td>

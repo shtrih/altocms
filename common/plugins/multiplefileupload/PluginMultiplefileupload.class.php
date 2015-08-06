@@ -69,16 +69,36 @@ class PluginMultiplefileupload extends Plugin {
 
     // Инициализация плагина
     public function Init() {
+        Config::Set('router.page.multiplefileupload', 'PluginMultiplefileupload_ActionMultiplefileupload');
+
         $sPluginLibDir = Plugin::GetDir(__CLASS__) . 'templates/vendor/';
         $sTemplateDir = Plugin::GetTemplateDir(__CLASS__);
-        E::ModuleViewer()->AppendScript($sPluginLibDir . 'JavaScript-Templates-2.5.5/js/tmpl.js');
-        E::ModuleViewer()->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload.js');
-        E::ModuleViewer()->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload-process.js');
-        E::ModuleViewer()->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload-image.js');
-        E::ModuleViewer()->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload-ui.js');
-        E::ModuleViewer()->AppendScript($sTemplateDir . 'assets/js/fileupload-init.js');
-        E::ModuleViewer()->AppendStyle($sPluginLibDir . 'jQuery-File-Upload-9.10.5/css/jquery.fileupload.css');
-        E::ModuleViewer()->AppendStyle($sPluginLibDir . 'jQuery-File-Upload-9.10.5/css/jquery.fileupload-ui.css');
+        $oModuleViewer = E::ModuleViewer();
+
+        $oModuleViewer->AppendScript($sPluginLibDir . 'JavaScript-Templates-2.5.5/js/tmpl.js');
+        // The Load Image plugin is included for the preview images and image resizing functionality
+        $oModuleViewer->AppendScript($sPluginLibDir . 'JavaScript-Load-Image-1.13.1/js/load-image.all.min.js');
+        // The Iframe Transport is required for browsers without support for XHR file uploads
+        $oModuleViewer->AppendScript($sTemplateDir . 'jQuery-File-Upload-9.10.5/js/jquery.iframe-transport.js');
+        // The basic File Upload plugin
+        $oModuleViewer->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload.js');
+        // The File Upload processing plugin
+        $oModuleViewer->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload-process.js');
+        // The File Upload image preview & resize plugin
+        $oModuleViewer->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload-image.js');
+        // The File Upload audio preview plugin
+        $oModuleViewer->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload-audio.js');
+        // The File Upload video preview plugin
+        $oModuleViewer->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload-video.js');
+        // The File Upload validation plugin
+        $oModuleViewer->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload-validate.js');
+        // The File Upload user interface plugin
+        $oModuleViewer->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload-ui.js');
+        // The main application script
+        $oModuleViewer->AppendScript($sTemplateDir . 'assets/js/fileupload-init.js');
+
+        $oModuleViewer->AppendStyle($sPluginLibDir . 'jQuery-File-Upload-9.10.5/css/jquery.fileupload.css');
+        $oModuleViewer->AppendStyle($sPluginLibDir . 'jQuery-File-Upload-9.10.5/css/jquery.fileupload-ui.css');
     }
 }
 
