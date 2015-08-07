@@ -54,6 +54,10 @@ class PluginMultiplefileupload extends Plugin {
         * PluginAbcplugin_ModuleTopic_EntityTopic (/plugins/abcplugin/classes/modules/entity/Topic.entity.class.php) - новые или замена существующих
         *
         */
+        'module' => array(
+            'ModuleMresource',
+            'ModuleMresource_MapperMresource'
+        )
     );
 
     // Активация плагина

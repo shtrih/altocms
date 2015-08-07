@@ -33,14 +33,13 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
     }
 
     /**
-     * 
+     *
      * @param $sUploadedFile
      * @param $oFile
      * @param $iError
+     * @return bool
      */
     protected function validateFile($sUploadedFile, $oFile, $iError) {
-        $bResult = false;
-
         if ($iError != 0) {
             switch ($iError) {
                 case UPLOAD_ERR_INI_SIZE:
@@ -83,12 +82,12 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
 
             $aFileExtensions = Config::Get('module.uploader.files.default.file_extensions');
             $aPathInfo = pathinfo($oFile->name);
-            if ($aFileExtensions && !in_array(strtolower($aPathInfo['extension']), $aFileExtensions)) {
+            if ($aFileExtensions && (empty($aPathInfo['extension']) || !in_array(strtolower($aPathInfo['extension']), $aFileExtensions))) {
                 $oFile->error = E::ModuleLang()->Get('topic_field_file_upload_err_type', array('types' => implode(', ', $aFileExtensions)));
             }
         }
 
-        return $bResult;
+        return empty($oFile->error);
     }
 
     protected function handleUploadedFile($iTargetId, $sUploadedFile, $sName, $sType, $iSize, $iError) {
@@ -98,20 +97,47 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
         $oFile->size = $iSize;
         if ($this->validateFile($sUploadedFile, $oFile, $iError)) {
             if (is_uploaded_file($sUploadedFile)) {
-                $oStoredFile = E::ModuleUploader()->Store($sUploadedFile);
-                /** @var ModuleMresource_EntityMresource $oResource */
-                $oResource = E::ModuleMresource()->GetMresourcesByUuid($oStoredFile->getUuid());
-                if ($oResource) {
-                    $oResource->setUrl(E::ModuleMresource()->NormalizeUrl(E::ModuleUploader()->GetTargetUrl('topic', $iTargetId)));
-                    $oResource->setType(self::TARGET_TYPE);
-                    $oResource->setUserId(E::UserId());
+                $sDirSave = Config::Get('path.uploads.root') . '/files/' . E::ModuleUser()->GetUserCurrent()->getId() . '/' . F::RandomStr(16);
+                if (mkdir(Config::Get('path.root.dir') . $sDirSave, 0777, true)) {
+                    $aPathInfo = pathinfo($oFile->name);
+                    $sFile = $sDirSave . '/' . F::RandomStr(10) . '.' . strtolower($aPathInfo['extension']);
+                    $sFileFullPath = Config::Get('path.root.dir') . $sFile;
 
-                    $oFile->id = $oResource->getMresourceId();
-                    //E::ModuleMresource()->UnlinkFile(self::TARGET_TYPE, 0, E::UserId());
-                    E::ModuleMresource()->AddTargetRel(array($oResource), self::TARGET_TYPE, $iTargetId);
+                    if (move_uploaded_file($sUploadedFile, $sFileFullPath)) {
+                        $oStoredFile = E::ModuleUploader()->Store($sFileFullPath, $sFileFullPath);
+
+                        if ($oStoredFile !== false) {
+                            /** @var ModuleMresource_EntityMresource $oResource */
+                            $oResource = E::ModuleMresource()->GetMresourcesByUuid($oStoredFile->getUuid());
+                            if ($oResource) {
+                                $iUserId = E::UserId();
+
+                                $oResource->setType(self::TARGET_TYPE);
+                                $oResource->setUserId($iUserId);
+
+                                $oResource->setParams(array('original_filename' => $oFile->name));
+                                E::ModuleMresource()->UpdateParams($oResource);
+
+                                $oFile->url = $oResource->GetUrl();
+                                //E::ModuleMresource()->UnlinkFile(self::TARGET_TYPE, 0, E::UserId());
+                                E::ModuleMresource()->AddTargetRel($oResource, self::TARGET_TYPE, $iTargetId);
+                                $aMresourceRelIds = E::ModuleMresource()->GetMresourcesRelIds($oResource->getMresourceId(), self::TARGET_TYPE, $iTargetId);
+                                $oFile->id = array_shift($aMresourceRelIds);
+                            }
+                            else {
+                                $oFile->error = 'File resource not found.';
+                            }
+                        }
+                        else {
+                            $oFile->error = E::ModuleUploader()->GetErrorMsg() . 'adsasd';
+                        }
+                    }
+                    else {
+                        $oFile->error = 'There is not a valid upload file OR file cannot be moved for some reason.';
+                    }
                 }
                 else {
-                    var_dump('asdasdsad');
+                    $oFile->error = 'Cannot create save dir.';
                 }
 
 /*                $sDirSave = Config::Get('path.uploads.root') . '/files/' . E::ModuleUser()->GetUserCurrent()->getId() . '/' . F::RandomStr(16);
@@ -148,7 +174,7 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
     public function eventUpload($aParams = null) {
         $this->checkSecurityKey();
 
-        $iTargetId = F::GetRequest('topic_id');
+        $iTargetId = (int)F::GetRequest('topic_id');
         $aFiles = array();
 
         if (isset($_FILES['multiple-file-upload'])) {
@@ -176,27 +202,31 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
             }
         }
 
-        // 1. Удалить значение target_tmp
-        // Нужно затереть временный ключ в ресурсах, что бы в дальнейшем картнка не
-        // воспринималась как временная.
-        if ($sTargetTmp = E::ModuleSession()->GetCookie(ModuleUploader::COOKIE_TARGET_TMP)) {
-            // 2. Удалить куку.
-            // Если прозошло сохранение вновь созданного топика, то нужно
-            // удалить куку временной картинки. Если же сохранялся уже существующий топик,
-            // то удаление куки ни на что влиять не будет.
-            E::ModuleSession()->DelCookie(ModuleUploader::COOKIE_TARGET_TMP);
+        E::ModuleViewer()->AssignAjax('files', $aFiles);
 
-            // 3. Переместить фото
+        /*
+                // 1. Удалить значение target_tmp
+                // Нужно затереть временный ключ в ресурсах, что бы в дальнейшем картнка не
+                // воспринималась как временная.
+                if ($sTargetTmp = E::ModuleSession()->GetCookie(ModuleUploader::COOKIE_TARGET_TMP)) {
+                    // 2. Удалить куку.
+                    // Если прозошло сохранение вновь созданного топика, то нужно
+                    // удалить куку временной картинки. Если же сохранялся уже существующий топик,
+                    // то удаление куки ни на что влиять не будет.
+                    E::ModuleSession()->DelCookie(ModuleUploader::COOKIE_TARGET_TMP);
 
-            $sNewPath = E::ModuleUploader()->GetUserImageDir(E::UserId(), true, false);
-            $aMresourceRel = E::ModuleMresource()->GetMresourcesRelByTargetAndUser(self::TARGET_TYPE, 0, E::UserId());
+                    // 3. Переместить фото
 
-            if ($aMresourceRel) {
-                $oResource = array_shift($aMresourceRel);
-                $sOldPath = $oResource->GetFile();
+                    $sNewPath = E::ModuleUploader()->GetUserImageDir(E::UserId(), true, false);
+                    $aMresourceRel = E::ModuleMresource()->GetMresourcesRelByTargetAndUser(self::TARGET_TYPE, 0, E::UserId());
 
-                $oStoredFile = E::ModuleUploader()->Store($sOldPath, $sNewPath);
-                /** @var ModuleMresource_EntityMresource $oResource */
+                    if ($aMresourceRel) {
+                        $oResource = array_shift($aMresourceRel);
+                        $sOldPath = $oResource->GetFile();
+
+                        $oStoredFile = E::ModuleUploader()->Store($sOldPath, $sNewPath);
+                        /** @var ModuleMresource_EntityMresource $oResource */
+                /*
                 $oResource = E::ModuleMresource()->GetMresourcesByUuid($oStoredFile->getUuid());
                 if ($oResource) {
                     $oResource->setUrl(E::ModuleMresource()->NormalizeUrl(E::ModuleUploader()->GetTargetUrl(self::TARGET_TYPE, $iTargetId)));
@@ -220,9 +250,8 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
 //                                    $this->DeleteField($oField);
             }
         }
-
-        E::ModuleViewer()->AssignAjax('foo', 'bar');
-        E::ModuleViewer()->AssignAjax('lol', $aParams);
+*/
+//        E::ModuleViewer()->AssignAjax('lol', $aParams);
         E::ModuleViewer()->DisplayAjax();
     }
 
