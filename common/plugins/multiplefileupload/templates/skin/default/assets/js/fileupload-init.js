@@ -114,16 +114,24 @@ $(function () {
             $('.table-uploaded tr').each(function(){
                 ids.push($(this).data('id'));
             });
-            $.ajax ({
-                url: DIR_WEB_ROOT + '/multiplefileupload/sort/',
-                data: {
-                    topic: topic_id ? topic_id : '',
-                    sort: ids,
-                    security_key: ALTO_SECURITY_KEY
+            ids.reverse();
+            ls.ajax(
+                DIR_WEB_ROOT + '/multiplefileupload/sort/',
+                {
+                    target: 'multiple-file-upload',
+                    target_id: topic_id ? topic_id : '',
+                    order: ids
                 },
-                dataType: 'json',
-                type: 'POST'
-            });
+                /**
+                 * Выведем пользователю сообщение о результате сортировки
+                 * @param {{bStateError: {boolean}, sMsg: {string}, sMsgTitle: {string}}} result
+                 */
+                function (result) {
+                    return result.bStateError
+                        ? ls.msg.error(result.sMsgTitle, result.sMsg)
+                        : ls.msg.notice(result.sMsgTitle, result.sMsg);
+                }
+            );
         }
     });
 });

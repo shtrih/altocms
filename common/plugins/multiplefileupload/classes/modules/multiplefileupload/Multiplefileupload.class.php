@@ -30,13 +30,17 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
             $oMresource = $oModuleResource->GetMresourceById($oMresourceRel->getMresourceId());
 
             $oFile = new stdClass();
-            $oFile->id = $oMresourceRel->getId();
+            // Пока привызяваемся к идентификатору ресурса вместо идентификатора связи
+//            $oFile->id = $oMresourceRel->getId();
+            $oFile->id = $oMresource->GetId();
             $oFile->name = $oMresource->getParamValue('original_filename');
             if (!$oFile->name)
                 $oFile->name = basename($oMresource->getPathUrl());
 
 //            $oFile->url = $oMresource->getWebPath();
-            $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresourceRel->getId();
+            // Пока привызяваемся к идентификатору ресурса вместо идентификатора связи
+//            $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresourceRel->getId();
+            $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresource->GetId();
 
             $sFilePath = $oMresource->GetFile();
             $oFile->size = file_exists($sFilePath) ? filesize($sFilePath) : 0;

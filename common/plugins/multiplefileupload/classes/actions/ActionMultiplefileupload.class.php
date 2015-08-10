@@ -120,8 +120,11 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
                                 $oFile->url = $oResource->GetUrl();
                                 //E::ModuleMresource()->UnlinkFile(self::TARGET_TYPE, 0, E::UserId());
                                 E::ModuleMresource()->AddTargetRel($oResource, PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
-                                $aMresourceRelIds = E::ModuleMresource()->GetMresourcesRelIds($oResource->getMresourceId(), PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
-                                $oFile->id = array_shift($aMresourceRelIds);
+
+                                // Пока привызяваемся к идентификатору ресурса вместо идентификатора связи
+                                $oFile->id = $oResource->getMresourceId();
+                                // $aMresourceRelIds = E::ModuleMresource()->GetMresourcesRelIds($oResource->getMresourceId(), PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
+                                // $oFile->id = array_shift($aMresourceRelIds);
                             }
                             else {
                                 $oFile->error = 'File resource not found.';
@@ -170,7 +173,7 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
         return $oFile;
     }
 
-    public function eventUpload($aParams = null) {
+    public function eventUpload() {
         $this->checkSecurityKey();
 
         $iTargetId = (int)F::GetRequest('topic_id');
@@ -250,7 +253,6 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
             }
         }
 */
-//        E::ModuleViewer()->AssignAjax('lol', $aParams);
         E::ModuleViewer()->DisplayAjax();
     }
 
@@ -262,13 +264,48 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
     public function eventSort() {
         $this->checkSecurityKey();
 
+        // * Устанавливаем формат Ajax ответа
+        E::ModuleViewer()->SetResponseAjax('json');
+
+        $sTargetType = F::GetRequest('target', FALSE);
+        // В нашем случае, права точно такие же, как у топика, поэтому не будем переопределять метод, а просто используем код для топика
+        if ('multiple-file-upload' == $sTargetType) {
+            $sTargetType = 'topic';
+        }
+
+        $sTargetId = F::GetRequest('target_id', FALSE);
+
+        // Проверяем, целевой объект и права на его редактирование
+        if (!$oTarget = E::ModuleUploader()->CheckAccessAndGetTarget($sTargetType, $sTargetId)) {
+            E::ModuleMessage()->AddErrorSingle(E::ModuleLang()->Get('not_access'), E::ModuleLang()->Get('error'));
+
+            return;
+        }
+
+        if (!($aOrder = F::GetRequest('order', FALSE))) {
+            E::ModuleMessage()->AddError(E::ModuleLang()->Get('not_access'), E::ModuleLang()->Get('error'));
+
+            return;
+        }
+
+        if (!is_array($aOrder)) {
+            E::ModuleMessage()->AddError(E::ModuleLang()->Get('not_access'), E::ModuleLang()->Get('error'));
+
+            return;
+        }
+
+        E::ModuleMresource()->UpdateSort(array_flip($aOrder), PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $sTargetId);
+        E::ModuleMessage()->AddNoticeSingle(E::ModuleLang()->Get('plugin.multiplefileupload.uploader_sort_changed'));
     }
 
     public function eventGet() {
 //        $this->checkSecurityKey();
 
-        $iMresourceRelId = (int)$this->GetParam(0);
-        $oMresource = E::ModuleMresource()->GetMresourceByRelId($iMresourceRelId);
+        // Пока привызяваемся к идентификатору ресурса вместо идентификатора связи
+        // $iMresourceRelId = (int)$this->GetParam(0);
+        // $oMresource = E::ModuleMresource()->GetMresourceByRelId($iMresourceRelId);
+        $iMresourceId = (int)$this->GetParam(0);
+        $oMresource = E::ModuleMresource()->GetMresourceById($iMresourceId);
 
         $sFilePath = $oMresource->GetFile();
         if (file_exists($sFilePath)) {
@@ -311,13 +348,5 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
         $iResourceId = F::GetRequest('resource_id');
         $oMresource = E::ModuleMresource()->GetMresourceById($iResourceId);
         E::ModuleMresource()->AddTargetRel($oMresource, 'topic', $iTopicId);
-    }
-
-    public function eventGetList() {
-
-        $oFile = new stdClass();
-        $oFile->id = $iMresourceRelId;
-        $oFile->name = $oMresource->getParamValue('original_filename');
-        $oFile->url = $oMresource->getParamValue('original_filename');
     }
 }
