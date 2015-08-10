@@ -6,6 +6,15 @@ $(function () {
         topic_id = fileupload.data('topic-id')
     ;
 
+    $('.multiple-file-upload .toggle-others').on('click', function () {
+        $(this)
+            .closest('ul')
+            .find('li').removeClass('hide')
+            .end().end().parent('li').remove();
+
+        return false;
+    });
+
     fileupload.fileupload({
         autoUpload: false,
         disableImageResize: true,

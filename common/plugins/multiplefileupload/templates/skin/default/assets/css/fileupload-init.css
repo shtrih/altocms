@@ -16,3 +16,11 @@
 #multiple-file-upload .table {
 	margin-bottom: 0;
 }
+
+ul.multiple-file-upload {
+
+}
+
+#multiple-file-upload .fileinput-button input {
+	bottom: 0;
+}

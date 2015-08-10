@@ -50,4 +50,14 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
 
         return $aResult;
     }
+
+    public static function sizeFormat($iSize) {
+        $aSizes = array('B', 'KB', 'MB', 'GB', 'TB');
+        $i = 0;
+        while ($iSize > 1000) {
+            $iSize /= 1024;
+            $i++;
+        }
+        return sprintf('%.2f %s', $iSize, $aSizes[$i]);
+    }
 }
