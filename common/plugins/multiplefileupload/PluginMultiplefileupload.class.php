@@ -83,7 +83,7 @@ class PluginMultiplefileupload extends Plugin {
         // The Load Image plugin is included for the preview images and image resizing functionality
         $oModuleViewer->AppendScript($sPluginLibDir . 'JavaScript-Load-Image-1.13.1/js/load-image.all.min.js');
         // The Iframe Transport is required for browsers without support for XHR file uploads
-        $oModuleViewer->AppendScript($sTemplateDir . 'jQuery-File-Upload-9.10.5/js/jquery.iframe-transport.js');
+        $oModuleViewer->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.iframe-transport.js');
         // The basic File Upload plugin
         $oModuleViewer->AppendScript($sPluginLibDir . 'jQuery-File-Upload-9.10.5/js/jquery.fileupload.js');
         // The File Upload processing plugin
