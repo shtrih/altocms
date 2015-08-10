@@ -1,0 +1,18 @@
+#multiple-file-upload .sort {
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
+	background: url('../images/arrows.gif') no-repeat center center;
+}
+
+#multiple-file-upload .table > tbody > tr > td {
+	vertical-align: middle;
+}
+
+#multiple-file-upload .size {
+	color: #000;
+}
+
+#multiple-file-upload .table {
+	margin-bottom: 0;
+}

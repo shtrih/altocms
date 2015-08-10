@@ -1,18 +1,14 @@
 //;(function ($, document, window) {
 $(function () {
-    var upload = $('#multiple-file-upload'),
-        btn_start = $('.fileupload-buttonbar button.start', upload),
-        btn_cancel  = $('.fileupload-buttonbar button.cancel', upload)
+    var fileupload = $('#multiple-file-upload'),
+        btn_start = $('.fileupload-buttonbar button.start', fileupload),
+        btn_cancel  = $('.fileupload-buttonbar button.cancel', fileupload),
+        topic_id = fileupload.data('topic-id')
     ;
-    var r = function(){
-        return (Math.floor(Math.random() * (90)) + 10).toString();
-    };
-    var formId = r()+r()+r()+r()+r()+r();
-    var topicId = upload.attr('rel');
 
-    upload.fileupload({
+    fileupload.fileupload({
         autoUpload: false,
-//        disableImageResize: true,
+        disableImageResize: true,
         disableImagePreview: false,
         disableVideoPreview: false,
         disableAudioPreview: false,
@@ -20,12 +16,8 @@ $(function () {
         url: DIR_WEB_ROOT + '/multiplefileupload/upload',
         formData: [
             {
-                name: 'form_id',
-                value: formId
-            },
-            {
                 name: 'topic_id',
-                value: topicId
+                value: topic_id
             },
             {
                 name: 'security_key',
@@ -44,13 +36,13 @@ $(function () {
             btn_cancel.addClass('hide');
         }
     });
-    upload.bind('fileuploadcompleted', function (e, data) {data.context.appendTo('.table-uploaded')});
-
-    $('#form-topic-add').append('<input name="form_id_topic" type="hidden" value="' + formId + '" />');
+    fileupload.bind('fileuploadcompleted', function (e, data) {
+        data.context.appendTo('.table-uploaded')
+    });
 
     if (typeof fileList != 'undefined') {
-        upload.fileupload('option', 'done')
-            .call(upload[0], $.Event('done'), {result: {files: fileList}});
+        fileupload.fileupload('option', 'done')
+            .call(fileupload[0], $.Event('done'), {result: {files: fileList}});
     }
 /*
     window.linkfile = function(id, size, name) {
@@ -102,7 +94,7 @@ $(function () {
             }
             var blob = new Blob([url], {type : "file\/link"});
             blob.name = filename;
-            upload.fileupload('add', {files: [blob]});
+            fileupload.fileupload('add', {files: [blob]});
         }
     });
 
@@ -110,7 +102,7 @@ $(function () {
         containment: '.table-uploaded',
         cursor: "move",
         forcePlaceholderSize: true,
-        handle: ".sort img",
+        handle: ".sort",
         helper: function(e, ui) {
             ui.children().each(function() {
                 $(this).width($(this).width());
@@ -125,8 +117,7 @@ $(function () {
             $.ajax ({
                 url: DIR_WEB_ROOT + '/multiplefileupload/sort/',
                 data: {
-                    form: formId,
-                    topic: topicId ? topicId : '',
+                    topic: topic_id ? topic_id : '',
                     sort: ids,
                     security_key: ALTO_SECURITY_KEY
                 },

@@ -8,13 +8,12 @@
 
 class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
 
-    const TARGET_TYPE = 'multiple-file-upload';
 
     protected function RegisterEvent() {
         $this->AddEvent('upload', 'eventUpload');
         $this->AddEvent('remove', 'eventRemove');
         $this->AddEvent('sort', 'eventSort');
-        $this->AddEvent('get', 'eventGet');
+        $this->AddEventPreg('~^get$~i', '~^\d+$~', 'eventGet');
         $this->AddEvent('attach', 'eventAttach');
     }
 
@@ -112,7 +111,7 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
                             if ($oResource) {
                                 $iUserId = E::UserId();
 
-                                $oResource->setType(self::TARGET_TYPE);
+                                $oResource->setType(PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE);
                                 $oResource->setUserId($iUserId);
 
                                 $oResource->setParams(array('original_filename' => $oFile->name));
@@ -120,8 +119,8 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
 
                                 $oFile->url = $oResource->GetUrl();
                                 //E::ModuleMresource()->UnlinkFile(self::TARGET_TYPE, 0, E::UserId());
-                                E::ModuleMresource()->AddTargetRel($oResource, self::TARGET_TYPE, $iTargetId);
-                                $aMresourceRelIds = E::ModuleMresource()->GetMresourcesRelIds($oResource->getMresourceId(), self::TARGET_TYPE, $iTargetId);
+                                E::ModuleMresource()->AddTargetRel($oResource, PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
+                                $aMresourceRelIds = E::ModuleMresource()->GetMresourcesRelIds($oResource->getMresourceId(), PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
                                 $oFile->id = array_shift($aMresourceRelIds);
                             }
                             else {
@@ -266,8 +265,43 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
     }
 
     public function eventGet() {
-        $this->checkSecurityKey();
+//        $this->checkSecurityKey();
 
+        $iMresourceRelId = (int)$this->GetParam(0);
+        $oMresource = E::ModuleMresource()->GetMresourceByRelId($iMresourceRelId);
+
+        $sFilePath = $oMresource->GetFile();
+        if (file_exists($sFilePath)) {
+            $iFileSize = filesize($sFilePath);
+            $rFinfo = finfo_open(FILEINFO_MIME_TYPE);
+            $sType = finfo_file($rFinfo, $sFilePath);
+            finfo_close($rFinfo);
+            header('Content-Type: ' . $sType);
+
+            // Файл, размером более 15Мб отдаем как attachment, в ином случае, без оного заголовка, чтобы браузер сам решил, что с ним делать
+            if ($iFileSize > 15 * 1024 * 1024) {
+                header('Content-Disposition: attachment; filename="' . $oMresource->getParamValue('original_filename') . '"');
+            }
+
+            // http://mailman.nginx.org/pipermail/nginx-ru/2005-May/002145.html
+            /*
+            header("HTTP/1.1 206 Partial Content");
+            header("Accept-Ranges: bytes");
+            header("Content-Range: bytes 0-");
+            header("X-Xox: static");
+            header("X-Accel-Redirect: /internal-file-proxy" . $http_file);
+
+            sleep(1);
+*/
+            header('Content-Length: ' . $iFileSize);
+            ob_clean();
+            flush();
+            readfile($sFilePath);
+        }
+        else {
+            return parent::EventNotFound();
+        }
+        exit;
     }
 
     public function eventAttach() {
@@ -277,5 +311,13 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
         $iResourceId = F::GetRequest('resource_id');
         $oMresource = E::ModuleMresource()->GetMresourceById($iResourceId);
         E::ModuleMresource()->AddTargetRel($oMresource, 'topic', $iTopicId);
+    }
+
+    public function eventGetList() {
+
+        $oFile = new stdClass();
+        $oFile->id = $iMresourceRelId;
+        $oFile->name = $oMresource->getParamValue('original_filename');
+        $oFile->url = $oMresource->getParamValue('original_filename');
     }
 }

@@ -103,6 +103,7 @@ class PluginMultiplefileupload extends Plugin {
 
         $oModuleViewer->AppendStyle($sPluginLibDir . 'jQuery-File-Upload-9.10.5/css/jquery.fileupload.css');
         $oModuleViewer->AppendStyle($sPluginLibDir . 'jQuery-File-Upload-9.10.5/css/jquery.fileupload-ui.css');
+        $oModuleViewer->AppendStyle($sTemplateDir . 'assets/css/fileupload-init.css');
     }
 }
 

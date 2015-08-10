@@ -4,7 +4,7 @@
     <div class="form-group">
     <label>{$oField->getFieldName()}</label>
     <div class="fileupload-wrapper">
-        <div id="multiple-file-upload" rel="{$_aRequest.topic_id}" class="uneditable-input">
+        <div id="multiple-file-upload" data-topic-id="{$oTopic->getId()}">
             <div class="fileupload-buttonbar">
                 <span class="span5">
                     <span class="btn btn-success fileinput-button">
@@ -39,14 +39,7 @@
     </div>
 {literal}
     <script>
-        var fileList = [
-            {
-                name: 'Filename.jpg',
-                size: '10kb',
-                url: '/file/down',
-                id: 1
-            }
-        ];
+        var fileList = {/literal}{json_encode(E::Module('PluginMultiplefileupload_ModuleMultiplefileupload')->getAttachedFiles($oTopic->getId()))}{literal};
     </script>
 {/literal}
 {literal}
@@ -62,7 +55,7 @@
 		</td>
 		<td>
 			<div class="progress progress-animated progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-				<div class="progress-bar progress-bar-success" style="width:0%;"><p class="size">Загружается...</p></div>
+				<div class="progress-bar progress-bar-success" style="width:0%;"><span class="size">Загружается...</span></div>
 			</div>
 		</td>
 		<td>
@@ -102,7 +95,7 @@
 			<span class="size">{%=o.formatFileSize(file.size)%}</span>
 		</td>
 		<td>
-			<span class="sort"><img src="{/literal}{cfg name='path.root.web'}{literal}/templates/skin/norma/images/arrows.gif"></span>
+			<div class="sort" title="Тащите, чтобы сортировать"></div>
 		</td>
 		<td>
 			<button type="button" class="btn btn-danger" onclick="if (deletefile({%=file.id%}, '{%=file.name.replace(/\'/g, "\\'")%}')) $(this).parents('.template-download').remove(); return false;">

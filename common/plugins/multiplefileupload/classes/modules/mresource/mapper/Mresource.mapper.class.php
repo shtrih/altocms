@@ -12,7 +12,10 @@ class PluginMultiplefileupload_ModuleMresource_MapperMresource extends PluginMul
      */
     public function GetMresourcesRelIds($aMresourcesId, $sTargetType, $iTargetId) {
         $aCriteria = array(
-            'fields' => 'id',
+            'fields' => array(
+                'id',
+                'mr.mresource_id'
+            ),
             'filter' => array(
                 'mresource_id' => $aMresourcesId,
                 'target_type' => $sTargetType,
@@ -24,7 +27,9 @@ class PluginMultiplefileupload_ModuleMresource_MapperMresource extends PluginMul
         $aResult = array();
         if ($aData['data']) {
             foreach ($aData['data'] as $xValue) {
-                $aResult[] = $xValue['id'];
+                // в ключе mresource_id. Можем позволить, потому что сейчас
+                // mresource и mresource_target 1:1 из-за уникального ключа `target_type, target_id, mresource_id`.
+                $aResult[ $xValue['mresource_id'] ] = $xValue['id'];
             }
         }
         return $aResult;
