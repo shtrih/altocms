@@ -18,11 +18,20 @@ class ModuleMenu extends Module {
 
     }
 
+    protected function _getCacheKey($sMenuId, $aMenu) {
+
+        $sCacheKey = $sMenuId . '-' . md5(serialize($aMenu))
+            . ((isset($aMenu['init']['user_cache']) && $aMenu['init']['user_cache']) ? ('_' . E::UserId()) : '');
+
+        return 'menu_' . $sCacheKey;
+    }
+
     /**
      * Возвращает кэшированные элементы меню
      *
      * @param string $sMenuId Идентификатор меню
      * @param array $aMenu Конфиг меню
+     *
      * @return ModuleMenu_EntityItem[]
      */
     protected function GetCachedItems($sMenuId, $aMenu) {
@@ -32,15 +41,36 @@ class ModuleMenu extends Module {
         // добавим идентификатор этого меню. И если кэша не будет, то на всякий случай
         // очистим по тегу.
 
-        $sCacheKey = md5(serialize($aMenu)) . ((isset($aMenu['init']['user_cache']) && $aMenu['init']['user_cache']) ? ('_' . E::UserId()) : '');
+        $sCacheKey = $this->_getCacheKey($sMenuId, $aMenu);
         if (FALSE === ($data = E::ModuleCache()->Get($sCacheKey, ',file'))) {
-            E::ModuleCache()->CleanByTags(array($sMenuId), ',file');
+            $this->ClearMenuCache($sMenuId);
 
             return array();
         }
 
         return $data;
+    }
 
+    /**
+     * Подготавливет все меню для вывода
+     */
+    public function PrepareMenus() {
+
+        $aMenus = Config::Get('menu.data');
+        $bChanged = false;
+        if ($aMenus && is_array($aMenus)) {
+
+            foreach($aMenus as $sMenuId => $aMenu) {
+                if (isset($aMenu['init']['fill'])) {
+                    $aMenus[$sMenuId] = $this->Prepare($sMenuId, $aMenu);
+                    $bChanged = true;
+                }
+            }
+            if ($bChanged) {
+                Config::Set('menu.data', null);
+                Config::Set('menu.data', $aMenus);
+            }
+        }
     }
 
     /**
@@ -87,7 +117,6 @@ class ModuleMenu extends Module {
             ? intval($aMenu['init']['total'])
             : Config::Get('module.menu.default_length'));
 
-
         // Получим список режимов заполнения меню
         /** @var string[] $aFillMode */
         if (!$aFillMode = (isset($aMenu['init']['fill']) ? $aMenu['init']['fill'] : FALSE)) {
@@ -109,13 +138,12 @@ class ModuleMenu extends Module {
             // Если валидных режимов заполнения не осталось, то завершимся
             // и сбросим кэш, ведь очевидно, что меню пустое :(
             if (empty($aFillMode)) {
-                E::ModuleCache()->Delete('menu_' . $sMenuId);
+                $this->ClearMenuCache($sMenuId);
 
                 return FALSE;
             }
 
         }
-
 
         // Заполняем элементы меню указанным способом
         $aItems = array();
@@ -129,7 +157,6 @@ class ModuleMenu extends Module {
             );
         }
 
-
         // Проверим количество элементов меню по допустимому максимальному количеству
         if (sizeof($aItems) > $iTotal) {
             $aItems = array_slice($aItems, 0, $iTotal);
@@ -137,11 +164,11 @@ class ModuleMenu extends Module {
 
         // Кэшируем результат, если нужно
         if (!(isset($aMenu['init']['cache']) && $aMenu['init']['cache'] == false)) {
-            $sUserCache = ((isset($aMenu['init']['user_cache']) && $aMenu['init']['user_cache']) ? ('_' . E::UserId()) : '');
+            $sCacheKey = $this->_getCacheKey($sMenuId, $aMenu);
             E::ModuleCache()->Set(
                 $aItems,
-                md5(serialize($aMenu)) . $sUserCache,
-                array('menu_' . $sMenuId . $sUserCache),
+                $sCacheKey,
+                array('menu_' . $sMenuId, 'menu'),
                 isset($aMenu['init']['cache']) ? $aMenu['init']['cache'] : 'P30D',
                 ',file'
             );
@@ -158,6 +185,7 @@ class ModuleMenu extends Module {
      * Возвращает меню по его идентификатору
      *
      * @param $sMenuId
+     *
      * @return bool
      */
     public function GetMenu($sMenuId) {
@@ -183,6 +211,7 @@ class ModuleMenu extends Module {
      * @return ModuleMenu_EntityMenu[]
      */
     public function GetMenus() {
+
         /** @var string[] $aMenuId */
         $aMenuId = array_keys(Config::Get('menu.data'));
 
@@ -193,6 +222,7 @@ class ModuleMenu extends Module {
      * Получает все меню сайта
      *
      * @param string[] $aMenuId
+     *
      * @return ModuleMenu_EntityMenu[]
      */
     public function GetMenusByArrayId($aMenuId) {
@@ -230,7 +260,21 @@ class ModuleMenu extends Module {
         }
         Config::WriteCustomConfig(array("menu.data.{$oMenu->getId()}.list" => $aNewConfigData));
         Config::Set("menu.data.{$oMenu->getId()}.list", $aNewConfigData);
+    }
 
+    /**
+     * Сбрасывет сохраненное меню в исходное состояние
+     *
+     * @param ModuleMenu_EntityMenu| string $xMenu
+     */
+    public function ResetMenu($xMenu) {
+
+        if (is_object($xMenu)) {
+            $sMenuId = $xMenu->getId();
+        } else {
+            $sMenuId = (string)$xMenu;
+        }
+        Config::ResetCustomConfig("menu.data.{$sMenuId}");
     }
 
     /**
@@ -243,6 +287,7 @@ class ModuleMenu extends Module {
      * @return string
      */
     public function CreateMenu($sMenuId, $aMenu) {
+
         return $this->Prepare($sMenuId, $aMenu);
     }
 
@@ -250,9 +295,11 @@ class ModuleMenu extends Module {
      * Возвращает имя метода обработки режима заполнения меню
      *
      * @param string $sModeName Название режима заполнения
+     *
      * @return string
      */
     private function _getProcessMethodName($sModeName) {
+
         return 'Process' . F::StrCamelize($sModeName) . 'Mode';
     }
 
@@ -316,6 +363,7 @@ class ModuleMenu extends Module {
      *
      * @param string[] $aFillSet Набор элементов меню
      * @param array $aMenu Само меню
+     *
      * @return array
      */
     public function ProcessListMode($aFillSet, $aMenu) {
@@ -354,7 +402,6 @@ class ModuleMenu extends Module {
             }
         }
 
-
         return $aItems;
 
     }
@@ -364,6 +411,7 @@ class ModuleMenu extends Module {
      *
      * @param string[] $aFillSet Набор элементов меню
      * @param array $aMenu Само меню
+     *
      * @return array
      */
     public function ProcessInsertImageMode($aFillSet, $aMenu = NULL) {
@@ -440,6 +488,7 @@ class ModuleMenu extends Module {
      *
      * @param string[] $aFillSet Набор элементов меню
      * @param array $aMenu Само меню
+     *
      * @return array
      */
     public function ProcessBlogsMode($aFillSet, $aMenu = NULL) {
@@ -486,52 +535,67 @@ class ModuleMenu extends Module {
 
     /**
      * Вызывается по строке "is_user"
+     *
      * @return bool
      */
     public function IsUser() {
+
         return E::IsUser();
     }
 
     /**
      * Вызывается по строке "is_admin"
+     *
      * @return bool
      */
     public function IsAdmin() {
+
         return E::IsAdmin();
     }
 
     /**
      * Вызывается по строке "is_not_admin"
+     *
      * @return bool
      */
     public function IsNotAdmin() {
+
         return E::IsNotAdmin();
     }
 
     /**
      * Вызывается по строке "user_id_is"
+     *
      * @param $iUserId
+     *
      * @return bool
      */
     public function UserIdIs($iUserId) {
+
         return E::UserId() == $iUserId;
     }
 
     /**
      * Вызывается по строке "user_id_not_is"
+     *
      * @param $iUserId
+     *
      * @return bool
      */
     public function UserIdNotIs($iUserId) {
+
         return E::UserId() != $iUserId;
     }
 
     /**
      * Вызывается по строке "check_plugin"
+     *
      * @param $aPlugins
+     *
      * @return bool
      */
     public function CheckPlugin($aPlugins) {
+
         if (is_string($aPlugins)) {
             $aPlugins = array($aPlugins);
         }
@@ -550,7 +614,9 @@ class ModuleMenu extends Module {
 
     /**
      * Вызывается по строке "compare_action"
+     *
      * @param $aActionName
+     *
      * @return bool
      */
     public function CompareAction($aActionName) {
@@ -565,7 +631,9 @@ class ModuleMenu extends Module {
 
     /**
      * Вызывается по строке "not_action"
+     *
      * @param $aActionName
+     *
      * @return bool
      */
     public function NotAction($aActionName) {
@@ -580,7 +648,9 @@ class ModuleMenu extends Module {
 
     /**
      * Вызывается по строке "not_event"
+     *
      * @param $aEventName
+     *
      * @return bool
      */
     public function NotEvent($aEventName) {
@@ -595,7 +665,9 @@ class ModuleMenu extends Module {
 
     /**
      * Вызывается по строке "new_talk"
+     *
      * @param bool $sTemplate
+     *
      * @return bool
      */
     public function NewTalk($sTemplate = false) {
@@ -620,7 +692,9 @@ class ModuleMenu extends Module {
 
     /**
      * Вызывается по строке "new_talk_string"
+     *
      * @param string $sIcon
+     *
      * @return bool
      */
     public function NewTalkString($sIcon = '') {
@@ -635,6 +709,7 @@ class ModuleMenu extends Module {
 
     /**
      * Вызывается по строке "user_avatar_url"
+     *
      * @return bool
      */
     public function UserAvatarUrl($sSize) {
@@ -649,6 +724,7 @@ class ModuleMenu extends Module {
 
     /**
      * Вызывается по строке "user_name"
+     *
      * @return bool
      */
     public function UserName() {
@@ -663,8 +739,10 @@ class ModuleMenu extends Module {
 
     /**
      * Вызывается по строке "compare_param"
+     *
      * @param $iParam
      * @param $sParamData
+     *
      * @return bool
      */
     public function CompareParam($iParam, $sParamData) {
@@ -675,9 +753,12 @@ class ModuleMenu extends Module {
 
     /**
      * Вызывается по строке "topic_kind"
+     *
      * @param $sTopicType
+     *
      * @internal param $iParam
      * @internal param $sParamData
+     *
      * @return bool
      */
     public function TopicKind($sTopicType) {
@@ -696,9 +777,12 @@ class ModuleMenu extends Module {
 
     /**
      * Вызывается по строке "new_topics_count"
+     *
+     * @param string $newClass
+     *
      * @internal param $iParam
      * @internal param $sParamData
-     * @param string $newClass
+     *
      * @return bool
      */
     public function NewTopicsCount($newClass = '') {
@@ -726,8 +810,10 @@ class ModuleMenu extends Module {
 
     /**
      * Вызывается по строке "no_new_topics"
+     *
      * @internal param $iParam
      * @internal param $sParamData
+     *
      * @return bool
      */
     public function NoNewTopics() {
@@ -752,8 +838,10 @@ class ModuleMenu extends Module {
 
     /**
      * Вызывается по строке "user_rating"
+     *
      * @param string $sIcon
      * @param string $sNegativeClass
+     *
      * @return bool
      */
     public function UserRating($sIcon = '', $sNegativeClass='') {
@@ -777,7 +865,9 @@ class ModuleMenu extends Module {
 
     /**
      * Вызывается по строке "count_track"
+     *
      * @param string $sIcon
+     *
      * @return bool
      */
     public function CountTrack($sIcon = '') {
@@ -805,6 +895,7 @@ class ModuleMenu extends Module {
      * Возвращает количество сообщений для пользователя
      *
      * @param bool $sTemplate
+     *
      * @return int|mixed|string
      */
     public function CountMessages($sTemplate = false) {
@@ -831,4 +922,16 @@ class ModuleMenu extends Module {
 
     }
 
+    public function ClearMenuCache($sMenuId) {
+
+        E::ModuleCache()->CleanByTags(array('menu_' . $sMenuId), ',file');
+    }
+
+    public function ClearAllMenuCache() {
+
+        E::ModuleCache()->CleanByTags(array('menu'), ',file');
+    }
+
 }
+
+// EOF
