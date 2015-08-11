@@ -258,7 +258,28 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
 
     public function eventRemove() {
         $this->checkSecurityKey();
+        E::ModuleViewer()->SetResponseAjax('json');
 
+        $iTopicId = (int)F::GetRequest('topic_id');
+        // Проверяем, целевой объект и права на его редактирование
+        if (!E::ModuleUploader()->CheckAccessAndGetTarget('topic', $iTopicId)) {
+            E::ModuleMessage()->AddError(E::ModuleLang()->Get('not_access'), E::ModuleLang()->Get('error'));
+
+            return;
+        }
+
+        $xTargetId = F::GetRequest('target_id');
+        if (!$xTargetId) {
+            E::ModuleMessage()->AddError(E::ModuleLang()->Get('not_access'), E::ModuleLang()->Get('error'));
+
+            return;
+        }
+
+        $aRelIds = E::ModuleMresource()->GetMresourcesRelIds($xTargetId, PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTopicId);
+        // Удаляем связь (а вместе с ней ресурс и файл)
+        E::ModuleMresource()->DeleteMresourcesRel($aRelIds);
+
+        E::ModuleMessage()->AddNotice(E::ModuleLang()->Get('plugin.multiplefileupload.success_remove'));
     }
 
     public function eventSort() {
@@ -277,7 +298,7 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
 
         // Проверяем, целевой объект и права на его редактирование
         if (!$oTarget = E::ModuleUploader()->CheckAccessAndGetTarget($sTargetType, $sTargetId)) {
-            E::ModuleMessage()->AddErrorSingle(E::ModuleLang()->Get('not_access'), E::ModuleLang()->Get('error'));
+            E::ModuleMessage()->AddError(E::ModuleLang()->Get('not_access'), E::ModuleLang()->Get('error'));
 
             return;
         }
@@ -295,7 +316,7 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
         }
 
         E::ModuleMresource()->UpdateSort(array_flip($aOrder), PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $sTargetId);
-        E::ModuleMessage()->AddNoticeSingle(E::ModuleLang()->Get('plugin.multiplefileupload.uploader_sort_changed'));
+        E::ModuleMessage()->AddNoticeSingle(E::ModuleLang()->Get('plugin.multiplefileupload.success_sort'));
     }
 
     public function eventGet() {
@@ -306,6 +327,10 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
         // $oMresource = E::ModuleMresource()->GetMresourceByRelId($iMresourceRelId);
         $iMresourceId = (int)$this->GetParam(0);
         $oMresource = E::ModuleMresource()->GetMresourceById($iMresourceId);
+
+        if (!$oMresource) {
+            return parent::EventNotFound();
+        }
 
         $sFilePath = $oMresource->GetFile();
         if (file_exists($sFilePath)) {
@@ -320,6 +345,7 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
                 header('Content-Disposition: attachment; filename="' . $oMresource->getParamValue('original_filename') . '"');
             }
 
+            // TODO: Nginx frontend, Apache XSendfile
             // http://mailman.nginx.org/pipermail/nginx-ru/2005-May/002145.html
             /*
             header("HTTP/1.1 206 Partial Content");
@@ -327,8 +353,6 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
             header("Content-Range: bytes 0-");
             header("X-Xox: static");
             header("X-Accel-Redirect: /internal-file-proxy" . $http_file);
-
-            sleep(1);
 */
             header('Content-Length: ' . $iFileSize);
             ob_clean();
@@ -345,7 +369,7 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
         $this->checkSecurityKey();
 
         $iTopicId = F::GetRequest('topic_id');
-        $iResourceId = F::GetRequest('resource_id');
+        $iResourceId = F::GetRequest('target_id');
         $oMresource = E::ModuleMresource()->GetMresourceById($iResourceId);
         E::ModuleMresource()->AddTargetRel($oMresource, 'topic', $iTopicId);
     }

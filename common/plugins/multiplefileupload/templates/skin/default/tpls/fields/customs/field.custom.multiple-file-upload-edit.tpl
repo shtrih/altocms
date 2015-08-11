@@ -1,23 +1,31 @@
 {if $oField}
     {$iFieldId=$oField->getFieldId()}
-
+    {if $oTopic}
+        {$iTopicId = $oTopic->getId()}
+    {else}
+        {$iTopicId = 0}
+    {/if}
     <div class="form-group">
     <label>{$oField->getFieldName()}</label>
     <div class="fileupload-wrapper">
-        <div id="multiple-file-upload" data-topic-id="{$oTopic->getId()}">
+        <div id="multiple-file-upload" data-topic-id="{$iTopicId}">
             <div class="fileupload-buttonbar">
                 <span class="span5">
                     <span class="btn btn-success fileinput-button">
+                        <span class="fa fa-plus-circle"></span>
                         <span>Добавить</span>
                         <input type="file" name="multiple-file-upload[]" multiple />
                     </span>
-                    <button type="button" class="btn" id="uploadFromUrl">
+                    <button type="button" class="btn url-upload">
+                        <span class="fa fa-link"></span>
                         <span>Указать url</span>
                     </button>
                     <button type="submit" class="btn btn-primary start hide">
+                        <span class="fa fa-upload"></span>
                         <span>Загрузить всё</span>
                     </button>
                     <button type="reset" class="btn btn-warning cancel hide">
+                        <span class="fa fa-ban"></span>
                         <span>Отменить</span>
                     </button>
                     <span class="fileupload-process"></span>
@@ -37,12 +45,15 @@
         <br />{$oField->getFieldDescription()}</small>
 
     </div>
+
 {literal}
-    <script>
-        var fileList = {/literal}{json_encode(E::Module('PluginMultiplefileupload_ModuleMultiplefileupload')->getAttachedFiles($oTopic->getId()))}{literal};
-    </script>
-{/literal}
-{literal}
+<script>
+$(document).ready(function () {
+    ls.multiplefileupload.addFiles(
+        {/literal}{json_encode(E::Module('PluginMultiplefileupload_ModuleMultiplefileupload')->getAttachedFiles({$iTopicId}))}{literal}
+    );
+});
+</script>
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
 	<tr class="template-upload fade">
@@ -67,7 +78,7 @@
 			{% } %}
 			{% if (!i) { %}
 				<button class="btn btn-warning cancel">
-					<span class="fa fa-ban-circle"></span>
+					<span class="fa fa-ban"></span>
 					<span>Отменить</span>
 				</button>
 			{% } %}
@@ -78,7 +89,7 @@
 
 <script id="template-download" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
-	<tr class="template-download fade" data-id="{%=file.id%}">
+	<tr class="template-download fade" data-file-id="{%=file.id%}">
 		<td>
 			<p class="name">
 				{% if (file.url) { %}
@@ -98,9 +109,8 @@
 			<div class="sort" title="Тащите, чтобы сортировать"></div>
 		</td>
 		<td>
-			<button type="button" class="btn btn-danger" onclick="if (deletefile({%=file.id%}, '{%=file.name.replace(/\'/g, "\\'")%}')) $(this).parents('.template-download').remove(); return false;">
-				<span class="fa fa-ban-circle"></span>
-				<span>Удалить</span>
+			<button type="button" class="btn btn-danger mfu-remove-file">
+				<span class="fa fa-trash-o"></span>&nbsp;Удалить
 			</button>
 		</td>
 	</tr>
