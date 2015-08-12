@@ -28,4 +28,7 @@ class PluginMultiplefileupload_ModuleMresource extends PluginMultiplefileupload_
         return array_pop($xResult);
     }
 
+    public function updateMresourceRelTargetId($iMresourceId, $iTargetId) {
+        return $this->oMapper->updateMresourceRelTargetId($iMresourceId, PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
+    }
 }

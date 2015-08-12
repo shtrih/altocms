@@ -381,10 +381,21 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
 
     public function eventAttach() {
         $this->checkSecurityKey();
+        E::ModuleViewer()->SetResponseAjax('json');
 
-        $iTopicId = F::GetRequest('topic_id');
-        $iResourceId = F::GetRequest('target_id');
-        $oMresource = E::ModuleMresource()->GetMresourceById($iResourceId);
-        E::ModuleMresource()->AddTargetRel($oMresource, 'topic', $iTopicId);
+        $iTargetId = F::GetRequest('target_id');
+        $iMresourceId = F::GetRequest('file_id');
+        if (!$iMresourceId) {
+            E::ModuleMessage()->AddError(E::ModuleLang()->Get('not_access'), E::ModuleLang()->Get('error'));
+
+            return;
+        }
+
+        if (E::ModuleMresource()->updateMresourceRelTargetId($iMresourceId, $iTargetId)) {
+            E::ModuleMessage()->AddNotice(E::ModuleLang()->Get('plugin.multiplefileupload.success_attach'));
+        }
+        else {
+            E::ModuleMessage()->AddError(E::ModuleLang()->Get('plugin.multiplefileupload.error_attach'), E::ModuleLang()->Get('error'));
+        }
     }
 }

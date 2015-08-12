@@ -34,6 +34,18 @@ class PluginMultiplefileupload_ModuleMresource_MapperMresource extends PluginMul
         }
         return $aResult;
     }
+
+    public function updateMresourceRelTargetId($iMresourceId, $sTargetType, $iTargetId) {
+        $sql = "UPDATE ?_mresource_target SET
+                  target_id = ?,
+                  target_tmp = null
+                WHERE mresource_id = ?d AND target_type = ? AND target_id = 0";
+        return $this->oDb->query($sql,
+            $iTargetId,
+            $iMresourceId,
+            $sTargetType
+        );
+    }
 }
 
 // EOF

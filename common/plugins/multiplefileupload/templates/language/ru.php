@@ -7,9 +7,11 @@ return array(
     'contenttypes_field_notice'       => '',
 
     'error_invalid_security_key'      => 'Ошибка проверки ключа безопасности.',
+    'error_attach'                    => 'Ошибка прикрепления файла. Возможно, он уже прикреплён.',
 
     'success_sort'                    => 'Порядок файлов обновлён.',
     'success_remove'                  => 'Файл удалён.',
+    'success_attach'                  => 'Файл прикреплён.',
 
     'upload_err_ini_size'             => 'Загруженный файл превышает размер, заданный в настройке upload_max_filesize в php.ini',
     'upload_err_form_size'            => 'Загружаемый файл превышает размер, указанный в html-форме.',
@@ -32,6 +34,11 @@ return array(
     'btn_upload_all'   => 'Загрузить все',
     'progress_loading' => 'Загружается…',
     'title_sort'       => 'Тащите, чтобы сортировать',
+
+    'widget_header'    => 'Не прикреплённые файлы',
+    'btn_attach'       => 'Прикрепить',
+    'btn_attach_title' => 'Прикрепить к этому топику',
+    'empty_list' => 'Список пуст.',
 );
 
 

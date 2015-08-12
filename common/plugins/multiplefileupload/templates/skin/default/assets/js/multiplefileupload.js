@@ -15,7 +15,7 @@ ls.multiplefileupload = (function ($) {
         ;
 
         // Ссылка «показать все файлы»
-        $('.multiple-file-upload .toggle-others').on('click', function () {
+        $('.js-topic-preview-place,.js-topic').on('click', '.multiple-file-upload .toggle-others', function () {
             $(this)
                 .closest('ul')
                 .find('li').removeClass('hide')
@@ -79,12 +79,34 @@ ls.multiplefileupload = (function ($) {
         // кнопка «Удалить»
         fileupload.on('click', '.mfu-remove-file', function (e) {
             var oBtn = $(this),
-                oRowFile = oBtn.closest('.template-download'),
+                oRowFile = oBtn.closest('tr'),
                 iFileId = oRowFile.data('fileId'),
                 sFileName = $.trim(oRowFile.find('.name').text())
             ;
             self.removeFile(iTopicId, iFileId, sFileName, function() {
                 oRowFile.remove();
+            });
+
+            return false;
+        });
+
+        // кнопка «Прикрепить»
+        fileupload.on('click', '.mfu-attach-file', function () {
+            var oBtn = $(this),
+                oRowFile = oBtn.closest('tr'),
+                iFileId = oRowFile.data('fileId'),
+                iFileSize = oRowFile.data('fileSize'),
+                sFileName = $.trim(oRowFile.find('.name').text())
+            ;
+
+            self.attachFile(iTopicId, iFileId, function () {
+                oRowFile.remove();
+                self.addFiles([{
+                    id: iFileId,
+                    name: sFileName,
+                    url: self.getFileUrl(iFileId),
+                    size: iFileSize
+                }]);
             });
 
             return false;
@@ -104,7 +126,7 @@ ls.multiplefileupload = (function ($) {
         }
     };
 
-    this.attachFile = function(iTopicId, iFileId, sFileName, iFileSize) {
+    this.attachFile = function(iTopicId, iFileId, fOnSuccess) {
         var bResult = false;
         ls.progressStart();
         ls.ajax(
@@ -124,21 +146,16 @@ ls.multiplefileupload = (function ($) {
                     ls.msg.error(oResult.sMsgTitle, oResult.sMsg);
                 } else {
                     ls.msg.notice(oResult.sMsgTitle, oResult.sMsg);
+                    if (typeof fOnSuccess == 'function') {
+                        fOnSuccess();
+                    }
                 }
-                oResult.bStateError
-                    ? ls.msg.error(oResult.sMsgTitle, oResult.sMsg)
-                    : ls.msg.notice(oResult.sMsgTitle, oResult.sMsg)
-                ;
-
-                if (oResult.bStateError)
-                    return false;
-
-                self.addFiles([{
-                    id: iFileId,
-                    name: sFileName,
-                    url: self.getFileUrl(iFileId),
-                    size: iFileSize
-                }]);
+            },
+            {
+                error: function () {
+                    ls.progressDone();
+                    ls.msg.error(null, 'System error #1001');
+                }
             }
         );
     };

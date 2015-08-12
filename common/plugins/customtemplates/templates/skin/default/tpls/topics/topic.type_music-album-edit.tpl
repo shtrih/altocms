@@ -236,7 +236,7 @@
                 {include file="fields/field.photoset-edit.tpl" sFormId='#form-topic-add'}
             {/if}
 
-            <br/><br/>
+            <hr />
 
             <div class="form-group checkbox">
                 <div class="input-group">

@@ -44,6 +44,8 @@
             </div>
             <table class="table table-striped table-uploaded"><tbody></tbody></table>
             <table role="presentation" class="table table-striped table-files"><tbody class="files"></tbody></table>
+
+            {wgroup group="mfu-after-file-list"}
         </div>
         </div>
     </div>
@@ -63,7 +65,7 @@ $(document).ready(function () {
 			<span class="preview"></span>
 		</td>
 		<td>
-			<p class="name">{%=file.name%}</p>
+			<div class="name">{%=file.name%}</div>
 			<strong class="error text-danger"></strong>
 		</td>
 		<td>
@@ -92,13 +94,13 @@ $(document).ready(function () {
 {% for (var i=0, file; file=o.files[i]; i++) { %}
 	<tr class="template-download fade" data-file-id="{%=file.id%}">
 		<td>
-			<p class="name">
+			<div class="name">
 				{% if (file.url) { %}
 					<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
 				{% } else { %}
 					<span>{%=file.name%}</span>
 				{% } %}
-			</p>
+			</div>
 			{% if (file.error) { %}
 				<div><span class="label label-warning">Error</span> {%=file.error%}</div>
 			{% } %}
