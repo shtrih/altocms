@@ -57,9 +57,9 @@ $(document).ready(function () {
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
 	<tr class="template-upload fade">
-        <td>
-            <span class="preview"></span>
-        </td>
+		<td>
+			<span class="preview"></span>
+		</td>
 		<td>
 			<p class="name">{%=file.name%}</p>
 			<strong class="error text-danger"></strong>
@@ -106,10 +106,12 @@ $(document).ready(function () {
 			<span class="size">{%=o.formatFileSize(file.size)%}</span>
 		</td>
 		<td>
-			<div class="sort" title="Тащите, чтобы сортировать"></div>
+			{% if (!file.error) { %}
+				<div class="sort" title="Тащите, чтобы сортировать"></div>
+			{% } %}
 		</td>
 		<td>
-			<button type="button" class="btn btn-danger mfu-remove-file">
+			<button type="button" class="btn btn-danger mfu-remove-file"{% if (file.error) { %} disabled{% } %}>
 				<span class="fa fa-trash-o"></span>&nbsp;Удалить
 			</button>
 		</td>

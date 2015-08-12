@@ -98,24 +98,29 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
         if (is_uploaded_file($sUploadedFile)) {
             if ('file/link' == $sType) {
                 $sUrl = file_get_contents($sUploadedFile);
-                $sFileUrl = file_get_contents($sUrl);
-                if (!$sFileUrl) {
+                $xUrlFileContent = @file_get_contents($sUrl);
+
+                F::File_Delete($sUploadedFile);
+
+                if (!$xUrlFileContent) {
                     $iError = UPLOAD_ERR_NO_FILE;
                 }
-
-                $sTmpName = tempnam(sys_get_temp_dir(), "mfu");
-                if (false === $sTmpName) {
-                    $iError = UPLOAD_ERR_NO_TMP_DIR;
+                else {
+                    $sTmpName = tempnam(sys_get_temp_dir(), "mfu");
+                    if (false === $sTmpName) {
+                        $iError = UPLOAD_ERR_NO_TMP_DIR;
+                    }
+                    else {
+                        $iSize = file_put_contents($sTmpName, $xUrlFileContent);
+                        if (false === $iSize) {
+                            $iError = UPLOAD_ERR_CANT_WRITE;
+                        }
+                        $sUploadedFile = $sTmpName;
+//                        $hFinfo = finfo_open(FILEINFO_MIME_TYPE);
+//                        $sType = finfo_file($hFinfo, $sTmpName);
+//                        finfo_close($hFinfo);
+                    }
                 }
-
-                $iSize = file_put_contents($sTmpName, $sFileUrl);
-                if (false === $iSize) {
-                    $iError = UPLOAD_ERR_CANT_WRITE;
-                }
-                $sUploadedFile = $sTmpName;
-//            $hFinfo = finfo_open(FILEINFO_MIME_TYPE);
-//            $sType = finfo_file($hFinfo, $tmpname);
-//            finfo_close($hFinfo);
             }
 
             if ($this->validateFile($sUploadedFile, $oFile, $iError)) {
@@ -164,28 +169,6 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
                 else {
                     $oFile->error = 'Cannot create save dir.';
                 }
-
-/*                $sDirSave = Config::Get('path.uploads.root') . '/files/' . E::ModuleUser()->GetUserCurrent()->getId() . '/' . F::RandomStr(16);
-                mkdir(Config::Get('path.root.dir') . $sDirSave, 0777, true);
-                if (is_dir(Config::Get('path.root.dir') . $sDirSave)) {
-                    $aPathInfo = pathinfo($oFile->name);
-                    $sFile = $sDirSave . '/' . F::RandomStr(10) . '.' . strtolower($aPathInfo['extension']);
-                    $sFileFullPath = Config::Get('path.root.dir') . $sFile;
-                    if (copy($sUploadedFile, $sFileFullPath)) {
-                        $oFile->url = $sFile;
-
-                        $aFileObj = array();
-                        $aFileObj['file_hash'] = F::RandomStr(32);
-                        $aFileObj['file_name'] = E::ModuleText()->Parser($_FILES['multiple-file-upload']['name']);
-                        $aFileObj['file_url'] = $sFile;
-                        $aFileObj['file_size'] = $_FILES['multiple-file-upload']['size'];
-                        $aFileObj['file_extension'] = $aPathInfo['extension'];
-                        $aFileObj['file_downloads'] = 0;
-                        $sData = serialize($aFileObj);
-
-                        F::File_Delete($sUploadedFile);
-                    }
-                }*/
             }
         }
         else {
