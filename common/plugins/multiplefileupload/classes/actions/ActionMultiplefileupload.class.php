@@ -94,15 +94,38 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
         $oFile = new \stdClass();
         $oFile->name = $sName;
         $oFile->size = $iSize;
-        if ($this->validateFile($sUploadedFile, $oFile, $iError)) {
-            if (is_uploaded_file($sUploadedFile)) {
+
+        if (is_uploaded_file($sUploadedFile)) {
+            if ('file/link' == $sType) {
+                $sUrl = file_get_contents($sUploadedFile);
+                $sFileUrl = file_get_contents($sUrl);
+                if (!$sFileUrl) {
+                    $iError = UPLOAD_ERR_NO_FILE;
+                }
+
+                $sTmpName = tempnam(sys_get_temp_dir(), "mfu");
+                if (false === $sTmpName) {
+                    $iError = UPLOAD_ERR_NO_TMP_DIR;
+                }
+
+                $iSize = file_put_contents($sTmpName, $sFileUrl);
+                if (false === $iSize) {
+                    $iError = UPLOAD_ERR_CANT_WRITE;
+                }
+                $sUploadedFile = $sTmpName;
+//            $hFinfo = finfo_open(FILEINFO_MIME_TYPE);
+//            $sType = finfo_file($hFinfo, $tmpname);
+//            finfo_close($hFinfo);
+            }
+
+            if ($this->validateFile($sUploadedFile, $oFile, $iError)) {
                 $sDirSave = Config::Get('path.uploads.root') . '/files/' . E::ModuleUser()->GetUserCurrent()->getId() . '/' . F::RandomStr(16);
                 if (mkdir(Config::Get('path.root.dir') . $sDirSave, 0777, true)) {
                     $aPathInfo = pathinfo($oFile->name);
                     $sFile = $sDirSave . '/' . F::RandomStr(10) . '.' . strtolower($aPathInfo['extension']);
                     $sFileFullPath = Config::Get('path.root.dir') . $sFile;
 
-                    if (move_uploaded_file($sUploadedFile, $sFileFullPath)) {
+                    if (move_uploaded_file($sUploadedFile, $sFileFullPath) || 'file/link' == $sType && rename($sUploadedFile, $sFileFullPath)) {
                         $oStoredFile = E::ModuleUploader()->Store($sFileFullPath, $sFileFullPath);
 
                         if ($oStoredFile !== false) {
@@ -164,9 +187,9 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
                     }
                 }*/
             }
-            else {
-                $oFile->error = 'This upload method is not supported.';
-            }
+        }
+        else {
+            $oFile->error = 'This upload method is not supported.';
         }
         F::File_Delete($sUploadedFile);
 
