@@ -16,7 +16,7 @@
                         <span>Добавить</span>
                         <input type="file" name="multiple-file-upload[]" multiple />
                     </span>
-                    <button type="button" class="btn url-upload">
+                    <button type="button" class="btn url-upload" title="Загрузить по ссылке">
                         <span class="fa fa-link"></span>
                         <span>Указать url</span>
                     </button>
