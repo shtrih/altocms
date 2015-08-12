@@ -39,7 +39,7 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
      * @return bool
      */
     protected function validateFile($sUploadedFile, $oFile, $iError) {
-        if ($iError != 0) {
+        if (UPLOAD_ERR_OK != $iError) {
             switch ($iError) {
                 case UPLOAD_ERR_INI_SIZE:
                     $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_ini_size');
@@ -155,24 +155,27 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
                                 // $oFile->id = array_shift($aMresourceRelIds);
                             }
                             else {
-                                $oFile->error = 'File resource not found.';
+                                $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_resource_not_found');
                             }
                         }
                         else {
-                            $oFile->error = E::ModuleUploader()->GetErrorMsg() . 'adsasd';
+                            $oFile->error = E::ModuleUploader()->GetErrorMsg();
+                            if (!$oFile->error) {
+                                $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_unknown');
+                            }
                         }
                     }
                     else {
-                        $oFile->error = 'There is not a valid upload file OR file cannot be moved for some reason.';
+                        $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_move');
                     }
                 }
                 else {
-                    $oFile->error = 'Cannot create save dir.';
+                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_cannot_create_dir');
                 }
             }
         }
         else {
-            $oFile->error = 'This upload method is not supported.';
+            $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_method_not_supported');
         }
         F::File_Delete($sUploadedFile);
 
