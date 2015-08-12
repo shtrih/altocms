@@ -37,10 +37,14 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
             if (!$oFile->name)
                 $oFile->name = basename($oMresource->getPathUrl());
 
-//            $oFile->url = $oMresource->getWebPath();
             // Пока привызяваемся к идентификатору ресурса вместо идентификатора связи
-//            $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresourceRel->getId();
-            $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresource->GetId();
+            if (Config::Get('plugin.multiplefileupload.hide-direct-links')) {
+                // $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresourceRel->getId();
+                $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresource->GetId();
+            }
+            else {
+                $oFile->url = $oMresource->getWebPath();
+            }
 
             $sFilePath = $oMresource->GetFile();
             $oFile->size = file_exists($sFilePath) ? filesize($sFilePath) : 0;

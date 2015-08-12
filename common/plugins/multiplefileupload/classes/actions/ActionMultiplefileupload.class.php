@@ -124,7 +124,7 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
             }
 
             if ($this->validateFile($sUploadedFile, $oFile, $iError)) {
-                $sDirSave = Config::Get('path.uploads.root') . '/files/' . E::ModuleUser()->GetUserCurrent()->getId() . '/' . F::RandomStr(16);
+                $sDirSave = Config::Get('path.uploads.root') . '/mfu-files/' . E::ModuleUser()->GetUserCurrent()->getId() . '/' . F::RandomStr(16);
                 if (mkdir(Config::Get('path.root.dir') . $sDirSave, 0777, true)) {
                     $aPathInfo = pathinfo($oFile->name);
                     $sFile = $sDirSave . '/' . F::RandomStr(10) . '.' . strtolower($aPathInfo['extension']);
@@ -134,23 +134,28 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
                         $oStoredFile = E::ModuleUploader()->Store($sFileFullPath, $sFileFullPath);
 
                         if ($oStoredFile !== false) {
-                            /** @var ModuleMresource_EntityMresource $oResource */
-                            $oResource = E::ModuleMresource()->GetMresourcesByUuid($oStoredFile->getUuid());
-                            if ($oResource) {
+                            /** @var ModuleMresource_EntityMresource $oMresource */
+                            $oMresource = E::ModuleMresource()->GetMresourcesByUuid($oStoredFile->getUuid());
+                            if ($oMresource) {
                                 $iUserId = E::UserId();
 
-                                $oResource->setType(PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE);
-                                $oResource->setUserId($iUserId);
+                                $oMresource->setType(PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE);
+                                $oMresource->setUserId($iUserId);
 
-                                $oResource->setParams(array('original_filename' => $oFile->name));
-                                E::ModuleMresource()->UpdateParams($oResource);
+                                $oMresource->setParams(array('original_filename' => $oFile->name));
+                                E::ModuleMresource()->UpdateParams($oMresource);
 
-                                $oFile->url = $oResource->GetUrl();
+                                if (Config::Get('plugin.multiplefileupload.hide-direct-links')) {;
+                                    $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresource->GetId();
+                                }
+                                else {
+                                    $oFile->url = $oMresource->getWebPath();
+                                }
                                 //E::ModuleMresource()->UnlinkFile(self::TARGET_TYPE, 0, E::UserId());
-                                E::ModuleMresource()->AddTargetRel($oResource, PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
+                                E::ModuleMresource()->AddTargetRel($oMresource, PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
 
                                 // Пока привызяваемся к идентификатору ресурса вместо идентификатора связи
-                                $oFile->id = $oResource->getMresourceId();
+                                $oFile->id = $oMresource->getMresourceId();
                                 // $aMresourceRelIds = E::ModuleMresource()->GetMresourcesRelIds($oResource->getMresourceId(), PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
                                 // $oFile->id = array_shift($aMresourceRelIds);
                             }
