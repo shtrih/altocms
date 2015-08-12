@@ -354,8 +354,8 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
             finfo_close($rFinfo);
             header('Content-Type: ' . $sType);
 
-            // Файл, размером более 15Мб отдаем как attachment, в ином случае, без оного заголовка, чтобы браузер сам решил, что с ним делать
-            if ($iFileSize > 15 * 1024 * 1024) {
+            // Файл, размером большим, чем указано в конфиге, отдаем как attachment, в ином случае, без оного заголовка, чтобы браузер сам решил, что с ним делать
+            if ($iFileSize > Config::Get('plugin.multiplefileupload.attachment-header-max-file-size')) {
                 header('Content-Disposition: attachment; filename="' . $oMresource->getParamValue('original_filename') . '"');
             }
 
