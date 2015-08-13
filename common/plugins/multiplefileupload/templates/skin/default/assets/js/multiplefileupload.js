@@ -97,7 +97,9 @@ ls.multiplefileupload = (function ($) {
                 oRowFile = oBtn.closest('tr'),
                 iFileId = oRowFile.data('fileId'),
                 iFileSize = oRowFile.data('fileSize'),
-                sFileName = $.trim(oRowFile.find('.name').text())
+                oFielName = oRowFile.find('.name'),
+                sFileName = $.trim(oFielName.text()),
+                sFileUrl = oFielName.attr('href')
             ;
 
             self.attachFile(iTopicId, iFileId, function () {
@@ -105,7 +107,7 @@ ls.multiplefileupload = (function ($) {
                 self.addFiles([{
                     id: iFileId,
                     name: sFileName,
-                    url: self.getFileUrl(iFileId),
+                    url: sFileUrl,
                     size: iFileSize
                 }]);
             });
@@ -200,10 +202,6 @@ ls.multiplefileupload = (function ($) {
         var oBlob = new Blob([sUrl], {type : 'file/link'});
         oBlob.name = sFileName;
         this.$fileupload.fileupload('add', {files: [oBlob]});
-    };
-
-    this.getFileUrl = function(iFileId) {
-        return ls.routerUrl('multiplefileupload') + 'get/' + iFileId;
     };
 
     this.initSortable = function (iTopicId) {
