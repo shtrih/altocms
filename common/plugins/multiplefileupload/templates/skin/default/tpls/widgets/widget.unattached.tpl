@@ -1,7 +1,7 @@
 {$aFiles = E::Module('PluginMultiplefileupload_ModuleMultiplefileupload')->getAttachedFiles(0)}
 {if $aFiles}
     {$aLangPlugin = $aLang.plugin.multiplefileupload}
-    <div class="multiple-file-upload-unattached">
+    <div class="mfu-unattached">
         <h5 class="text-center">{$aLang.plugin.multiplefileupload.widget_header}</h5>
 
         <div class="table-responsive">

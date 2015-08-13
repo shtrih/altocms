@@ -81,7 +81,8 @@ ls.multiplefileupload = (function ($) {
             var oBtn = $(this),
                 oRowFile = oBtn.closest('tr'),
                 iFileId = oRowFile.data('fileId'),
-                sFileName = $.trim(oRowFile.find('.name').text())
+                sFileName = $.trim(oRowFile.find('.name').text()),
+                iTopicId = (oRowFile.closest('.mfu-unattached').length ? 0 : iTopicId)
             ;
             self.removeFile(iTopicId, iFileId, sFileName, function() {
                 oRowFile.remove();
