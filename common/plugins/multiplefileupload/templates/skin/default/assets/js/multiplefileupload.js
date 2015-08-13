@@ -7,9 +7,9 @@ ls.multiplefileupload = (function ($) {
     var self = this;
 
     this.init = function () {
-        this.$fileupload = $('#multiple-file-upload');
-        var iTopicId = this.$fileupload.data('topicId');
-        var fileupload = this.$fileupload,
+        this.oFileUpload = $('#multiple-file-upload');
+        var iTopicId = this.oFileUpload.data('topicId');
+        var fileupload = this.oFileUpload,
             btn_start = $('.fileupload-buttonbar button.start', fileupload),
             btn_cancel  = $('.fileupload-buttonbar button.cancel', fileupload)
         ;
@@ -77,14 +77,14 @@ ls.multiplefileupload = (function ($) {
         });
 
         // кнопка «Удалить»
-        fileupload.on('click', '.mfu-remove-file', function (e) {
+        fileupload.on('click', '.mfu-remove-file', function () {
             var oBtn = $(this),
                 oRowFile = oBtn.closest('tr'),
                 iFileId = oRowFile.data('fileId'),
                 sFileName = $.trim(oRowFile.find('.name').text()),
-                iTopicId = (oRowFile.closest('.mfu-unattached').length ? 0 : iTopicId)
+                iiTopicId = (oRowFile.closest('.mfu-unattached').length ? 0 : iTopicId)
             ;
-            self.removeFile(iTopicId, iFileId, sFileName, function() {
+            self.removeFile(iiTopicId, iFileId, sFileName, function() {
                 oRowFile.remove();
             });
 
@@ -124,8 +124,8 @@ ls.multiplefileupload = (function ($) {
      */
     this.addFiles = function (aFiles) {
         if (aFiles.length) {
-            this.$fileupload.fileupload('option', 'done')
-                .call(this.$fileupload[0], $.Event('done'), {result: {files: aFiles}});
+            this.oFileUpload.fileupload('option', 'done')
+                .call(this.oFileUpload[0], $.Event('done'), {result: {files: aFiles}});
         }
     };
 
@@ -201,7 +201,7 @@ ls.multiplefileupload = (function ($) {
     this.addFileUrl = function(sUrl, sFileName) {
         var oBlob = new Blob([sUrl], {type : 'file/link'});
         oBlob.name = sFileName;
-        this.$fileupload.fileupload('add', {files: [oBlob]});
+        this.oFileUpload.fileupload('add', {files: [oBlob]});
     };
 
     this.initSortable = function (iTopicId) {
