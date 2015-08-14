@@ -9,9 +9,9 @@ ls.multiplefileupload = (function ($) {
     this.init = function () {
         this.oFileUpload = $('#multiple-file-upload');
         var iTopicId = this.oFileUpload.data('topicId');
-        var fileupload = this.oFileUpload,
-            btn_start = $('.fileupload-buttonbar button.start', fileupload),
-            btn_cancel  = $('.fileupload-buttonbar button.cancel', fileupload)
+        var oFileupload = this.oFileUpload,
+            btn_start = $('.fileupload-buttonbar button.start', oFileupload),
+            btn_cancel  = $('.fileupload-buttonbar button.cancel', oFileupload)
         ;
 
         // Ссылка «показать все файлы»
@@ -25,7 +25,7 @@ ls.multiplefileupload = (function ($) {
         });
 
         // Кнопка «загрузить по url»
-        $('.url-upload', fileupload).on('click', function () {
+        $('.url-upload', oFileupload).on('click', function () {
             var sUrl = prompt("Адрес файла: ", "http://");
             if (sUrl) {
                 var sFileName = sUrl.match(/.*\/(.*)$/)[1];
@@ -41,7 +41,7 @@ ls.multiplefileupload = (function ($) {
             return false;
         });
 
-        fileupload.fileupload({
+        oFileupload.fileupload({
             autoUpload: false,
             disableImageResize: true,
             disableImagePreview: false,
@@ -72,12 +72,16 @@ ls.multiplefileupload = (function ($) {
             }
         });
 
-        fileupload.bind('fileuploadcompleted', function (e, data) {
-            data.context.appendTo('.table-uploaded')
+        oFileupload.bind('fileuploadcompleted', function (e, data) {
+            data.context.appendTo('.table-uploaded');
+            // загрузка файла при создании топика
+            if (!iTopicId) {
+                self.createAttachInput(oFileupload.data('fieldId'), $(data.context).data('fileId'));
+            }
         });
 
         // кнопка «Удалить»
-        fileupload.on('click', '.mfu-remove-file', function () {
+        oFileupload.on('click', '.mfu-remove-file', function () {
             var oBtn = $(this),
                 oRowFile = oBtn.closest('tr'),
                 iFileId = oRowFile.data('fileId'),
@@ -92,17 +96,31 @@ ls.multiplefileupload = (function ($) {
         });
 
         // кнопка «Прикрепить»
-        fileupload.on('click', '.mfu-attach-file', function () {
+        oFileupload.on('click', '.mfu-attach-file', function () {
             var oBtn = $(this),
                 oRowFile = oBtn.closest('tr'),
                 iFileId = oRowFile.data('fileId'),
                 iFileSize = oRowFile.data('fileSize'),
                 oFielName = oRowFile.find('.name'),
                 sFileName = $.trim(oFielName.text()),
-                sFileUrl = oFielName.attr('href')
+                sFileUrl = oFielName.attr('href'),
+                iFieldId = oFileupload.data('fieldId')
             ;
 
-            self.attachFile(iTopicId, iFileId, function () {
+            if (iTopicId) {
+                self.attachFile(iTopicId, iFileId, function () {
+                    oRowFile.remove();
+                    self.addFiles([{
+                        id: iFileId,
+                        name: sFileName,
+                        url: sFileUrl,
+                        size: iFileSize
+                    }]);
+                });
+            }
+            // прикрепление файла в новом топике
+            else {
+                self.createAttachInput(iFieldId, iFileId);
                 oRowFile.remove();
                 self.addFiles([{
                     id: iFileId,
@@ -110,7 +128,7 @@ ls.multiplefileupload = (function ($) {
                     url: sFileUrl,
                     size: iFileSize
                 }]);
-            });
+            }
 
             return false;
         });
@@ -127,6 +145,16 @@ ls.multiplefileupload = (function ($) {
             this.oFileUpload.fileupload('option', 'done')
                 .call(this.oFileUpload[0], $.Event('done'), {result: {files: aFiles}});
         }
+    };
+
+    this.createAttachInput = function (iFieldId, iFileId) {
+        self.oFileUpload.append(
+            $('<input />', {
+                type: 'hidden',
+                name: 'fields['+ iFieldId +'][]',
+                value: iFileId
+            })
+        );
     };
 
     this.attachFile = function(iTopicId, iFileId, fOnSuccess) {

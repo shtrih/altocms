@@ -13,7 +13,7 @@
             <br />{$oField->getFieldDescription()}</small>
 
         <div class="fileupload-wrapper">
-        <div id="multiple-file-upload" data-topic-id="{$iTopicId}">
+        <div id="multiple-file-upload" data-topic-id="{$iTopicId}" data-field-id="{$iFieldId}">
             <div class="fileupload-buttonbar">
                 <span class="span5">
                     <span class="btn btn-success fileinput-button">
@@ -54,7 +54,13 @@
 <script>
 $(document).ready(function () {
     ls.multiplefileupload.addFiles(
-        {/literal}{json_encode(E::Module('PluginMultiplefileupload_ModuleMultiplefileupload')->getAttachedFiles({$iTopicId}))}{literal}
+    {/literal}{strip}
+        {if $iTopicId}
+            {json_encode(E::Module('PluginMultiplefileupload_ModuleMultiplefileupload')->getAttachedFiles({$iTopicId}))}
+        {else}
+            []
+        {/if}
+    {/strip}{literal}
     );
 });
 </script>

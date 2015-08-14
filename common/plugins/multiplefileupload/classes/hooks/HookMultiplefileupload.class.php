@@ -30,18 +30,29 @@ class PluginMultiplefileupload_HookMultiplefileupload extends Hook {
      */
     public function RegisterHook() {
         $this->AddHook('template_admin_content_add_field_list', 'RenderSelectOption');
-        $this->AddHook('content_field_proccess', 'SaveValue');
+        $this->AddHook('content_field_proccess', 'SaveFormValues');
     }
 
     public function RenderSelectOption(array $aVars) {
         return E::ModuleViewer()->Fetch(Plugin::GetTemplateFile(__CLASS__, 'tpls/content-field-select-option.tpl'), $aVars);
     }
 
-    public function SaveValue(array &$aVars) {
+    public function SaveFormValues(array &$aVars) {
+        /**
+         * @var ModuleTopic_EntityTopic $oTopic
+         * @var ModuleTopic_EntityField $oField
+         */
         $oField = $aVars['oField'];
-        if ('checkbox' == $oField->getFieldType()) {
-            if (!empty($_REQUEST['fields'][$oField->getFieldId()])) {
-                $aVars['sData'] = 'checked';
+        $oTopic = $aVars['oTopic'];
+        $iTopicId = $oTopic->getId();
+        if ('add' == $aVars['sType'] && 'multiple-file-upload' == $oField->getFieldType()) {
+            $aValues = isset($_REQUEST['fields'][$oField->getFieldId()]) ? $_REQUEST['fields'][$oField->getFieldId()] : array();
+            if (is_array($aValues) && count($aValues)) {
+                foreach ($aValues as $iMresourceId) {
+                    if (is_numeric($iMresourceId)) {
+                        E::ModuleMresource()->updateMresourceRelTargetId($iMresourceId, $iTopicId);
+                    }
+                }
             }
         }
     }

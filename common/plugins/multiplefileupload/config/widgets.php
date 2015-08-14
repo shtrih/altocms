@@ -6,6 +6,6 @@ $config['widgets'][] = array(
     'priority' => 0,
     'plugin'   => 'multiplefileupload',
     'action'   => array(
-        'content' => array('edit'),
+        'content'// => array('add', 'edit'),
     ),
 );
