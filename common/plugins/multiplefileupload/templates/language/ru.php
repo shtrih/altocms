@@ -35,7 +35,7 @@ return array(
     'progress_loading' => 'Загружается…',
     'title_sort'       => 'Тащите, чтобы сортировать',
 
-    'widget_header'    => 'Не прикреплённые файлы',
+    'widget_header'    => 'Неприкреплённые файлы',
     'btn_attach'       => 'Прикрепить',
     'btn_attach_title' => 'Прикрепить к этому топику',
     'empty_list' => 'Список пуст.',
