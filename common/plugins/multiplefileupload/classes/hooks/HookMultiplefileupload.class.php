@@ -31,6 +31,7 @@ class PluginMultiplefileupload_HookMultiplefileupload extends Hook {
     public function RegisterHook() {
         $this->AddHook('template_admin_content_add_field_list', 'RenderSelectOption');
         $this->AddHook('content_field_proccess', 'SaveFormValues');
+        $this->AddHook('template_html_head_tags', 'htmlHeadTags');
     }
 
     public function RenderSelectOption(array $aVars) {
@@ -55,6 +56,17 @@ class PluginMultiplefileupload_HookMultiplefileupload extends Hook {
                 }
             }
         }
+    }
+
+    public function htmlHeadTags() {
+        $aVars = [
+            'aConfig' => [
+                'auto-upload'   => Config::Get('plugin.multiplefileupload.auto-upload'),
+                'max-file-size' => 1 * 1024 * 1024,
+            ]
+        ];
+
+        return E::ModuleViewer()->Fetch(Plugin::GetTemplateFile(__CLASS__, 'tpls/hooks/hook.template_html_head_tags.tpl'), $aVars);
     }
 }
 

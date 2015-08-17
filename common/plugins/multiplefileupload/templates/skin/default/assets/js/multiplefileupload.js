@@ -42,12 +42,12 @@ ls.multiplefileupload = (function ($) {
         });
 
         oFileupload.fileupload({
-            autoUpload: false,
+            autoUpload: MFU_CONFIG['auto-upload'] || false,
             disableImageResize: true,
             disableImagePreview: false,
             disableVideoPreview: false,
             disableAudioPreview: false,
-            maxFileSize: 2048 * 1024 * 1024,
+            maxFileSize: MFU_CONFIG['max-file-size'] || 10 * 1024 * 1024,
             url: ls.routerUrl('multiplefileupload') + 'upload/',
             formData: [
                 {
