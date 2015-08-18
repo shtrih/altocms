@@ -9,8 +9,8 @@
                 {foreach $aFiles as $oFile}
                     <tr data-file-id="{$oFile->id}" data-file-size="{$oFile->size}">
                         <td><a class="name" href="{$oFile->url}" title="{$oFile->name|escape:'htmlall'}">{$oFile->name|escape}</a></td>
-                        <td>{PluginMultiplefileupload_ModuleMultiplefileupload::sizeFormat($oFile->size)}</td>
-                        <td>
+                        <td class="col-md-4">{PluginMultiplefileupload_ModuleMultiplefileupload::sizeFormat($oFile->size)}</td>
+                        <td class="col-md-8">
                             <a class="btn btn-small btn-default mfu-attach-file" href="#"
                                title="{$aLangPlugin.btn_attach_title|escape:'htmlall'}"><span class="fa fa-thumb-tack"></span>&nbsp;{$aLangPlugin.btn_attach}</a>
                             <a class="btn btn-small btn-danger mfu-remove-file" href="#"><span class="fa fa-trash-o"></span>&nbsp;{$aLangPlugin.btn_remove}</a>

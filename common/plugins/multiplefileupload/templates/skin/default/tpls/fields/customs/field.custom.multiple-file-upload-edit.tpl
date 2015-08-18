@@ -9,13 +9,11 @@
 
     <div class="form-group">
         <label>{$oField->getFieldName()}</label><br />
-        <small class="control-notice">Максимальный размер файла: <strong>{min((int)ini_get("post_max_size"), (int)ini_get("upload_max_filesize"))} Мб</strong>.
-            <br />{$oField->getFieldDescription()}</small>
 
         <div class="fileupload-wrapper">
         <div id="multiple-file-upload" data-topic-id="{$iTopicId}" data-field-id="{$iFieldId}">
             <div class="fileupload-buttonbar">
-                <span class="span5">
+                <div>
                     <span class="btn btn-success fileinput-button">
                         <span class="fa fa-plus-circle"></span>
                         {$aLangPlugin.btn_add}
@@ -33,9 +31,12 @@
                         <span class="fa fa-ban"></span>
                         {$aLangPlugin.btn_cancel}
                     </button>
-                    <span class="fileupload-process"></span>
-                </span>
-                <div class="fileupload-progress fade pull-right">
+                </div>
+
+                <div class="control-notice mab12">Максимальный размер файла: <strong>{min((int)ini_get("post_max_size"), (int)ini_get("upload_max_filesize"))} Мб</strong>.
+                    <br />{$oField->getFieldDescription()}</div>
+
+                <div class="fileupload-progress fade in mab6">
                     <div class="progress progress-striped active progress-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100">
                         <div class="progress-bar progress-bar-success" style="width:0%;"></div>
                     </div>
@@ -74,12 +75,12 @@ $(document).ready(function () {
 			<div class="name">{%=file.name%}</div>
 			<strong class="error text-danger"></strong>
 		</td>
-		<td>
+		<td class="col-md-4">
 			<div class="progress progress-animated progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
 				<div class="progress-bar progress-bar-success" style="width:0%;"><span class="size">{/literal}{$aLangPlugin.progress_loading}{literal}</span></div>
 			</div>
 		</td>
-		<td>
+		<td class="col-md-8">
 			{% if (!i && !o.options.autoUpload) { %}
 				<button class="btn btn-primary start" disabled>
 					<span class="fa fa-upload"></span>
@@ -111,15 +112,17 @@ $(document).ready(function () {
 				<div><span class="label label-warning">Error</span> {%=file.error%}</div>
 			{% } %}
 		</td>
-		<td>
+		<td class="col-md-4">
 			<span class="size">{%=o.formatFileSize(file.size)%}</span>
 		</td>
-		<td>
+		<td class="col-md-2">
 			{% if (!file.error) { %}
-				<div class="sort" title="{/literal}{$aLangPlugin.title_sort|escape:'htmlall'}{literal}"></div>
+				<a href="#" title="{/literal}{$aLangPlugin.title_sort|escape:'htmlall'}{literal}" class="btn btn-default btn-sm sort">
+					<span class="fa fa-arrows-v"></span>
+				</a>
 			{% } %}
 		</td>
-		<td>
+		<td class="col-md-4">
 			<button type="button" class="btn btn-danger mfu-remove-file"{% if (file.error) { %} disabled{% } %}>
 				<span class="fa fa-trash-o"></span>
 				{/literal}{$aLangPlugin.btn_remove}{literal}
