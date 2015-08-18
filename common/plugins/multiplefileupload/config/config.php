@@ -29,4 +29,19 @@ $aConfig = array(
     'auto-upload' => false,
 );
 
+
+// Настройки загружаемых файлов
+$aConfig['$root$']['module']['uploader']['files']['multiple-file-upload'] = array(
+    '$extends$' => '___module.uploader.files.default___',
+    // максимальный размер загружаемого файла
+    'file_maxsize'    => '10Kb',
+    'url_maxsize'     => '10Kb',
+    //расширения файлов, которые можно прикреплять к топикам
+    'file_extensions' => array(
+        'zip','rar','gz','mp3',
+        //'doc', 'docx', 'xls', 'xlsx', 'pdf','djv','djvu',
+        //'gif', 'png', 'jpg', 'jpeg',
+    ),
+);
+
 return $aConfig;

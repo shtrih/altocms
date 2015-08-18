@@ -90,93 +90,84 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
     }
 
     protected function handleUploadedFile($iTargetId, $sUploadedFile, $sName, $sType, $iSize, $iError) {
-        // TODO: $iTargetId может отсутствовать
         $oFile = new \stdClass();
         $oFile->name = $sName;
         $oFile->size = $iSize;
 
         if (is_uploaded_file($sUploadedFile)) {
+            $bRemote = $sUrl = false;
             if ('file/link' == $sType) {
                 $sUrl = file_get_contents($sUploadedFile);
-                $xUrlFileContent = @file_get_contents($sUrl);
-
-                F::File_Delete($sUploadedFile);
-
-                if (!$xUrlFileContent) {
-                    $iError = UPLOAD_ERR_NO_FILE;
-                }
-                else {
-                    $sTmpName = tempnam(sys_get_temp_dir(), "mfu");
-                    if (false === $sTmpName) {
-                        $iError = UPLOAD_ERR_NO_TMP_DIR;
-                    }
-                    else {
-                        $iSize = file_put_contents($sTmpName, $xUrlFileContent);
-                        if (false === $iSize) {
-                            $iError = UPLOAD_ERR_CANT_WRITE;
-                        }
-                        $sUploadedFile = $sTmpName;
-//                        $hFinfo = finfo_open(FILEINFO_MIME_TYPE);
-//                        $sType = finfo_file($hFinfo, $sTmpName);
-//                        finfo_close($hFinfo);
-                    }
-                }
+                $bRemote = true;
             }
 
             if ($this->validateFile($sUploadedFile, $oFile, $iError)) {
-                $sDirSave = Config::Get('path.uploads.root') . '/mfu-files/' . E::ModuleUser()->GetUserCurrent()->getId() . '/' . F::RandomStr(16);
-                if (mkdir(Config::Get('path.root.dir') . $sDirSave, 0777, true)) {
-                    $aPathInfo = pathinfo($oFile->name);
-                    $sFile = $sDirSave . '/' . F::RandomStr(10) . '.' . strtolower($aPathInfo['extension']);
-                    $sFileFullPath = Config::Get('path.root.dir') . $sFile;
+                if ($bRemote) {
+                    $sFileTmp = E::ModuleUploader()->UploadRemote($sUrl, 'multiple-file-upload');
+                }
+                else {
+                    $sFileTmp = E::ModuleUploader()->UploadLocal(
+                        array(
+                            'tmp_name' => $sUploadedFile,
+                            'name'     => $oFile->name,
+                            'error'    => $iError
+                        ),
+                        'multiple-file-upload',
+                        null,
+                        true
+                    );
+                }
+                if ($sFileTmp) {
+                    $oStoredFile = E::ModuleUploader()->Store($sFileTmp, null);
 
-                    if (move_uploaded_file($sUploadedFile, $sFileFullPath) || 'file/link' == $sType && rename($sUploadedFile, $sFileFullPath)) {
-                        $oStoredFile = E::ModuleUploader()->Store($sFileFullPath, $sFileFullPath);
+                    if ($oStoredFile !== false) {
+                        /** @var ModuleMresource_EntityMresource $oMresource */
+                        $oMresource = E::ModuleMresource()->GetMresourcesByUuid($oStoredFile->getUuid());
+                        if ($oMresource) {
+                            $iUserId = E::UserId();
 
-                        if ($oStoredFile !== false) {
-                            /** @var ModuleMresource_EntityMresource $oMresource */
-                            $oMresource = E::ModuleMresource()->GetMresourcesByUuid($oStoredFile->getUuid());
-                            if ($oMresource) {
-                                $iUserId = E::UserId();
+                            $oMresource->setType(PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE);
+                            $oMresource->setUserId($iUserId);
 
-                                $oMresource->setType(PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE);
-                                $oMresource->setUserId($iUserId);
+                            $oMresource->setParams(array('original_filename' => $oFile->name));
+                            E::ModuleMresource()->UpdateParams($oMresource);
 
-                                $oMresource->setParams(array('original_filename' => $oFile->name));
-                                E::ModuleMresource()->UpdateParams($oMresource);
-
-                                if (Config::Get('plugin.multiplefileupload.hide-direct-links')) {;
-                                    $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresource->GetId();
-                                }
-                                else {
-                                    $oFile->url = $oMresource->getWebPath();
-                                }
-                                //E::ModuleMresource()->UnlinkFile(self::TARGET_TYPE, 0, E::UserId());
-                                E::ModuleMresource()->AddTargetRel($oMresource, PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
-
-                                // Пока привызяваемся к идентификатору ресурса вместо идентификатора связи
-                                $oFile->id = $oMresource->getMresourceId();
-                                // $aMresourceRelIds = E::ModuleMresource()->GetMresourcesRelIds($oResource->getMresourceId(), PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
-                                // $oFile->id = array_shift($aMresourceRelIds);
+                            if (Config::Get('plugin.multiplefileupload.hide-direct-links')) {;
+                                $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresource->GetId();
                             }
                             else {
-                                $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_resource_not_found');
+                                $oFile->url = $oMresource->getWebPath();
                             }
+                            //E::ModuleMresource()->UnlinkFile(self::TARGET_TYPE, 0, E::UserId());
+                            E::ModuleMresource()->AddTargetRel($oMresource, PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
+
+                            // Пока привызяваемся к идентификатору ресурса вместо идентификатора связи
+                            $oFile->id = $oMresource->getMresourceId();
+                            // $aMresourceRelIds = E::ModuleMresource()->GetMresourcesRelIds($oResource->getMresourceId(), PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
+                            // $oFile->id = array_shift($aMresourceRelIds);
                         }
                         else {
-                            $oFile->error = E::ModuleUploader()->GetErrorMsg();
-                            if (!$oFile->error) {
-                                $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_unknown');
-                            }
+                            $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_resource_not_found');
                         }
                     }
+                    else {
+                        $oFile->error = E::ModuleUploader()->GetErrorMsg();
+                        if (!$oFile->error) {
+                            $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_unknown');
+                        }
+                    }
+                }
+                else {
+                    $oFile->error = E::ModuleUploader()->GetErrorMsg();
+                }
+                    /*}
                     else {
                         $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_move');
                     }
                 }
                 else {
                     $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_cannot_create_dir');
-                }
+                }*/
             }
         }
         else {
@@ -189,9 +180,17 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
 
     public function eventUpload() {
         $this->checkSecurityKey();
+        E::ModuleViewer()->SetResponseAjax('json');
 
         $iTargetId = (int)F::GetRequest('topic_id');
         $aFiles = array();
+
+        // Проверяем, целевой объект и права на его редактирование
+        if (!E::ModuleUploader()->CheckAccessAndGetTarget('topic', $iTargetId)) {
+            E::ModuleMessage()->AddError(E::ModuleLang()->Get('not_access'), E::ModuleLang()->Get('error'));
+
+            return;
+        }
 
         if (isset($_FILES['multiple-file-upload'])) {
             if (is_array($_FILES['multiple-file-upload']['tmp_name'])) {
@@ -267,7 +266,6 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
             }
         }
 */
-        E::ModuleViewer()->DisplayAjax();
     }
 
     public function eventRemove() {
