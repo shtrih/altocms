@@ -14,7 +14,7 @@ $aConfig = array(
     /* Прятать прямые ссылки на файлы.
      *
      * Если true, то ссылки на файлы имеют вид «/multiplefileupload/get/45»,
-     *    иначе прямые вида «/uploads/mfu-files/00/00/01/2015/08/12/0u73b903ac-78531e29-486b6694.zip»
+     *    иначе прямые вида «/uploads/files/00/00/01/2015/08/12/0u73b903ac-78531e29-486b6694.zip»
      */
     'hide-direct-links' => false,
 

@@ -14,6 +14,153 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
 
     }
 
+    public function handleUploadedFile($iTargetId, $sUploadedFile, $sName, $sType, $iSize, $iError) {
+        $oFile = new \stdClass();
+        $oFile->name = $sName;
+        $oFile->size = $iSize;
+
+        if (is_uploaded_file($sUploadedFile)) {
+            $bRemote = $sUrl = false;
+            if ('file/link' == $sType) {
+                $sUrl = file_get_contents($sUploadedFile);
+                $bRemote = true;
+            }
+
+            if ($this->validateFile($sUploadedFile, $oFile, $iError)) {
+                if ($bRemote) {
+                    $sFileTmp = E::ModuleUploader()->UploadRemote($sUrl, 'multiple-file-upload');
+                }
+                else {
+                    $sFileTmp = E::ModuleUploader()->UploadLocal(
+                        array(
+                            'tmp_name' => $sUploadedFile,
+                            'name'     => $oFile->name,
+                            'error'    => $iError
+                        ),
+                        'multiple-file-upload',
+                        null,
+                        true
+                    );
+                }
+                if ($sFileTmp) {
+                    $oStoredFile = E::ModuleUploader()->Store($sFileTmp, null);
+
+                    if ($oStoredFile !== false) {
+                        /** @var ModuleMresource_EntityMresource $oMresource */
+                        $oMresource = E::ModuleMresource()->GetMresourcesByUuid($oStoredFile->getUuid());
+                        if ($oMresource) {
+                            $iUserId = E::UserId();
+
+                            $oMresource->setType(PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE);
+                            $oMresource->setUserId($iUserId);
+
+                            $oMresource->setParams(array('original_filename' => $oFile->name));
+                            E::ModuleMresource()->UpdateParams($oMresource);
+
+                            if (Config::Get('plugin.multiplefileupload.hide-direct-links')) {;
+                                $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresource->GetId();
+                            }
+                            else {
+                                $oFile->url = $oMresource->getWebPath();
+                            }
+                            //E::ModuleMresource()->UnlinkFile(self::TARGET_TYPE, 0, E::UserId());
+                            E::ModuleMresource()->AddTargetRel($oMresource, PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
+
+                            // Пока привызяваемся к идентификатору ресурса вместо идентификатора связи
+                            $oFile->id = $oMresource->getMresourceId();
+                            // $aMresourceRelIds = E::ModuleMresource()->GetMresourcesRelIds($oResource->getMresourceId(), PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
+                            // $oFile->id = array_shift($aMresourceRelIds);
+                        }
+                        else {
+                            $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_resource_not_found');
+                        }
+                    }
+                    else {
+                        $oFile->error = E::ModuleUploader()->GetErrorMsg();
+                        if (!$oFile->error) {
+                            $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_unknown');
+                        }
+                    }
+                }
+                else {
+                    $oFile->error = E::ModuleUploader()->GetErrorMsg();
+                }
+                    /*}
+                    else {
+                        $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_move');
+                    }
+                }
+                else {
+                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_cannot_create_dir');
+                }*/
+            }
+        }
+        else {
+            $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_method_not_supported');
+        }
+        F::File_Delete($sUploadedFile);
+
+        return $oFile;
+    }
+
+    /**
+     *
+     * @param $sUploadedFile
+     * @param $oFile
+     * @param $iError
+     * @return bool
+     */
+    protected function validateFile($sUploadedFile, $oFile, $iError) {
+        if (UPLOAD_ERR_OK != $iError) {
+            switch ($iError) {
+                case UPLOAD_ERR_INI_SIZE:
+                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_ini_size');
+                    break;
+
+                case UPLOAD_ERR_FORM_SIZE:
+                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_form_size');
+                    break;
+
+                case UPLOAD_ERR_PARTIAL:
+                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_partial');
+                    break;
+
+                case UPLOAD_ERR_NO_FILE:
+                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_no_file');
+                    break;
+
+                case UPLOAD_ERR_NO_TMP_DIR:
+                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_no_tmp_dir');
+                    break;
+
+                case UPLOAD_ERR_CANT_WRITE:
+                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_cant_write');
+                    break;
+
+                case UPLOAD_ERR_EXTENSION:
+                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_extension');
+                    break;
+
+                default:
+                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_unknown');
+            }
+        }
+        else {
+            $iMaxFileSize = F::MemSize2Int(Config::Get('module.uploader.files.default.file_maxsize'));
+            if ($iMaxFileSize && $oFile->size > $iMaxFileSize) {
+                $oFile->error = E::ModuleLang()->Get('topic_field_file_upload_err_size', array('size' => $iMaxFileSize));
+            }
+
+            $aFileExtensions = Config::Get('module.uploader.files.default.file_extensions');
+            $aPathInfo = pathinfo($oFile->name);
+            if ($aFileExtensions && (empty($aPathInfo['extension']) || !in_array(strtolower($aPathInfo['extension']), $aFileExtensions))) {
+                $oFile->error = E::ModuleLang()->Get('topic_field_file_upload_err_type', array('types' => implode(', ', $aFileExtensions)));
+            }
+        }
+
+        return empty($oFile->error);
+    }
+
     /**
      * @param $iTopicId int Идентификатор топика. 0, если надо получить неприкреплённые файлы.
      * @return array Массив с объектами файлов
@@ -57,12 +204,12 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
     }
 
     public static function sizeFormat($iSize) {
-        $aSizes = array('B', 'KB', 'MB', 'GB', 'TB');
+        $aSizes = array('б', 'Кб', 'Мб', 'Гб', 'Тб');
         $i = 0;
         while ($iSize > 1000) {
             $iSize /= 1024;
             $i++;
         }
-        return sprintf('%.2f %s', $iSize, $aSizes[$i]);
+        return rtrim(rtrim(sprintf('%.2f', $iSize), '0'), ',.') . '&nbsp;' . $aSizes[$i];
     }
 }
