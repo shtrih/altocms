@@ -46,6 +46,8 @@ return array(
     'btn_upload_all'   => 'Загрузить все',
     'progress_loading' => 'Загружается…',
     'title_sort'       => 'Тащите, чтобы сортировать',
+    'file_maxsize'     => 'Максимальный размер файла',
+    'url_maxsize'      => 'Максимальный размер файла по ссылке',
 
     'widget_header'    => 'Неприкреплённые файлы',
     'btn_attach'       => 'Прикрепить',
