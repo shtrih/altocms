@@ -33,8 +33,14 @@
                     </button>
                 </div>
 
-                <div class="control-notice mab12">Максимальный размер файла: <strong>{min((int)ini_get("post_max_size"), (int)ini_get("upload_max_filesize"))} Мб</strong>.
-                    <br />{$oField->getFieldDescription()}</div>
+                <div class="control-notice mab12">
+                    {$iPhpMin = min(F::MemSize2Int(ini_get("post_max_size")), F::MemSize2Int(ini_get("upload_max_filesize")))}
+                    {$sUploadMaxSize = PluginMultiplefileupload_ModuleMultiplefileupload::sizeFormat(min($iPhpMin, F::MemSize2Int(Config::Get('module.uploader.files.multiple-file-upload.file_maxsize'))))}
+                    {$sRemoteMaxSize = PluginMultiplefileupload_ModuleMultiplefileupload::sizeFormat(min($iPhpMin, F::MemSize2Int(Config::Get('module.uploader.files.multiple-file-upload.url_maxsize'))))}
+                    Максимальный размер файла: <strong>{$sUploadMaxSize}</strong>.
+                    <br />Максимальный размер файла по ссылке: <strong>{$sRemoteMaxSize}</strong>.
+                    <br />{$oField->getFieldDescription()}
+                </div>
 
                 <div class="fileupload-progress fade in mab6">
                     <div class="progress progress-striped active progress-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100">
