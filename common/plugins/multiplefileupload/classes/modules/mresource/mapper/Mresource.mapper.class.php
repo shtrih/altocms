@@ -47,5 +47,3 @@ class PluginMultiplefileupload_ModuleMresource_MapperMresource extends PluginMul
         );
     }
 }
-
-// EOF

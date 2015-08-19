@@ -10,8 +10,41 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
 
     const TARGET_TYPE = 'multiple-file-upload';
 
+    public static $aUploadErrors = array(
+        UPLOAD_ERR_INI_SIZE                       => 'plugin.multiplefileupload.upload_err_ini_size',
+        UPLOAD_ERR_FORM_SIZE                      => 'plugin.multiplefileupload.upload_err_form_size',
+        UPLOAD_ERR_PARTIAL                        => 'plugin.multiplefileupload.upload_err_partial',
+        UPLOAD_ERR_NO_FILE                        => 'plugin.multiplefileupload.upload_err_no_file',
+        UPLOAD_ERR_NO_TMP_DIR                     => 'plugin.multiplefileupload.upload_err_no_tmp_dir',
+        UPLOAD_ERR_CANT_WRITE                     => 'plugin.multiplefileupload.upload_err_cant_write',
+        UPLOAD_ERR_EXTENSION                      => 'plugin.multiplefileupload.upload_err_extension',
+        ModuleUploader::ERR_NOT_POST_UPLOADED     => 'plugin.multiplefileupload.upload_err_method_not_supported',
+        ModuleUploader::ERR_NOT_FILE_VARIABLE     => 'plugin.multiplefileupload.upload_err_not_file_variable',
+        ModuleUploader::ERR_MAKE_UPLOAD_DIR       => 'plugin.multiplefileupload.upload_err_cannot_create_dir',
+        ModuleUploader::ERR_MOVE_UPLOAD_FILE      => 'plugin.multiplefileupload.upload_err_move',
+        ModuleUploader::ERR_COPY_UPLOAD_FILE      => 'plugin.multiplefileupload.upload_err_copy_upload_file',
+        ModuleUploader::ERR_REMOTE_FILE_OPEN      => 'plugin.multiplefileupload.upload_err_remote_file_open',
+        ModuleUploader::ERR_REMOTE_FILE_MAXSIZE   => 'plugin.multiplefileupload.upload_err_remote_file_maxsize',
+        ModuleUploader::ERR_REMOTE_FILE_READ      => 'plugin.multiplefileupload.upload_err_remote_file_read',
+        ModuleUploader::ERR_REMOTE_FILE_WRITE     => 'plugin.multiplefileupload.upload_err_remote_file_write',
+        ModuleUploader::ERR_NOT_ALLOWED_EXTENSION => 'plugin.multiplefileupload.upload_err_not_allowed_extension',
+        ModuleUploader::ERR_FILE_TOO_LARGE        => 'plugin.multiplefileupload.upload_err_file_too_large',
+        ModuleUploader::ERR_IMG_NO_INFO           => 'plugin.multiplefileupload.upload_err_img_no_info',
+        ModuleUploader::ERR_IMG_LARGE_WIDTH       => 'plugin.multiplefileupload.upload_err_img_large_width',
+        ModuleUploader::ERR_IMG_LARGE_HEIGHT      => 'plugin.multiplefileupload.upload_err_img_large_height',
+        ModuleUploader::ERR_TRANSFORM_IMAGE       => 'plugin.multiplefileupload.upload_err_transform_image',
+    );
+
     public function Init() {
 
+    }
+
+    public static function getUploadErrorMsg($iErrorCode) {
+        if (isset(self::$aUploadErrors[$iErrorCode])) {
+            return E::ModuleLang()->Get(self::$aUploadErrors[$iErrorCode]);
+        }
+
+        return E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_unknown');
     }
 
     public function handleUploadedFile($iTargetId, $sUploadedFile, $sName, $sType, $iSize, $iError) {
@@ -57,7 +90,7 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
                             $oMresource->setParams(array('original_filename' => $oFile->name));
                             E::ModuleMresource()->UpdateParams($oMresource);
 
-                            if (Config::Get('plugin.multiplefileupload.hide-direct-links')) {;
+                            if (Config::Get('plugin.multiplefileupload.hide-direct-links')) {
                                 $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresource->GetId();
                             }
                             else {
@@ -76,27 +109,16 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
                         }
                     }
                     else {
-                        $oFile->error = E::ModuleUploader()->GetErrorMsg();
-                        if (!$oFile->error) {
-                            $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_unknown');
-                        }
+                        $oFile->error = self::getUploadErrorMsg(E::ModuleUploader()->GetError());
                     }
                 }
                 else {
-                    $oFile->error = E::ModuleUploader()->GetErrorMsg();
+                    $oFile->error = self::getUploadErrorMsg(E::ModuleUploader()->GetError());
                 }
-                    /*}
-                    else {
-                        $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_move');
-                    }
-                }
-                else {
-                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_cannot_create_dir');
-                }*/
             }
         }
         else {
-            $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_method_not_supported');
+            $oFile->error = self::getUploadErrorMsg(ModuleUploader::ERR_NOT_POST_UPLOADED);
         }
         F::File_Delete($sUploadedFile);
 
@@ -111,47 +133,16 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
      * @return bool
      */
     protected function validateFile($sUploadedFile, $oFile, $iError) {
-        if (UPLOAD_ERR_OK != $iError) {
-            switch ($iError) {
-                case UPLOAD_ERR_INI_SIZE:
-                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_ini_size');
-                    break;
-
-                case UPLOAD_ERR_FORM_SIZE:
-                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_form_size');
-                    break;
-
-                case UPLOAD_ERR_PARTIAL:
-                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_partial');
-                    break;
-
-                case UPLOAD_ERR_NO_FILE:
-                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_no_file');
-                    break;
-
-                case UPLOAD_ERR_NO_TMP_DIR:
-                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_no_tmp_dir');
-                    break;
-
-                case UPLOAD_ERR_CANT_WRITE:
-                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_cant_write');
-                    break;
-
-                case UPLOAD_ERR_EXTENSION:
-                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_extension');
-                    break;
-
-                default:
-                    $oFile->error = E::ModuleLang()->Get('plugin.multiplefileupload.upload_err_unknown');
-            }
+        if (UPLOAD_ERR_OK !== $iError) {
+            $oFile->error = self::getUploadErrorMsg($iError);
         }
         else {
-            $iMaxFileSize = F::MemSize2Int(Config::Get('module.uploader.files.default.file_maxsize'));
+            $iMaxFileSize = F::MemSize2Int(Config::Get('module.uploader.files.multiple-file-upload.file_maxsize'));
             if ($iMaxFileSize && $oFile->size > $iMaxFileSize) {
-                $oFile->error = E::ModuleLang()->Get('topic_field_file_upload_err_size', array('size' => $iMaxFileSize));
+                $oFile->error = E::ModuleLang()->Get('topic_field_file_upload_err_size', array('size' => self::sizeFormat($iMaxFileSize)));
             }
 
-            $aFileExtensions = Config::Get('module.uploader.files.default.file_extensions');
+            $aFileExtensions = Config::Get('module.uploader.files.multiple-file-upload.file_extensions');
             $aPathInfo = pathinfo($oFile->name);
             if ($aFileExtensions && (empty($aPathInfo['extension']) || !in_array(strtolower($aPathInfo['extension']), $aFileExtensions))) {
                 $oFile->error = E::ModuleLang()->Get('topic_field_file_upload_err_type', array('types' => implode(', ', $aFileExtensions)));
@@ -210,6 +201,6 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
             $iSize /= 1024;
             $i++;
         }
-        return rtrim(rtrim(sprintf('%.2f', $iSize), '0'), ',.') . '&nbsp;' . $aSizes[$i];
+        return rtrim(rtrim(sprintf('%.2f', $iSize), '0'), ',.') . "\xc2\xa0" . $aSizes[$i];
     }
 }
