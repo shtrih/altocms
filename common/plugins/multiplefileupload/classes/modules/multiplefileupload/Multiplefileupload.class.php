@@ -10,7 +10,7 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
 
     const TARGET_TYPE = 'multiple-file-upload';
 
-    public static $aUploadErrors = array(
+    protected static $aUploadErrors = array(
         UPLOAD_ERR_INI_SIZE                       => 'plugin.multiplefileupload.upload_err_ini_size',
         UPLOAD_ERR_FORM_SIZE                      => 'plugin.multiplefileupload.upload_err_form_size',
         UPLOAD_ERR_PARTIAL                        => 'plugin.multiplefileupload.upload_err_partial',
@@ -84,7 +84,7 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
                         if ($oMresource) {
                             $iUserId = E::UserId();
 
-                            $oMresource->setType(PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE);
+                            $oMresource->setType(self::TARGET_TYPE);
                             $oMresource->setUserId($iUserId);
 
                             $oMresource->setParams(array('original_filename' => $oFile->name));
@@ -97,11 +97,11 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
                                 $oFile->url = $oMresource->getWebPath();
                             }
                             //E::ModuleMresource()->UnlinkFile(self::TARGET_TYPE, 0, E::UserId());
-                            E::ModuleMresource()->AddTargetRel($oMresource, PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
+                            E::ModuleMresource()->AddTargetRel($oMresource, self::TARGET_TYPE, $iTargetId);
 
                             // Пока привызяваемся к идентификатору ресурса вместо идентификатора связи
                             $oFile->id = $oMresource->getMresourceId();
-                            // $aMresourceRelIds = E::ModuleMresource()->GetMresourcesRelIds($oResource->getMresourceId(), PluginMultiplefileupload_ModuleMultiplefileupload::TARGET_TYPE, $iTargetId);
+                            // $aMresourceRelIds = E::ModuleMresource()->GetMresourcesRelIds($oResource->getMresourceId(), self::TARGET_TYPE, $iTargetId);
                             // $oFile->id = array_shift($aMresourceRelIds);
                         }
                         else {
