@@ -161,7 +161,7 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
 
         $oModuleResource = E::ModuleMresource();
 
-        $aMresourceRels = $oModuleResource->GetMresourcesRelByTarget(self::TARGET_TYPE, (int)$iTopicId);
+        $aMresourceRels = $oModuleResource->GetMresourcesRelByTargetAndUser(self::TARGET_TYPE, (int)$iTopicId, (int)E::UserId());
         foreach ($aMresourceRels as $oMresourceRel) {
             /* @var $oMresource ModuleMresource_EntityMresource
              * @var $oMresourceRel ModuleMresource_EntityMresourceRel
