@@ -3,7 +3,7 @@
     <div class="form-group checkbox">
         <div class="input-group">
             <label>
-            <input class="form-control" name="fields[{$iFieldId}]" id="fields-{$iFieldId}"
+            <input class="" name="fields[{$iFieldId}]" id="fields-{$iFieldId}"
                value="{$iFieldId}"
                {if $_aRequest.fields.$iFieldId}checked="checked"{/if}
                type="checkbox" />{$oField->getFieldName()}</label>
