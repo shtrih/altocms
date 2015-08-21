@@ -13,6 +13,9 @@ ls.multiplefileupload = (function ($) {
             btn_cancel  = $('.fileupload-buttonbar button.cancel', oFileupload)
         ;
 
+        if (!oFileupload.length)
+            return;
+
         // Ссылка «показать все файлы»
         $('.js-topic-preview-place,.js-topic').on('click', '.multiple-file-upload .toggle-others', function () {
             $(this)
