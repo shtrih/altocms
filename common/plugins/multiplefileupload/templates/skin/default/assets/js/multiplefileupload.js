@@ -13,9 +13,6 @@ ls.multiplefileupload = (function ($) {
             btn_cancel  = $('.fileupload-buttonbar button.cancel', oFileupload)
         ;
 
-        if (!oFileupload.length)
-            return;
-
         // Ссылка «показать все файлы»
         $('.js-topic-preview-place,.js-topic').on('click', '.multiple-file-upload .toggle-others', function () {
             $(this)
@@ -25,6 +22,9 @@ ls.multiplefileupload = (function ($) {
 
             return false;
         });
+
+        if (!oFileupload.length)
+            return;
 
         // Кнопка «загрузить по url»
         $('.url-upload', oFileupload).on('click', function () {
