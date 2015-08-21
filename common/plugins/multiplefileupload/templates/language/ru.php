@@ -37,6 +37,9 @@ return array(
     'upload_err_img_large_width'       => 'Ширина изображения слишком велика.', // 'Width of image is too large',
     'upload_err_img_large_height'      => 'Высота изображения слишком велика.', // 'Height of image is too large',
     'upload_err_transform_image'       => 'Ошибка при обработке изображения.', // 'Error during transform image',
+    'upload_err_uploaded_bytes_exceed_fs' => 'Кол-во загруженных байт превышает размер файла.', // 'Uploaded bytes exceed file size',
+    'upload_err_max_number_of_files'   => 'Превышено максимальное количество файлов.', // 'Maximum number of files exceeded',
+    'upload_err_file_too_small'        => 'Файл слишком маленький.', // 'File type not allowed',
 
     'btn_add'          => 'Добавить',
     'btn_add_url'      => 'Указать url',

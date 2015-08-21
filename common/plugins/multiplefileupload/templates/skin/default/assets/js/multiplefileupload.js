@@ -43,11 +43,19 @@ ls.multiplefileupload = (function ($) {
 
         oFileupload.fileupload({
             autoUpload: MFU_CONFIG['auto-upload'] || false,
+            messages: {
+                uploadedBytes: ls.lang.get('plugin.multiplefileupload.upload_err_uploaded_bytes_exceed_fs'), // 'Uploaded bytes exceed file size',
+                maxNumberOfFiles: ls.lang.get('plugin.multiplefileupload.upload_err_max_number_of_files'), // 'Maximum number of files exceeded',
+                acceptFileTypes: ls.lang.get('plugin.multiplefileupload.upload_err_not_allowed_extension'), // 'File type not allowed',
+                maxFileSize: ls.lang.get('plugin.multiplefileupload.upload_err_file_too_large'), // 'File is too large',
+                minFileSize: ls.lang.get('plugin.multiplefileupload.upload_err_file_too_small'),  // 'File is too small',
+                unknownError: ls.lang.get('plugin.multiplefileupload.upload_err_unknown') // 'Unknown error'
+            },
             disableImageResize: true,
             disableImagePreview: false,
             disableVideoPreview: false,
             disableAudioPreview: false,
-            maxFileSize: MFU_CONFIG['max-file-size'] || 10 * 1024 * 1024,
+            maxFileSize: MFU_CONFIG['max-file-size'],
             url: ls.routerUrl('multiplefileupload') + 'upload/',
             formData: [
                 {

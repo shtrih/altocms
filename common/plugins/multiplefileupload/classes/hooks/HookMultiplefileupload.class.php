@@ -62,7 +62,7 @@ class PluginMultiplefileupload_HookMultiplefileupload extends Hook {
         $aVars = [
             'aConfig' => [
                 'auto-upload'   => Config::Get('plugin.multiplefileupload.auto-upload'),
-                'max-file-size' => 1 * 1024 * 1024,
+                'max-file-size' => F::MemSize2Int(Config::Get('module.uploader.files.multiple-file-upload.file_maxsize')),
             ]
         ];
 
