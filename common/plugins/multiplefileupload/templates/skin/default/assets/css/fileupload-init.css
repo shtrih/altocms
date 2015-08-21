@@ -1,0 +1,24 @@
+#multiple-file-upload .table > tbody > tr > td {
+	vertical-align: middle;
+}
+
+#multiple-file-upload .size {
+	color: #000;
+	white-space: nowrap;
+}
+
+#multiple-file-upload .table {
+	margin-bottom: 0;
+}
+
+ul.multiple-file-upload {
+
+}
+
+#multiple-file-upload .fileinput-button input {
+	bottom: 0;
+}
+
+#multiple-file-upload .progress {
+	margin-bottom: 0;
+}

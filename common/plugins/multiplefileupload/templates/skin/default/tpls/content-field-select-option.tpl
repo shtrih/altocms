@@ -1,0 +1,2 @@
+<option value="multiple-file-upload" {if $_aRequest.field_type=='multiple-file-upload'}selected{/if} title="{$aLang.plugin.multiplefileupload.contenttypes_field_notice|escape:'htmlall'}">
+	{$aLang.plugin.multiplefileupload.contenttypes_field}</option>

@@ -236,7 +236,7 @@
                 {/if}
             {/foreach}
 
-            <br/><br/>
+            <hr />
 
             <div class="form-group checkbox">
                 <div class="input-group">
