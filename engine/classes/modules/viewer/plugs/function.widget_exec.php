@@ -16,7 +16,7 @@
 /**
  * Plugin for Smarty
  *
- * @param   array $aParams
+ * @param   array                    $aParams
  * @param   Smarty_Internal_Template $oSmartyTemplate
  *
  * @return  string|null
@@ -104,6 +104,7 @@ function smarty_function_widget_exec($aParams, $oSmartyTemplate) {
     }
 
     // * Подключаем необходимый обработчик
+    /** @var Widget $oWidgetHandler */
     $oWidgetHandler = new $sWidgetClass($aWidgetParams);
 
     // * Запускаем обработчик
@@ -112,9 +113,9 @@ function smarty_function_widget_exec($aParams, $oSmartyTemplate) {
     // Если обработчик ничего не вернул, то рендерим шаблон
     if (!$sResult && $sTemplate) {
         if ($aWidgetParams) {
-            $oSmartyTemplate->assign('aWidgetParams', $aWidgetParams);
+            $oSmartyTemplate->smarty->assign('aWidgetParams', $aWidgetParams);
         }
-        $sResult = $oSmartyTemplate->fetch($sTemplate);
+        $sResult = $oSmartyTemplate->smarty->fetch($sTemplate);
     }
 
     return $sResult;
