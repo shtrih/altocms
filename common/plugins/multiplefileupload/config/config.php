@@ -27,21 +27,19 @@ $aConfig = array(
 
     // Начинать загрузку файла сразу после добавления.
     'auto-upload' => false,
+
+    //расширения файлов, которые можно прикреплять к топикам
+    'accept-file-types' => array('zip', 'rar', 'gz', '7z')
 );
 
 
 // Настройки загружаемых файлов
 $aConfig['$root$']['module']['uploader']['files']['multiple-file-upload'] = array(
-    '$extends$' => '___module.uploader.files.default___',
+    Config::KEY_REPLACE => '___module.uploader.files.default___',
     // максимальный размер загружаемого файла
-    'file_maxsize'    => '10Kb',
-    'url_maxsize'     => '10Kb',
-    //расширения файлов, которые можно прикреплять к топикам
-    'file_extensions' => array(
-        'zip','rar','gz','mp3',
-        //'doc', 'docx', 'xls', 'xlsx', 'pdf','djv','djvu',
-        //'gif', 'png', 'jpg', 'jpeg',
-    ),
+    'file_maxsize'    => '10Mb',
+    'url_maxsize'     => '10Mb',
+    'file_extensions' => $aConfig['accept-file-types'],
 );
 
 return $aConfig;

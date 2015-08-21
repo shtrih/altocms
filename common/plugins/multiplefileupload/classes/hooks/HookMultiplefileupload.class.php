@@ -59,10 +59,15 @@ class PluginMultiplefileupload_HookMultiplefileupload extends Hook {
     }
 
     public function htmlHeadTags() {
+        $aAcceptTypes = (array)Config::Get('plugin.multiplefileupload.accept-file-types');
+        array_walk($aAcceptTypes, function (&$v) {
+            $v = preg_quote($v, '/');
+        });
         $aVars = [
             'aConfig' => [
                 'auto-upload'   => Config::Get('plugin.multiplefileupload.auto-upload'),
                 'max-file-size' => F::MemSize2Int(Config::Get('module.uploader.files.multiple-file-upload.file_maxsize')),
+                'accept-file-types' => $aAcceptTypes ? '(\.|\/)(' . join('|', $aAcceptTypes) . ')$' : '',
             ]
         ];
 

@@ -2,14 +2,13 @@
 ;var ls = ls || {};
 
 ls.multiplefileupload = (function ($) {
-    "use strict";
+    'use strict';
 
     var self = this;
 
     this.init = function () {
-        this.oFileUpload = $('#multiple-file-upload');
-        var iTopicId = this.oFileUpload.data('topicId');
-        var oFileupload = this.oFileUpload,
+        var oFileupload = this.oFileUpload = $('#multiple-file-upload'),
+            iTopicId = oFileupload.data('topicId'),
             btn_start = $('.fileupload-buttonbar button.start', oFileupload),
             btn_cancel  = $('.fileupload-buttonbar button.cancel', oFileupload)
         ;
@@ -56,6 +55,7 @@ ls.multiplefileupload = (function ($) {
             disableVideoPreview: false,
             disableAudioPreview: false,
             maxFileSize: MFU_CONFIG['max-file-size'],
+            acceptFileTypes: MFU_CONFIG['accept-file-types'] ? new RegExp(MFU_CONFIG['accept-file-types'], 'i') : undefined,
             url: ls.routerUrl('multiplefileupload') + 'upload/',
             formData: [
                 {

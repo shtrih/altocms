@@ -39,6 +39,7 @@
                     {$sRemoteMaxSize = PluginMultiplefileupload_ModuleMultiplefileupload::sizeFormat(min($iPhpMin, F::MemSize2Int(Config::Get('module.uploader.files.multiple-file-upload.url_maxsize'))))}
                     {$aLangPlugin.file_maxsize}: <strong>{$sUploadMaxSize}</strong>.
                     <br />{$aLangPlugin.url_maxsize}: <strong>{$sRemoteMaxSize}</strong>.
+                    <br />{$aLangPlugin.file_extensions}: <strong>{join(', ', array_unique(Config::Get('module.uploader.files.multiple-file-upload.file_extensions')))|escape}</strong>
                     <br />{$oField->getFieldDescription()}
                 </div>
 
