@@ -55,6 +55,7 @@ class PluginMultiplefileupload extends Plugin {
         *
         */
         'module' => array(
+            'ModuleTopic',
             'ModuleMresource',
             'ModuleMresource_MapperMresource'
         )
