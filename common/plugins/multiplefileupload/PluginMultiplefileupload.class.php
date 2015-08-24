@@ -21,7 +21,6 @@ class PluginMultiplefileupload extends Plugin {
              * 'template'=>array('actions/ActionIndex/index.tpl'=>'_actions/ActionTest/index.tpl'),
              * Замена index.tpl из скина из папки actions/ActionIndex/ файлом /common/plugins/abcplugin/templates/skin/default/actions/ActionTest/index.tpl
              */
-
         'template' => array(
             'tpls/fields/customs/field.custom.multiple-file-upload-edit.tpl'=>'_tpls/fields/customs/field.custom.multiple-file-upload-edit.tpl',
             'tpls/fields/customs/field.custom.multiple-file-upload-show.tpl'=>'_tpls/fields/customs/field.custom.multiple-file-upload-show.tpl',
@@ -58,7 +57,10 @@ class PluginMultiplefileupload extends Plugin {
             'ModuleTopic',
             'ModuleMresource',
             'ModuleMresource_MapperMresource'
-        )
+        ),
+        'action' => array(
+            'ActionAdmin'
+        ),
     );
 
     // Активация плагина
