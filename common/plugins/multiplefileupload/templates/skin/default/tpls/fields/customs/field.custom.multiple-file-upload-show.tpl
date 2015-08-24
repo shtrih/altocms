@@ -1,8 +1,9 @@
 {if $oField}
     {$iMaxShow = C::Get('plugin.multiplefileupload.files-show-count')}
+    {if $bPreview}{$iTopicId = $_aRequest.topic_id}{else}{$iTopicId = $oTopic->getId()}{/if}
 
     <strong>{$oField->getFieldName()}</strong>:
-    {$aFiles = E::Module('PluginMultiplefileupload_ModuleMultiplefileupload')->getAttachedFiles($oTopic->getId())}
+    {$aFiles = E::Module('PluginMultiplefileupload_ModuleMultiplefileupload')->getAttachedFiles($iTopicId)}
     {if $aFiles}
         <ul class="list-unstyled multiple-file-upload">
         {foreach $aFiles as $oFile}
