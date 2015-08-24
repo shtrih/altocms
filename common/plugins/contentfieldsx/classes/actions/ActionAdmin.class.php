@@ -3,7 +3,7 @@
 class PluginContentfieldsx_ActionAdmin extends PluginContentfieldsx_Inherits_ActionAdmin {
 
     protected function EventAddField() {
-        parent::EventAddField();
+        $xResult = parent::EventAddField();
 
         if (empty($_REQUEST['submit_field'])) {
             $_REQUEST['field_unique_name'] = F::TranslitUrl(F::GetRequest('field_name'));
@@ -11,6 +11,8 @@ class PluginContentfieldsx_ActionAdmin extends PluginContentfieldsx_Inherits_Act
             if (!F::GetRequest('field_unique_name_translit'))
                 $_REQUEST['field_unique_name'] = F::TranslitUrl(F::GetRequest('field_unique_name'));
         }
+
+        return $xResult;
     }
 
     protected function SubmitAddField($oContentType) {
@@ -62,12 +64,14 @@ class PluginContentfieldsx_ActionAdmin extends PluginContentfieldsx_Inherits_Act
     }
 
     protected function EventEditField() {
-        parent::EventEditField();
+        $xResult = parent::EventEditField();
 
         if (empty($_REQUEST['submit_field'])) {
             $oField = E::ModuleViewer()->getTemplateVars('oField');
             $_REQUEST['field_unique_name'] = $oField->getFieldUniqueName();
         }
+
+        return $xResult;
     }
 
     /**
