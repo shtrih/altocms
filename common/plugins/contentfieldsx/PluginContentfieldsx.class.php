@@ -21,7 +21,6 @@ class PluginContentfieldsx extends Plugin {
              * 'template'=>array('actions/ActionIndex/index.tpl'=>'_actions/ActionTest/index.tpl'),
              * Замена index.tpl из скина из папки actions/ActionIndex/ файлом /common/plugins/abcplugin/templates/skin/default/actions/ActionTest/index.tpl
              */
-        'action' => array('ActionAdmin'),
         'template' => array(
             'tpls/actions/admin/action.admin.settings/contenttypes_fieldadd.tpl' => '_tpls/actions/admin/action.admin.settings/contenttypes_fieldadd.tpl'
         )
@@ -59,6 +58,9 @@ class PluginContentfieldsx extends Plugin {
         ),
         'mapper' => array(
             'ModuleTopic_MapperTopic',
+        ),
+        'action' => array(
+            'ActionAdmin'
         ),
     );
 
