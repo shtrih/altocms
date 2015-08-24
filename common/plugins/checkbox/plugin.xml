@@ -3,14 +3,12 @@
     <id>checkbox</id>
     <name>
         <lang name="default">Checkbox</lang>
-        <lang name="russian">Checkbox</lang>
     </name>
     <author>
         <lang name="default">shtrih</lang>
-        <lang name="russian">shtrih</lang>
     </author>
-    <homepage>http://4otaku.org/</homepage>
-    <version>1.0.1</version>
+    <homepage>http://4otaku.org</homepage>
+    <version>1.0.2</version>
     <dirname>checkbox</dirname>
     <requires>
         <alto>
