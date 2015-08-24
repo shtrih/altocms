@@ -1,4 +1,4 @@
-{$aFiles = E::Module('PluginMultiplefileupload_ModuleMultiplefileupload')->getAttachedFiles(0)}
+{$aFiles = E::Module('PluginMultiplefileupload_ModuleMultiplefileupload')->getAttachedFiles(0, E::UserId())}
 {if $aFiles}
     {$aLangPlugin = $aLang.plugin.multiplefileupload}
     <div class="mfu-unattached">

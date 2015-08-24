@@ -154,14 +154,15 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
 
     /**
      * @param $iTopicId int Идентификатор топика. 0, если надо получить неприкреплённые файлы.
+     * @param null $iUserId
      * @return array Массив с объектами файлов
      */
-    public function getAttachedFiles($iTopicId) {
+    public function getAttachedFiles($iTopicId, $iUserId = null) {
         $aResult = array();
 
         $oModuleResource = E::ModuleMresource();
 
-        $aMresourceRels = $oModuleResource->GetMresourcesRelByTargetAndUser(self::TARGET_TYPE, (int)$iTopicId, (int)E::UserId());
+        $aMresourceRels = $oModuleResource->GetMresourcesRelByTargetAndUser(self::TARGET_TYPE, (int)$iTopicId, $iUserId);
         foreach ($aMresourceRels as $oMresourceRel) {
             /* @var $oMresource ModuleMresource_EntityMresource
              * @var $oMresourceRel ModuleMresource_EntityMresourceRel
