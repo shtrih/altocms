@@ -6,6 +6,7 @@
         {$iTopicId = 0}
     {/if}
     {$aLangPlugin = $aLang.plugin.multiplefileupload}
+    {$iUrlMaxSize = F::MemSize2Int(Config::Get('module.uploader.files.multiple-file-upload.url_maxsize'))}
 
     <div class="form-group">
         <label>{$oField->getFieldName()}</label><br />
@@ -19,10 +20,12 @@
                         {$aLangPlugin.btn_add}
                         <input type="file" name="multiple-file-upload[]" multiple />
                     </span>
-                    <button type="button" class="btn btn-default url-upload" title="Загрузить по ссылке">
-                        <span class="fa fa-link"></span>
-                        {$aLangPlugin.btn_add_url}
-                    </button>
+                    {if $iUrlMaxSize}
+                        <button type="button" class="btn btn-default url-upload" title="Загрузить по ссылке">
+                            <span class="fa fa-link"></span>
+                            {$aLangPlugin.btn_add_url}
+                        </button>
+                    {/if}
                     <button type="submit" class="btn btn-primary start hide">
                         <span class="fa fa-upload"></span>
                         {$aLangPlugin.btn_upload_all}
@@ -36,9 +39,11 @@
                 <div class="control-notice mab12">
                     {$iPhpMin = min(F::MemSize2Int(ini_get("post_max_size")), F::MemSize2Int(ini_get("upload_max_filesize")))}
                     {$sUploadMaxSize = PluginMultiplefileupload_ModuleMultiplefileupload::sizeFormat(min($iPhpMin, F::MemSize2Int(Config::Get('module.uploader.files.multiple-file-upload.file_maxsize'))))}
-                    {$sRemoteMaxSize = PluginMultiplefileupload_ModuleMultiplefileupload::sizeFormat(min($iPhpMin, F::MemSize2Int(Config::Get('module.uploader.files.multiple-file-upload.url_maxsize'))))}
                     {$aLangPlugin.file_maxsize}: <strong>{$sUploadMaxSize}</strong>.
-                    <br />{$aLangPlugin.url_maxsize}: <strong>{$sRemoteMaxSize}</strong>.
+                    {if $iUrlMaxSize}
+                        {$sRemoteMaxSize = PluginMultiplefileupload_ModuleMultiplefileupload::sizeFormat(min($iPhpMin, $iUrlMaxSize))}
+                        <br />{$aLangPlugin.url_maxsize}: <strong>{$sRemoteMaxSize}</strong>.
+                    {/if}
                     <br />{$aLangPlugin.file_extensions}: <strong>{join(', ', array_unique(Config::Get('module.uploader.files.multiple-file-upload.file_extensions')))|escape}</strong>
                     <br />{$oField->getFieldDescription()}
                 </div>
