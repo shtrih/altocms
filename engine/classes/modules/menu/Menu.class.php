@@ -14,6 +14,8 @@
  */
 class ModuleMenu extends Module {
 
+    protected $aPreparedMenu = array();
+
     public function Init() {
 
     }
@@ -57,20 +59,46 @@ class ModuleMenu extends Module {
     public function PrepareMenus() {
 
         $aMenus = Config::Get('menu.data');
-        $bChanged = false;
         if ($aMenus && is_array($aMenus)) {
 
             foreach($aMenus as $sMenuId => $aMenu) {
-                if (isset($aMenu['init']['fill'])) {
-                    $aMenus[$sMenuId] = $this->Prepare($sMenuId, $aMenu);
-                    $bChanged = true;
+                if (!isset($this->aPreparedMenu[$sMenuId])) {
+                    if (isset($aMenu['init']['fill'])) {
+                        $aPreparedMenu = $this->Prepare($sMenuId, $aMenu);
+                    } else {
+                        $aPreparedMenu = $aMenu;
+                    }
+                    $this->SetPreparedMenu($sMenuId, $aPreparedMenu);
                 }
             }
-            if ($bChanged) {
-                Config::Set('menu.data', null);
-                Config::Set('menu.data', $aMenus);
-            }
         }
+    }
+
+    /**
+     * @param string $sMenuId
+     * @param array  $aMenu
+     */
+    public function SetPreparedMenu($sMenuId, $aMenu) {
+
+        $this->aPreparedMenu[$sMenuId] = $aMenu;
+    }
+
+    /**
+     * @param string $sMenuId
+     *
+     * @return null|array
+     */
+    public function GetPreparedMenu($sMenuId) {
+
+        if (isset($this->aPreparedMenu[$sMenuId])) {
+            return $this->aPreparedMenu[$sMenuId];
+        }
+        if ($aMenu = Config::Get('menu.data.' . $sMenuId)) {
+            $aPreparedMenu = $this->Prepare($sMenuId, $aMenu);
+            $this->SetPreparedMenu($sMenuId, $aPreparedMenu);
+            return $aPreparedMenu;
+        }
+        return null;
     }
 
     /**
@@ -186,19 +214,20 @@ class ModuleMenu extends Module {
      *
      * @param $sMenuId
      *
-     * @return bool
+     * @return ModuleMenu_EntityMenu|bool
      */
     public function GetMenu($sMenuId) {
 
         // Настройки меню
-        $aMenuConfig = Config::Get('menu.data.' . $sMenuId);
+        //$aMenuData = Config::Get('menu.data.' . $sMenuId);
+        $aMenuData = $this->GetPreparedMenu($sMenuId);
 
         // Из них возьмем сами сформированные меню
-        if (isset($aMenuConfig['items'])) {
+        if (isset($aMenuData['items'])) {
             return E::GetEntity('Menu_Menu', array(
                 'id'          => $sMenuId,
-                'items'       => $aMenuConfig['items'],
-                'description' => isset($aMenuConfig['description']) ? $aMenuConfig['description'] : '',
+                'items'       => $aMenuData['items'],
+                'description' => isset($aMenuData['description']) ? $aMenuData['description'] : '',
             ));
         }
 
@@ -250,7 +279,8 @@ class ModuleMenu extends Module {
     public function SaveMenu($oMenu) {
 
         // Установим объект для дальнейшего использования
-        Config::Set("menu.data.{$oMenu->getId()}.items", $oMenu->GetItems());
+        //Config::Set("menu.data.{$oMenu->getId()}.items", $oMenu->GetItems());
+        $this->aPreparedMenu[$oMenu->getId()] = $oMenu->GetItems();
 
         // И конфиг сохраним
         $aNewConfigData = array();

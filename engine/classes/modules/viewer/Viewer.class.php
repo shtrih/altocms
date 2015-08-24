@@ -614,8 +614,11 @@ class ModuleViewer extends Module {
         $this->_initTemplator();
 
         // Loads localized texts
-        $this->Assign('aLang', E::ModuleLang()->GetLangMsg());
-        $this->Assign('oLang', E::ModuleLang()->Dictionary());
+        $aLang = E::ModuleLang()->GetLangMsg();
+        // Old skin compatibility
+        $aLang['registration_password_notice'] = E::ModuleLang()->Get('registration_password_notice', array('min' => C::Val('module.security.password_len', 3)));
+        $this->Assign('aLang', $aLang);
+        //$this->Assign('oLang', E::ModuleLang()->Dictionary());
 
         if (!$this->bLocal && !$this->GetResponseAjax()) {
             // Initialization of assets (JS-, CSS-files)
@@ -810,9 +813,11 @@ class ModuleViewer extends Module {
         /** @var Plugin $oPlugin */
         foreach ($aPlugins as $sPlugin => $oPlugin) {
             $sDir = Plugin::GetTemplateDir(get_class($oPlugin));
-            $this->oSmarty->addTemplateDir(array($sDir . 'tpls/', $sDir), $oPlugin->GetName(false));
-            $aPluginsTemplateDir[$sPlugin] = $sDir;
-            $aPluginsTemplateUrl[$sPlugin] = Plugin::GetTemplateUrl(get_class($oPlugin));
+            if ($sDir) {
+                $this->oSmarty->addTemplateDir(array($sDir . 'tpls/', $sDir), $oPlugin->GetName(false));
+                $aPluginsTemplateDir[$sPlugin] = $sDir;
+                $aPluginsTemplateUrl[$sPlugin] = Plugin::GetTemplateUrl(get_class($oPlugin));
+            }
         }
         if (E::ActivePlugin('ls')) {
             // LS-compatible //
