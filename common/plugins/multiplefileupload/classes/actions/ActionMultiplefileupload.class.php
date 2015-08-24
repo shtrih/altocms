@@ -156,25 +156,37 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
             $sType = finfo_file($rFinfo, $sFilePath);
             finfo_close($rFinfo);
             header('Content-Type: ' . $sType);
+            header('Content-Length: ' . $iFileSize);
 
             // Файл, размером большим, чем указано в конфиге, отдаем как attachment, в ином случае, без оного заголовка, чтобы браузер сам решил, что с ним делать
             if ($iFileSize > Config::Get('plugin.multiplefileupload.attachment-header-max-file-size')) {
                 header('Content-Disposition: attachment; filename="' . $oMresource->getParamValue('original_filename') . '"');
             }
 
-            // TODO: Nginx frontend, Apache XSendfile
-            // http://mailman.nginx.org/pipermail/nginx-ru/2005-May/002145.html
-            /*
-            header("HTTP/1.1 206 Partial Content");
-            header("Accept-Ranges: bytes");
-            header("Content-Range: bytes 0-");
-            header("X-Xox: static");
-            header("X-Accel-Redirect: /internal-file-proxy" . $http_file);
-*/
-            header('Content-Length: ' . $iFileSize);
-            ob_clean();
-            flush();
-            readfile($sFilePath);
+            // TODO: вынести в настройки
+            // Apache XSendFile
+            // https://tn123.org/mod_xsendfile/
+            if (in_array('mod_xsendfile', apache_get_modules()) && Config::Get('plugin.multiplefileupload.apache2-xsendfile')) {
+                header('X-Sendfile: ' . $sFilePath);
+                header("X-mfu: sendfile");
+            }
+            // Nginx as frontend server
+            // http://wiki.nginx.org/XSendfile
+            elseif (Config::Get('plugin.multiplefileupload.nginx-frontend')) {
+                // http://mailman.nginx.org/pipermail/nginx-ru/2005-May/002145.html
+                /*
+                header("HTTP/1.1 206 Partial Content");
+                header("Accept-Ranges: bytes");
+                header("Content-Range: bytes 0-");
+                header("X-Accel-Redirect: /internal-file-proxy" . $http_file);
+                */
+                header("X-Accel-Redirect: " . $sFilePath);
+            }
+            else {
+                ob_clean();
+                flush();
+                readfile($sFilePath);
+            }
         }
         else {
             return parent::EventNotFound();
