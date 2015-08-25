@@ -176,7 +176,7 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
                 header("HTTP/1.1 206 Partial Content");
                 header("Accept-Ranges: bytes");
                 header("Content-Range: bytes 0-");
-                header("X-Accel-Redirect: /internal-file-proxy" . $http_file);
+                header("X-Accel-Redirect: " . $sFilePath);
                 */
                 header("X-Accel-Redirect: " . $sFilePath);
             }
