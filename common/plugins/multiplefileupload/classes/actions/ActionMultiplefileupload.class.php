@@ -1,13 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: shtrih
- * Date: 06.08.15
- * Time: 13:27
+/*
+ * Этот файл является частью плагина Multiple File Upload
+ * Copyright © 2015 https://github.com/shtrih
+ * Распространение, продажа, обмен и передача плагина третьим лицам запрещено, за исключением когда третье лицо занимается разработкой вашего проекта.
  */
 
 class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
-
 
     protected function RegisterEvent() {
         $this->AddEvent('upload', 'eventUpload');
