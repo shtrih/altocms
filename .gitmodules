@@ -1,0 +1,3 @@
+[submodule "common/plugins/contentfieldsx"]
+	path = common/plugins/contentfieldsx
+	url = git@github.com:shtrih/altocms-plugin-contentfieldsx.git
