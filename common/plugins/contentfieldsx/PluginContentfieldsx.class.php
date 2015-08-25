@@ -4,7 +4,7 @@
  * Запрещаем напрямую через браузер обращение к этому файлу.
  */
 if (!class_exists('Plugin')) {
-    die('Hacking attemp!');
+    die('Hacking attempt!');
 }
 
 class PluginContentfieldsx extends Plugin {
@@ -26,7 +26,7 @@ class PluginContentfieldsx extends Plugin {
         )
     );
 
-    // Объявление переопределений (модули, мапперы и сущности)
+    // Объявление переопределений (модули, мапперы, экшны и сущности)
     protected $aInherits=array(
        /**
         * Переопределение модулей (функционал):
@@ -72,22 +72,5 @@ class PluginContentfieldsx extends Plugin {
 
         return true;
     }
-
-    // Деактивация плагина
-    public function Deactivate(){
-        /*
-        $this->ExportSQL(dirname(__FILE__).'/deinstall.sql'); // Выполнить деактивационный sql, если надо.
-        */
-        return true;
-    }
-
-
-    // Инициализация плагина
-    public function Init() {
-//        E::ModuleViewer()->AppendStyle(Plugin::GetTemplateDir(__CLASS__)."assets/css/style.css"); // Добавление своего CSS
-//        E::ModuleViewer()->AppendScript(Plugin::GetTemplateDir(__CLASS__)."assets/js/script.js"); // Добавление своего JS
-
-        //E::ModuleViewer()->AddMenu('blog',Plugin::GetTemplateDir(__CLASS__).'menu.blog.tpl'); // например, задаем свой вид меню
-    }
 }
-?>
+

@@ -27,7 +27,7 @@ class PluginContentfieldsx_ModuleTopic_EntityTopic extends PluginContentfieldsx_
      *         {$oTopicField->getValue()}
      *     {/if}
      *
-     * @param $sFieldUniqueName
+     * @param $sFieldUniqueName string Уникальное имя поля
      * @return ModuleTopic_EntityContentValues|null
      */
     public function getFieldValueByName($sFieldUniqueName) {

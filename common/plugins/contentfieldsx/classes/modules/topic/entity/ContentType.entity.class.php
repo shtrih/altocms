@@ -9,7 +9,7 @@
 class PluginContentfieldsx_ModuleTopic_EntityContentType extends PluginContentfieldsx_Inherits_ModuleTopic_EntityContentType {
 
     /**
-     * @param $sFieldUniqueName
+     * @param $sFieldUniqueName string Уникальное имя поля
      * @return ModuleTopic_EntityField|null
      */
     public function getFieldByName($sFieldUniqueName) {
