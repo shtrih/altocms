@@ -10,7 +10,7 @@
                     <tr data-file-id="{$oFile->id}" data-file-size="{$oFile->size}">
                         <td><a class="name" href="{$oFile->url}" title="{$oFile->name|escape:'htmlall'}">{$oFile->name|escape}</a></td>
                         <td class="col-md-2">{PluginMultiplefileupload_ModuleMultiplefileupload::sizeFormat($oFile->size)}</td>
-                        <td class="col-md-4">
+                        <td class="col-md-5">
                             <a class="btn btn-small btn-default mfu-attach-file" href="#"
                                title="{$aLangPlugin.btn_attach_title|escape:'htmlall'}"><span class="glyphicon glyphicon-pushpin"></span>&nbsp;{$aLangPlugin.btn_attach}</a>
                             <a class="btn btn-small btn-danger mfu-remove-file" href="#"><span class="glyphicon glyphicon-trash"></span>&nbsp;{$aLangPlugin.btn_remove}</a>
