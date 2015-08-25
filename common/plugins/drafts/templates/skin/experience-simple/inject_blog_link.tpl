@@ -1,1 +1,0 @@
-<a class="btn btn-default{if $sMenuSubItemSelect=='draft'} active{/if}" href="{$sMenuSubBlogUrl}draft/">{$aLang.plugin.drafts.drafts}{if $iCountDraftUser} ({$iCountDraftUser}) {/if}</a>

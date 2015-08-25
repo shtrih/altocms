@@ -1,3 +1,6 @@
 [submodule "common/plugins/contentfieldsx"]
 	path = common/plugins/contentfieldsx
 	url = git@github.com:shtrih/altocms-plugin-contentfieldsx.git
+[submodule "common/plugins/drafts"]
+	path = common/plugins/drafts
+	url = git@github.com:shtrih/livestreet_drafts.git
