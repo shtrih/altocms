@@ -51,7 +51,7 @@ class PluginGravatar extends Plugin {
      *
      */
     protected $aInherits = array(
-        'entity'  => array('ModuleUser_EntityUser'=>'_ModuleGravatar_EntityUser')
+        'entity'  => array('ModuleUser_EntityUser')
     );
 
     // Активация плагина

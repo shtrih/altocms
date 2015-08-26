@@ -1,5 +1,5 @@
 <?php
-class PluginGravatar_ModuleGravatar_EntityUser extends PluginGravatar_Inherit_ModuleUser_EntityUser {
+class PluginGravatar_ModuleUser_EntityUser extends PluginGravatar_Inherit_ModuleUser_EntityUser {
 
     /**
      * Возвращает полный URL до аватары нужного размера
