@@ -11,15 +11,15 @@ class PluginMHB_ModuleUser extends PluginMHB_Inherit_ModuleUser
 
             foreach ($aMhb as $oMhb) {
                 if ($oMhb->getAutoJoin()) {
-                    if ($oBlog = $this->Blog_GetBlogById($oMhb->getBlogId())) {
+                    if ($oBlog = E::ModuleBlog()->GetBlogById($oMhb->getBlogId())) {
                         $oBlogUserNew = Engine::GetEntity('Blog_BlogUser');
                         $oBlogUserNew->setUserId($sId);
                         $oBlogUserNew->setUserRole(ModuleBlog::BLOG_USER_ROLE_USER);
                         $oBlogUserNew->setBlogId($oBlog->getId());
-                        $bResult = $this->Blog_AddRelationBlogUser($oBlogUserNew);
+                        $bResult = E::ModuleBlog()->AddRelationBlogUser($oBlogUserNew);
                         if ($bResult) {
                             $oBlog->setCountUser($oBlog->getCountUser() + 1);
-                            $this->Blog_UpdateBlog($oBlog);
+                            E::ModuleBlog()->UpdateBlog($oBlog);
                             $this->Stream_write($sId, 'join_blog', $oBlog->getId());
                             $this->Userfeed_subscribeUser($sId, ModuleUserfeed::SUBSCRIBE_TYPE_BLOG, $oBlog->getId());
                         }

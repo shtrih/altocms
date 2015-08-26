@@ -13,15 +13,15 @@ class PluginMHB_ActionAdmin extends PluginMHB_Inherit_ActionAdmin
 {
 
     protected function RegisterEvent() {
-        $this->AddEvent('mhb', 'EventMHB');
+        $this->AddEvent('settings-mhb', 'EventMHB');
         parent::RegisterEvent();
     }
 
     public function EventMHB() {
-        $aBlogs = $this->Blog_GetBlogs();
+        $aBlogs = E::ModuleBlog()->GetBlogs();
 
         if (isPost('submit_mhb')) {
-            $this->Security_ValidateSendForm();
+            E::ModuleSecurity()->ValidateSendForm();
             $this->PluginMHB_ModuleMain_DeleteAllMhb();
 
             foreach ($_REQUEST as $key => $var) {
@@ -77,7 +77,7 @@ class PluginMHB_ActionAdmin extends PluginMHB_Inherit_ActionAdmin
             }
             $aData[] = $data;
         }
-        $this->Viewer_AddBlock('right', 'block.info.tpl', array('plugin' => 'mhb'), 100);
-        $this->Viewer_Assign("aData", $aData);
+        E::ModuleViewer()->AddBlock('right', 'block.info.tpl', array('plugin' => 'mhb'), 100);
+        E::ModuleViewer()->Assign("aData", $aData);
     }
 }
