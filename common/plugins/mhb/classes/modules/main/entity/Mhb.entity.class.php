@@ -12,36 +12,10 @@
 class PluginMhb_ModuleMain_EntityMhb extends Entity
 {
     public function getId() {
-        return $this->_aData['mhb_id'];
+        return $this->getProp('mhb_id');
     }
 
-    public function getBlogId() {
-        return $this->_aData['blog_id'];
-    }
-
-    public function getAutoJoin() {
-        return $this->_aData['auto_join'];
-    }
-
-    public function getCantLeave() {
-        return $this->_aData['cant_leave'];
-    }
-
-
-    public function setId($data) {
-        $this->_aData['mhb_id'] = $data;
-    }
-
-    public function setBlogId($data) {
-        $this->_aData['blog_id'] = $data;
-    }
-
-    public function setAutoJoin($data) {
-        $this->_aData['auto_join'] = $data ? $data : 0;
-    }
-
-    public function setCantLeave($data) {
-        $this->_aData['cant_leave'] = $data ? $data : 0;
+    public function setId($iMhbId) {
+        return $this->setProp('mhb_id', $iMhbId);
     }
 }
-

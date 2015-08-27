@@ -17,10 +17,12 @@ class PluginMHB extends Plugin
 {
 
     protected $aInherits = array(
-        'action' => array('ActionAdmin'),
+        'action' => array(
+            'ActionAdmin'
+        ),
         'module' => array(
-            'ModuleUser' => 'PluginMHB_ModuleUser',
-            'ModuleBlog' => 'PluginMHB_ModuleBlog'
+            'ModuleUser',
+            'ModuleBlog',
         )
     );
 

@@ -22,46 +22,49 @@ class PluginMHB_ActionAdmin extends PluginMHB_Inherit_ActionAdmin
 
         if (isPost('submit_mhb')) {
             E::ModuleSecurity()->ValidateSendForm();
-            $this->PluginMHB_ModuleMain_DeleteAllMhb();
+            E::Module('PluginMHB_ModuleMain')->DeleteAllMhb();
 
             foreach ($_REQUEST as $key => $var) {
                 $oMhb = null;
 
                 if (strpos($key, 'mhb_auto_join_') === 0) {
                     $iBlogId = substr($key, 14);
-                    $oMhb    = $this->PluginMHB_ModuleMain_GetMhbByBlogId($iBlogId);
+
+                    /** @var $oMhb PluginMhb_ModuleMain_EntityMhb */
+                    $oMhb    = E::Module('PluginMHB_ModuleMain')->GetMhbByBlogId($iBlogId);
                     if (!$oMhb) {
                         $oMhb = Engine::GetEntity('PluginMHB_Main_Mhb');
                         $oMhb->setBlogId($iBlogId);
                         $oMhb->setAutoJoin(1);
                         $oMhb->setCantLeave(0);
-                        $this->PluginMHB_ModuleMain_AddMhb($oMhb);
+                        E::Module('PluginMHB_ModuleMain')->AddMhb($oMhb);
                     }
                     else {
                         $oMhb->setAutoJoin(1);
-                        $this->PluginMHB_ModuleMain_UpdateMhb($oMhb);
+                        E::Module('PluginMHB_ModuleMain')->UpdateMhb($oMhb);
                     }
                 }
 
                 if (strpos($key, 'mhb_cant_leave_') === 0) {
                     $iBlogId = substr($key, 15);
-                    $oMhb    = $this->PluginMHB_ModuleMain_GetMhbByBlogId($iBlogId);
+                    /** @var $oMhb PluginMhb_ModuleMain_EntityMhb */
+                    $oMhb    = E::Module('PluginMHB_ModuleMain')->GetMhbByBlogId($iBlogId);
                     if (!$oMhb) {
                         $oMhb = Engine::GetEntity('PluginMHB_Main_Mhb');
                         $oMhb->setBlogId($iBlogId);
                         $oMhb->setAutoJoin(0);
                         $oMhb->setCantLeave(1);
-                        $this->PluginMHB_ModuleMain_AddMhb($oMhb);
+                        E::Module('PluginMHB_ModuleMain')->AddMhb($oMhb);
                     }
                     else {
                         $oMhb->setCantLeave(1);
-                        $this->PluginMHB_ModuleMain_UpdateMhb($oMhb);
+                        E::Module('PluginMHB_ModuleMain')->UpdateMhb($oMhb);
                     }
                 }
             }
         }
 
-        $aMhb = $this->PluginMHB_ModuleMain_GetAllMhb();
+        $aMhb = E::Module('PluginMHB_ModuleMain')->GetAllMhb();
 
         $aData = array();
         foreach ($aBlogs as $oBlog) {

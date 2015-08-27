@@ -7,11 +7,13 @@ class PluginMHB_ModuleUser extends PluginMHB_Inherit_ModuleUser
         if ($nUser = parent::Add($oUser)) {
             $sId = $nUser->getId();
 
-            $aMhb = $this->PluginMHB_ModuleMain_GetAllMhb();
+            $aMhb = E::Module('PluginMHB_ModuleMain')->GetAllMhb();
 
+            /** @var $oMhb PluginMhb_ModuleMain_EntityMhb */
             foreach ($aMhb as $oMhb) {
                 if ($oMhb->getAutoJoin()) {
                     if ($oBlog = E::ModuleBlog()->GetBlogById($oMhb->getBlogId())) {
+                        /** @var $oBlogUserNew ModuleBlog_EntityBlogUser */
                         $oBlogUserNew = Engine::GetEntity('Blog_BlogUser');
                         $oBlogUserNew->setUserId($sId);
                         $oBlogUserNew->setUserRole(ModuleBlog::BLOG_USER_ROLE_USER);
@@ -20,8 +22,8 @@ class PluginMHB_ModuleUser extends PluginMHB_Inherit_ModuleUser
                         if ($bResult) {
                             $oBlog->setCountUser($oBlog->getCountUser() + 1);
                             E::ModuleBlog()->UpdateBlog($oBlog);
-                            $this->Stream_write($sId, 'join_blog', $oBlog->getId());
-                            $this->Userfeed_subscribeUser($sId, ModuleUserfeed::SUBSCRIBE_TYPE_BLOG, $oBlog->getId());
+                            E::ModuleStream()->write($sId, 'join_blog', $oBlog->getId());
+                            E::ModuleUserfeed()->subscribeUser($sId, ModuleUserfeed::SUBSCRIBE_TYPE_BLOG, $oBlog->getId());
                         }
                     }
                 }
