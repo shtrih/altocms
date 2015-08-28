@@ -80,7 +80,6 @@ class PluginMHB_ActionAdmin extends PluginMHB_Inherit_ActionAdmin
             }
             $aData[] = $data;
         }
-        E::ModuleViewer()->AddBlock('right', 'block.info.tpl', array('plugin' => 'mhb'), 100);
         E::ModuleViewer()->Assign("aData", $aData);
     }
 }
