@@ -7,9 +7,8 @@
  *
  */
 
-$config=array();
-
-$config['table']['mhb']                = '___db.table.prefix___mhb';
-
-return $config;
-?>
+return array(
+    'table' => array(
+        'mhb' => '___db.table.prefix___mhb'
+    ),
+);

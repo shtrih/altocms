@@ -12,7 +12,8 @@
  * Модуль роботостатистики
  *
  */
-class PluginMHB_ModuleMain extends Module {
+class PluginMHB_ModuleMain extends Module
+{
     /**
      * Меппер для сохранения логов в базу данных и формирования выборок по данным из базы
      *
@@ -24,7 +25,7 @@ class PluginMHB_ModuleMain extends Module {
      * Инициализация модуля
      */
     public function Init() {
-        $this->oMapper=Engine::GetMapper(__CLASS__);
+        $this->oMapper = Engine::GetMapper(__CLASS__);
     }
 
     public function AddMhb(PluginMHB_ModuleMain_EntityMhb $oMhb) {
@@ -51,25 +52,24 @@ class PluginMHB_ModuleMain extends Module {
         return $this->oMapper->GetAllMhb();
     }
 
-    public function GetTemplateFilePath($sPluginClass,$sFileName)
-    {
-        $sPP=Plugin::GetTemplatePath($sPluginClass);
-        $fName=$sPP . $sFileName;
-        if (file_exists($fName))
+    public function GetTemplateFilePath($sPluginClass, $sFileName) {
+        $sPP   = Plugin::GetTemplatePath($sPluginClass);
+        $fName = $sPP . $sFileName;
+        if (file_exists($fName)) {
             return $fName;
-        
-        $aa=explode("/", $sPP);
+        }
+
+        $aa = explode("/", $sPP);
         array_pop($aa);
         array_pop($aa);
-        $aa[]='default';
-        $aa[]='';
+        $aa[] = 'default';
+        $aa[] = '';
+
         return join("/", $aa) . $sFileName;
     }
 
-    public function GetTemplateFileWebPath($sPluginClass,$sFileName)
-    {
+    public function GetTemplateFileWebPath($sPluginClass, $sFileName) {
         return str_replace(Config::Get('path.root.server'), Config::Get('path.root.web'), $this->GetTemplateFilePath($sPluginClass, $sFileName));
     }
 
 }
-?>
