@@ -10,6 +10,7 @@
     <homepage>http://imthinker.ru/plugin-mhb</homepage>
     <version>3.0.0</version>
     <dirname>mhb</dirname>
+    <settings>/admin/settings-mhb</settings>
     <requires>
         <alto>
             <version>1.1.0</version>
