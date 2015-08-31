@@ -12,21 +12,21 @@ class PluginBetterspoilers_ModuleText extends PluginBetterspoilers_Inherit_Modul
         parent::LoadJevixConfig($sType, $bClear);
         if ('default' == $sType) {
             // добавляем теги визуального редактора
-            $this->oJevix->cfgAllowTags(array('spoiler', 'hide'));
+            $this->oTextParser->cfgAllowTags(array('spoiler', 'hide'));
             $this->JevixAppendAllowTagParam('spoiler', 'name');
-            $this->oJevix->cfgSetTagBlockType('spoiler');
+            $this->oTextParser->cfgSetTagBlockType('spoiler');
 
 
             // добавляем правила для шаблонов tpls/snippets/snippet.*.tpl
             //region snippet.spoiler.tpl
-            $this->oJevix->cfgAllowTags(array('input', 'span'));
-            $this->oJevix->cfgSetTagShort(array('input'));
+            $this->oTextParser->cfgAllowTags(array('input', 'span'));
+            $this->oTextParser->cfgSetTagShort(array('input'));
             $this->JevixAppendAllowTagParam('input', 'type', 'checkbox');
             $this->JevixAppendAllowTagParam('input', 'tabindex', '-1');
 
             $this->JevixAppendAllowTagParam('span', 'class', array('btrsplr-text', 'btrsplr-trigger'));
             $this->JevixAppendAllowTagParam('div', 'class', array('betterspoiler', 'btrsplr-box'));
-            $this->oJevix->cfgSetTagBlockType(array('div'));
+            $this->oTextParser->cfgSetTagBlockType(array('div'));
             //endregion
             //region snippet.hide.tpl
             $this->JevixAppendAllowTagParam('span', 'class', 'hidetext');
@@ -43,8 +43,8 @@ class PluginBetterspoilers_ModuleText extends PluginBetterspoilers_Inherit_Modul
     private function JevixGetAllowTagParam($sTag, $sParam) {
         $result = array();
 
-        if (isset($this->oJevix->tagsRules[$sTag][Jevix::STATE_TAG_PARAM_VALUE][$sParam])) {
-            $result = $this->oJevix->tagsRules[$sTag][Jevix::STATE_TAG_PARAM_VALUE][$sParam];
+        if (isset($this->oTextParser->tagsRules[$sTag][Jevix::STATE_TAG_PARAM_VALUE][$sParam])) {
+            $result = $this->oTextParser->tagsRules[$sTag][Jevix::STATE_TAG_PARAM_VALUE][$sParam];
         }
 
         return $result;
@@ -74,7 +74,7 @@ class PluginBetterspoilers_ModuleText extends PluginBetterspoilers_Inherit_Modul
             array_unshift($aParams[$sTag][$sParam], $saValue);
         }
 
-        $this->oJevix->cfgAllowTagParams($sTag, $aParams[$sTag]);
+        $this->oTextParser->cfgAllowTagParams($sTag, $aParams[$sTag]);
     }
 
     /**
