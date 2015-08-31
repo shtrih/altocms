@@ -22,7 +22,8 @@
 $config['default']['js'] = array(
     /* Vendor libs */
     '___path.frontend.dir___/libs/vendor/html5shiv.min.js' => array('browser' => 'lt IE 9'),
-    '___path.frontend.dir___/libs/vendor/jquery-1.10.2.min.js' => array('name' => 'jquery', 'asset' => 'mini'),
+    //'___path.frontend.dir___/libs/vendor/jquery-1.10.2.min.js' => array('name' => 'jquery', 'asset' => 'mini'),
+    '___path.frontend.dir___/libs/vendor/jquery-1.11.3.min.js' => array('name' => 'jquery', 'asset' => 'mini'),
     '___path.frontend.dir___/libs/vendor/jquery-migrate-1.2.1.min.js' => array('asset' => 'mini'),
     '___path.frontend.dir___/libs/vendor/jquery-ui/js/jquery-ui-1.10.2.custom.min.js' => array('name' => 'jquery-ui', 'asset' => 'mini'),
     '___path.frontend.dir___/libs/vendor/jquery-ui/js/localization/jquery-ui-datepicker-ru.js',
@@ -40,7 +41,7 @@ $config['default']['js'] = array(
     '___path.frontend.dir___/libs/vendor/jquery.imagesloaded.js',
     '___path.frontend.dir___/libs/vendor/jquery.montage.min.js',
     '___path.frontend.dir___/libs/vendor/jcrop/jquery.Jcrop.js',
-    '___path.frontend.dir___/libs/vendor/markitup/jquery.markitup.js',
+    //'___path.frontend.dir___/libs/vendor/markitup/jquery.markitup.js',
     '___path.frontend.dir___/libs/vendor/notifier/jquery.notifier.js',
     '___path.frontend.dir___/libs/vendor/prettify/prettify.js',
     '___path.frontend.dir___/libs/vendor/nprogress/nprogress.js',
@@ -73,12 +74,15 @@ $config['default']['js'] = array(
     ),
 
     /* markitUp */
+    /*
     '___path.frontend.dir___/libs/vendor/markitup/jquery.markitup.js'       => array(
         'dir_from' => '___path.frontend.dir___/libs/vendor/markitup/',
         'name'     => 'markitup',
     ),
+    */
 
     /* tinyMCE */
+    /*
     '___path.frontend.dir___/libs/vendor/tinymce_4/tinymce.min.js'       => array(
         'dir_from' => '___path.frontend.dir___/libs/vendor/tinymce_4/',
         'name'     => 'tinymce_4',
@@ -109,6 +113,7 @@ $config['default']['js'] = array(
         'compress' => false,
         'merge'    => false,
     ),
+    */
     '___path.frontend.dir___/libs/vendor/jquery.fileapi/FileAPI/*'       => array(
         'dir_from'  => '___path.frontend.dir___/libs/vendor/jquery.fileapi/FileAPI/',
         'prepare'   => true,
@@ -181,6 +186,48 @@ $config['default']['css'] = array(
     '___path.frontend.dir___/libs/vendor/nprogress/nprogress.css',
     '___path.frontend.dir___/libs/vendor/syslabel/syslabel.css',
     '___path.frontend.dir___/libs/vendor/prettyphoto/css/prettyphoto.css',
+);
+
+/* *** Editor markitUp *** */
+$config['editor']['markitup']['js'] = array(
+    '___path.frontend.dir___/libs/vendor/markitup/jquery.markitup.js'       => array(
+        'dir_from' => '___path.frontend.dir___/libs/vendor/markitup/',
+        'name'     => 'markitup',
+    ),
+);
+
+/* *** Editor tinyMCE *** */
+$config['editor']['tinymce']['js'] = array(
+    '___path.frontend.dir___/libs/vendor/tinymce_4/tinymce.min.js'       => array(
+        'dir_from' => '___path.frontend.dir___/libs/vendor/tinymce_4/',
+        'name'     => 'tinymce_4',
+        'compress' => false,
+        'merge'    => false,
+    ),
+    '___path.frontend.dir___/libs/vendor/tinymce_4/plugins/*'       => array(
+        'dir_from'  => '___path.frontend.dir___/libs/vendor/tinymce_4/',
+        'prepare'   => true,
+        'compress'  => false,
+        'merge'     => false,
+    ),
+    '___path.frontend.dir___/libs/vendor/tinymce_4/langs/*'       => array(
+        'dir_from' => '___path.frontend.dir___/libs/vendor/tinymce_4/',
+        'prepare'  => true,
+        'compress' => false,
+        'merge'    => false,
+    ),
+    '___path.frontend.dir___/libs/vendor/tinymce_4/skins/*'       => array(
+        'dir_from' => '___path.frontend.dir___/libs/vendor/tinymce_4/',
+        'prepare'  => true,
+        'compress' => false,
+        'merge'    => false,
+    ),
+    '___path.frontend.dir___/libs/vendor/tinymce_4/themes/*'       => array(
+        'dir_from' => '___path.frontend.dir___/libs/vendor/tinymce_4/',
+        'prepare'  => true,
+        'compress' => false,
+        'merge'    => false,
+    ),
 );
 
 // EOF
