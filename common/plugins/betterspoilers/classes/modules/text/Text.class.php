@@ -1,6 +1,6 @@
 <?php
 
-class PluginBetterspoilers_ModuleText extends PluginBetterspoilers_Inherit_ModuleText {
+class PluginBetterspoilers_ModuleText extends PluginBetterspoilers_Inherits_ModuleText {
 
     /**
      * Загружает конфиг Jevix'а
@@ -10,6 +10,15 @@ class PluginBetterspoilers_ModuleText extends PluginBetterspoilers_Inherit_Modul
      */
     public function LoadJevixConfig($sType = 'default', $bClear = true) {
         parent::LoadJevixConfig($sType, $bClear);
+        $this->InjectTags($sType);
+    }
+
+    public function LoadQevixConfig($sType = 'default', $bClear = true) {
+        parent::LoadQevixConfig($sType, $bClear);
+        $this->InjectTags($sType);
+    }
+
+    public function InjectTags($sType) {
         if ('default' == $sType) {
             // добавляем теги визуального редактора
             $this->oTextParser->cfgAllowTags(array('spoiler', 'hide'));
