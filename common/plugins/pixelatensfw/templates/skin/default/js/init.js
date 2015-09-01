@@ -81,7 +81,7 @@ $(window).on('load', function () {
                 '<li></li>' +
             '</ul>' +
         '</li>').insertAfter(
-            $('.topic-footer .topic-comments')
+            $('.topic-footer .topic-comments', topics_nsfw).first()
         )
         .find('.dropdown-menu > li')
             .eq(0).append(a_pixelate)
