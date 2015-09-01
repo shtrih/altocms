@@ -1,7 +1,7 @@
 $(window).on('load', function () {
     var topics_nsfw = $('.nsfw-pictures'),
         initialized = false,
-        need_pixelate = $.cookie('pixelatensfw') === null ? true : !!parseInt($.cookie('pixelatensfw'))
+        need_pixelate = $.cookie('pixelatensfw') == null ? true : !!parseInt($.cookie('pixelatensfw'))
     ;
 
     function init_pixelate() {
