@@ -29,7 +29,7 @@ class PluginAttachments_HookAttachments extends Hook {
   public function AddStylesAndJS () {
       $sTemplateDir = Plugin::GetTemplateDir(__CLASS__);
       E::ModuleViewer()->AppendStyle($sTemplateDir . 'css/style.css');
-      E::ModuleViewer()->AppendScript($sTemplateDir . 'js/init.js');
+//      E::ModuleViewer()->AppendScript($sTemplateDir . 'js/init.js');
   }
   
 	// ---
