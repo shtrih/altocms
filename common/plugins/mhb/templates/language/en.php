@@ -21,5 +21,5 @@ return array(
     'mhb_auto_join_title'  => 'Autojoin',
     'mhb_cant_leave_title' => 'Can\'t leave',
     'mhb_submit'           => 'Save',
-    'mhb_note'             => 'Asterisk [*] marks a closed blog<br/><br/>',
+    'mhb_blog_closed'      => 'Closed blog',
 );

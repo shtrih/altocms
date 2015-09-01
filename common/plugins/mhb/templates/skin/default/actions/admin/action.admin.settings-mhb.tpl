@@ -24,7 +24,7 @@
                 <tbody>
                 {foreach from=$aData item=data}
                     <tr>
-                        <td>{if $data.closed}[*] {/if}{$data.title|escape:html}</td>
+                        <td>{if $data.closed}<span class="icon icon-lock" title="{$aLang.plugin.mhb.mhb_blog_closed}"></span> {/if}{$data.title|escape:html}</td>
                         <td class="mhb_checkbox cell-checkbox">
                             <input type="checkbox" name="mhb_auto_join_{$data.blog_id}" class="checkbox" {if $data.auto_join}checked{/if} />
                         </td>
@@ -35,7 +35,6 @@
                 {/foreach}
                 </tbody>
             </table>
-            <div>{$aLang.plugin.mhb.mhb_note}</div>
             <input type="submit" class="btn btn-default" name="submit_mhb" value="{$aLang.plugin.mhb.mhb_submit}"/>
         </form>
     </div>

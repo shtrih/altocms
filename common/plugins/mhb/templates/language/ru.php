@@ -22,5 +22,5 @@ return array(
     'mhb_cant_leave_title' => 'Нельзя покинуть',
     'mhb_cant_leave_blog'  => 'Администрация запретила покидать этот блог',
     'mhb_submit'           => 'Сохранить',
-    'mhb_note'             => 'Звездочкой [*] отмечены закрытые блоги<br/><br/>',
+    'mhb_blog_closed'      => 'Закрытый блог',
 );
