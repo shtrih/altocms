@@ -8,7 +8,7 @@ class PluginPixelatensfw_HookPixelatensfw extends Hook {
     public function RegisterHook() {
 
 
-        $this->AddHook('template_html_global_javascript_vars', 'initPixelate');
+        $this->AddHook('template_layout_head_end', 'initPixelate');
         /*
          * Хук в начало функции AddTopic() в модуле Topic (файл /classes/modules/topic/Topic.class.php , если этот модуль не переопределен в других плагинах):
          *
@@ -51,11 +51,11 @@ class PluginPixelatensfw_HookPixelatensfw extends Hook {
     }
 
     public function initPixelate() {
-        $this->Viewer_Assign('value', number_format(Config::Get('plugin.pixelatensfw.value'), 2));
-        $this->Viewer_Assign('reveal', Config::Get('plugin.pixelatensfw.reveal'));
-        $this->Viewer_Assign('revealonclick', Config::Get('plugin.pixelatensfw.revealonclick'));
+        E::ModuleViewer()->Assign('value', number_format(Config::Get('plugin.pixelatensfw.value'), 2));
+        E::ModuleViewer()->Assign('reveal', Config::Get('plugin.pixelatensfw.reveal'));
+        E::ModuleViewer()->Assign('revealonclick', Config::Get('plugin.pixelatensfw.revealonclick'));
 
-        return $this->Viewer_Fetch(Plugin::GetTemplatePath(__CLASS__).'init_pixelate.tpl');
+        return E::ModuleViewer()->Fetch(Plugin::GetTemplatePath(__CLASS__).'init_pixelate.tpl');
     }
 }
 ?>

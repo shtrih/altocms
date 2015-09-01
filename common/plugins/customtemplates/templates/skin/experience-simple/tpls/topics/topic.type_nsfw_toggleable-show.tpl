@@ -7,6 +7,7 @@
 {$oFavourite=$oTopic->getFavourite()}
 {$oContentType=$oTopic->getContentType()}
 {$oNsfw = $oTopic->getFieldValueByName('nsfw')}
+{$bNsfwPictures = !!$oTopic->getFieldValueByName('nsfw-pictures')}
 
 {*{if $oContentType}*}
     {*{$oField = $oContentType->getFieldByName('nsfw')}*}
@@ -22,7 +23,7 @@
     {*{/if}*}
 {*{/if}*}
 <!-- Блок топика -->
-<div class="panel panel-default topic flat topic-type_{$oTopic->getType()} js-topic{if $oNsfw} nsfw-show{/if}">
+<div class="panel panel-default topic flat topic-type_{$oTopic->getType()} js-topic{if $oNsfw} nsfw-show{/if}{if $bNsfwPictures} nsfw-pictures{/if}">
 
     <div class="panel-body">
         {block name="topic_header"}

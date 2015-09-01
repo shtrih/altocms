@@ -1,17 +1,17 @@
 $(window).on('load', function () {
-    var topics_nsfw = $('.topic-nsfw'),
+    var topics_nsfw = $('.nsfw-pictures'),
         initialized = false,
         need_pixelate = $.cookie('pixelatensfw') === null ? true : !!parseInt($.cookie('pixelatensfw'))
     ;
 
     function init_pixelate() {
-        $('.topic-content img', topics_nsfw).pixelate({
+        $('.topic-text img,.topic-photoset img', topics_nsfw).pixelate({
             value: PIXELATENSFW_VALUE,
             reveal:PIXELATENSFW_REVEAL,
             revealonclick: PIXELATENSFW_REVEALONCLICK
         });
 
-        $('.unfoldable', topics_nsfw)
+        $('a', topics_nsfw).has('img')
             // дабы не переопределять уже повешанный обработчик клика, добавляем новый класс и вешаем новое событие на него
             .addClass('pixelated')
             .filter('.pixelated')
@@ -32,10 +32,10 @@ $(window).on('load', function () {
             })
         ;
 
-        $('canvas:not(.unfoldable > canvas)', topics_nsfw).on('mouseenter', function () {
+        $('canvas:not(.pixelated > canvas)', topics_nsfw).on('mouseenter', function () {
             $(this).hide().next('img').show();
         });
-        $('canvas:not(.unfoldable > canvas) + img', topics_nsfw).on('mouseleave', function () {
+        $('canvas:not(.pixelated > canvas) + img', topics_nsfw).on('mouseleave', function () {
             $(this).hide().prev('canvas').show();
         });
         // скопировать классы картинок, чтобы были одинаковые стили
@@ -65,23 +65,23 @@ $(window).on('load', function () {
         init_pixelate();
 
     (function () {
-        var a_pixelate = $('<a href="#"><i></i>Замутнять картинки в nsfw-постах</a>'),
-            a_notpixelate = $('<a href="#"><i></i>Не замутнять</a>')
+        var a_pixelate = $('<a href="#"><i class="fa"></i>&nbsp;Замутнять картинки в nsfw-постах</a>'),
+            a_notpixelate = $('<a href="#"><i class="fa"></i>&nbsp;Не замутнять</a>')
         ;
 
         if (need_pixelate)
-            a_pixelate.children('i').addClass('icon-ok');
+            a_pixelate.children('i').addClass('fa-check');
         else
-            a_notpixelate.children('i').addClass('icon-ok');
+            a_notpixelate.children('i').addClass('fa-check');
 
         $('<li class="dropdown">' +
-            '<a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#"><i class="icon-cog muted"></i></a>' +
+            '<a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#"><i class="fa fa-cog muted"></i></a>' +
             '<ul class="dropdown-menu">' +
                 '<li></li>' +
                 '<li></li>' +
             '</ul>' +
         '</li>').insertAfter(
-            $('.topic-footer .label-important:first').parent()
+            $('.topic-footer .topic-comments')
         )
         .find('.dropdown-menu > li')
             .eq(0).append(a_pixelate)
@@ -90,8 +90,8 @@ $(window).on('load', function () {
         ;
 
         a_pixelate.on('click', function () {
-            $(this).children('i').addClass('icon-ok');
-            a_notpixelate.children('i').removeClass('icon-ok');
+            $(this).children('i').addClass('fa-check');
+            a_notpixelate.children('i').removeClass('fa-check');
 
             $.cookie('pixelatensfw', 1, {path: '/', expires: 5 * 365});
 
@@ -102,8 +102,8 @@ $(window).on('load', function () {
         });
 
         a_notpixelate.on('click', function () {
-            $(this).children('i').addClass('icon-ok');
-            a_pixelate.children('i').removeClass('icon-ok');
+            $(this).children('i').addClass('fa-check');
+            a_pixelate.children('i').removeClass('fa-check');
 
             $.cookie('pixelatensfw', 0, {path: '/'});
 

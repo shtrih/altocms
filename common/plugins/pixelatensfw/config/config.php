@@ -5,7 +5,7 @@
 
 $config = array(
     // The percentage of pixelation to perform, a value between 0 and 1
-    'value' => 0.1,
+    'value' => 0.08,
     // Reveal the image on hover and remain revealed if clicked
     'reveal' => 'false',
     // Reveal the image on click. When combined with reveal, it will remain revealed after being clicked.

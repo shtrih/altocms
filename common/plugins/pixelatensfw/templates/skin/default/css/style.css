@@ -1,4 +1,4 @@
-.topic-nsfw canvas {
+.nsfw-pictures canvas {
 	image-rendering: optimizeSpeed;
 	image-rendering: -moz-crisp-edges;
 	image-rendering: -webkit-optimize-contrast;
@@ -9,24 +9,38 @@
 	vertical-align: top;
 }
 
-.no-js .topic-nsfw img {
+.no-js .nsfw-pictures .topic-text img,
+.no-js .nsfw-pictures .topic-photoset img {
 	-webkit-filter: blur(3px);
 	-moz-filter: blur(3px);
 	-ms-filter: blur(3px);
 	filter: blur(3px);
 }
 
-.no-js .topic-nsfw img:hover {
+.no-js .nsfw-pictures .topic-text img:hover,
+.no-js .nsfw-pictures .topic-photoset img:hover {
 	-webkit-filter: blur(0px);
 	-moz-filter: blur(0px);
 	-ms-filter: blur(0px);
 	filter: none;
 }
 
-.topic-nsfw.topic {
+.nsfw-pictures.topic {
 	overflow: visible;
 }
 
 .content {
 	overflow: hidden;
+}
+
+/* в теме experience simple недостаточно точные селекторы, так что переопределяем тут */
+.content .topic .topic-footer ul ul {
+	height: auto;
+	padding: 0;
+}
+
+.content .topic .topic-footer ul li li {
+	display: block;
+	float: none;
+	padding: 0;
 }
