@@ -15,7 +15,7 @@
 	</requires>
 	<description>
 		<lang name="default">Allows attach files to topic</lang>
-		<lang name="russian">Позволяет прикреплять файлы к топику</lang>
+		<lang name="russian">Позволяет прикреплять файлы к топику. В данный момент работает в ограниченном режиме: только отображает прикреплённые ранее файлы.</lang>
 		<lang name="ukrainian">Дозволяє прикріплювати файли до топіка</lang>
 	</description>
 </plugin>

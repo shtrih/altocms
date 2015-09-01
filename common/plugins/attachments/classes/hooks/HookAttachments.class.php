@@ -10,17 +10,18 @@ class PluginAttachments_HookAttachments extends Hook {
 	public function RegisterHook() {
     $this -> AddHook ('init_action', 'AddStylesAndJS');
     
-    $this -> AddHook ('template_body_begin', 'BodyBegin');
-    $this->AddHook('template_form_add_topic_topic_begin', 'TopicBegin');
-    $this->AddHook('template_form_add_topic_photoset_begin', 'TopicBegin');
+//    $this -> AddHook ('template_body_begin', 'BodyBegin');
+//    $this->AddHook('template_form_add_topic_topic_begin', 'TopicBegin');
+//    $this->AddHook('template_form_add_topic_photoset_begin', 'TopicBegin');
     
     //$this->AddHook('template_topic_show_info', 'TopicShowGenInfo');
-    $this->AddHook('template_topic_show_info', 'TopicShowFullInfo');
+//    $this->AddHook('template_topic_show_info', 'TopicShowFullInfo');
+    $this->AddHook('template_topic_content_end', 'TopicShowFullInfo');
     // $this->AddHook('template_topic_show_end', 'TopicShowFullInfo');
     
-    $this->AddHook('topic_edit_show', 'TopicEditShow');
-    $this->AddHook('topic_delete_before','TopicDeleteBefore');
-    $this->AddHook('topic_add_after','TopicAddAfter');
+//    $this->AddHook('topic_edit_show', 'TopicEditShow');
+//    $this->AddHook('topic_delete_before','TopicDeleteBefore');
+//    $this->AddHook('topic_add_after','TopicAddAfter');
 	}
 	
   // ---
