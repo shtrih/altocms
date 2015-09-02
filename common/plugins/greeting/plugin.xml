@@ -1,19 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
-        <name>
-                <lang name="default">Greeting new user</lang>
-        </name>
-        <author>
-                <lang name="default">Web studio stfalcon.com</lang>
-        </author>
-        <homepage>http://stfalcon.com/</homepage>
-        <version>0.3.1</version>
-        <requires>
-                <livestreet>1.0</livestreet>
-        </requires>
-        <description>
-                <lang name="default">Send private message to new user with greeting</lang>
-                <lang name="russian">Отправляет приветствие новым пользователям</lang>
-                <lang name="ukrainian">Надсилає привітання новим користувачам</lang>
-        </description>
+    <id>greeting</id>
+    <name>
+        <lang name="default">Greeting new user</lang>
+    </name>
+    <author>
+        <lang name="default">Web studio stfalcon.com</lang>
+    </author>
+    <homepage>http://stfalcon.com/</homepage>
+    <version>0.3.1</version>
+    <dirname>greeting</dirname>
+    <requires>
+        <alto>
+            <version>1.1.0</version>
+        </alto>
+        <system>
+            <php>5.3.0</php>
+        </system>
+    </requires>
+    <description>
+        <lang name="default">Send private message to new user with greeting</lang>
+        <lang name="russian">Отправляет приветствие новым пользователям</lang>
+        <lang name="ukrainian">Надсилає привітання новим користувачам</lang>
+    </description>
 </plugin>
