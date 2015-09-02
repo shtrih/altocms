@@ -48,7 +48,7 @@
                     <br />{$oField->getFieldDescription()}
                 </div>
 
-                <div class="fileupload-progress fade in mab6">
+                <div class="fileupload-progress fade mab6">
                     <div class="progress progress-striped active progress-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100">
                         <div class="progress-bar progress-bar-success" style="width:0%;"></div>
                     </div>

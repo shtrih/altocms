@@ -70,8 +70,11 @@ class PluginMultiplefileupload_HookMultiplefileupload extends Hook {
         });
         $aVars = [
             'aConfig' => [
-                'auto-upload'   => Config::Get('plugin.multiplefileupload.auto-upload'),
-                'max-file-size' => F::MemSize2Int(Config::Get('module.uploader.files.multiple-file-upload.file_maxsize')),
+                'auto-upload'       => Config::Get('plugin.multiplefileupload.auto-upload'),
+                'max-file-size'     => min(
+                    min(F::MemSize2Int(ini_get("post_max_size")), F::MemSize2Int(ini_get("upload_max_filesize"))),
+                    F::MemSize2Int(Config::Get('module.uploader.files.multiple-file-upload.file_maxsize'))
+                ),
                 'accept-file-types' => $aAcceptTypes ? '(\.|\/)(' . join('|', $aAcceptTypes) . ')$' : '',
             ]
         ];
@@ -79,5 +82,3 @@ class PluginMultiplefileupload_HookMultiplefileupload extends Hook {
         return E::ModuleViewer()->Fetch(Plugin::GetTemplateFile(__CLASS__, 'tpls/hooks/hook.template_html_head_tags.tpl'), $aVars);
     }
 }
-
-// EOF
