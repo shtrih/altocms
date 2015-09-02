@@ -52,25 +52,23 @@ class PluginTagskit extends Plugin
     );
 
 
-    public function Init()
-    {
-        $this->Viewer_AppendScript(Plugin::GetWebPath(__CLASS__) . 'js/main.js');
-        $this->Viewer_AppendStyle(Plugin::GetTemplateWebPath(__CLASS__) . 'css/main.css');
+    public function Init() {
+        E::ModuleViewer()->AppendScript(Plugin::GetWebPath(__CLASS__) . 'js/main.js');
+        E::ModuleViewer()->AppendStyle(Plugin::GetTemplateWebPath(__CLASS__) . 'css/main.css');
     }
 
-    public function Activate()
-    {
+    public function Activate() {
         if (!$this->isTableExists('prefix_tk_tag')) {
             /**
              * При активации выполняем SQL дамп
              */
             $this->ExportSQL(dirname(__FILE__) . '/install/dump.sql');
         }
+
         return true;
     }
 
-    public function Deactivate()
-    {
+    public function Deactivate() {
         return true;
     }
 }

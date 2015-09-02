@@ -27,8 +27,7 @@ class PluginTagskit_HookMain extends Hook
     /**
      * Регистрация необходимых хуков
      */
-    public function RegisterHook()
-    {
+    public function RegisterHook() {
         $this->AddHook('template_tagskit_after_tag_form_search', 'AfterTagFormSearch');
         if (Config::Get('plugin.tagskit.type_tags_create') == 'white') {
             $this->AddHook('template_add_topic_topic_end', 'AddTopicEnd');
@@ -43,8 +42,7 @@ class PluginTagskit_HookMain extends Hook
      *
      * @return string
      */
-    public function AfterTagFormSearch()
-    {
+    public function AfterTagFormSearch() {
         return $this->Viewer_Fetch(Plugin::GetTemplatePath(__CLASS__) . 'inject.tags.search.options.tpl');
     }
 
@@ -53,16 +51,24 @@ class PluginTagskit_HookMain extends Hook
      *
      * @return string
      */
-    public function AddTopicEnd()
-    {
-        $aResult = $this->PluginTagskit_Main_GetTopicTagsByTags(Config::Get('plugin.tagskit.tags_list_white'), Config::Get('plugin.tagskit.white_list_sort'),
-            1, Config::Get('plugin.tagskit.white_list_per_page'));
-        $aPaging = $this->Viewer_MakePaging($aResult['count'], 1, Config::Get('plugin.tagskit.white_list_per_page'),
-            Config::Get('pagination.pages.count'), '');
-
+    public function AddTopicEnd() {
+        $aResult = $this->PluginTagskit_Main_GetTopicTagsByTags(
+            Config::Get('plugin.tagskit.tags_list_white'),
+            Config::Get('plugin.tagskit.white_list_sort'),
+            1,
+            Config::Get('plugin.tagskit.white_list_per_page')
+        );
+        $aPaging = $this->Viewer_MakePaging(
+            $aResult['count'],
+            1,
+            Config::Get('plugin.tagskit.white_list_per_page'),
+            Config::Get('pagination.pages.count'),
+            ''
+        );
 
         $this->Viewer_Assign('aTagsTkWhite', $aResult['collection']);
         $this->Viewer_Assign('aPagingTagsTkWhite', $aPaging);
+
         return $this->Viewer_Fetch(Plugin::GetTemplatePath(__CLASS__) . 'inject.tags.form.white.tpl');
     }
 }

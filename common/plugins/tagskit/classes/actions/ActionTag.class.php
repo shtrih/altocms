@@ -3,8 +3,7 @@
 class PluginTagskit_ActionTag extends PluginTagskit_Inherit_ActionTag
 {
 
-    protected function RegisterEvent()
-    {
+    protected function RegisterEvent() {
         $this->AddEventPreg('/^(page([1-9]\d{0,5}))?$/i', 'EventIndex');
         parent::RegisterEvent();
     }
@@ -12,8 +11,7 @@ class PluginTagskit_ActionTag extends PluginTagskit_Inherit_ActionTag
     /**
      * Поиск по нескольку тегов
      */
-    public function EventIndex()
-    {
+    public function EventIndex() {
         $this->PluginTagskit_Main_GetTagItemsAll();
         /**
          * Передан ли номер страницы
@@ -22,18 +20,21 @@ class PluginTagskit_ActionTag extends PluginTagskit_Inherit_ActionTag
         /**
          * Получаем параметры из реквеста
          */
-        $sTags = getRequestStr('tags');
-        $sHow = in_array(getRequestStr('tk_how'), array('or', 'and')) ? getRequestStr('tk_how') : 'or';
-        $sWhere = in_array(getRequestStr('tk_where'),
-            array('all', 'corp', 'pers', 'other')) ? getRequestStr('tk_where') : 'all';
-        $_REQUEST['tk_how'] = $sHow;
+        $sTags                = getRequestStr('tags');
+        $sHow                 = in_array(getRequestStr('tk_how'), array('or', 'and')) ? getRequestStr('tk_how') : 'or';
+        $sWhere               = in_array(
+            getRequestStr('tk_where'),
+            array('all', 'corp', 'pers', 'other')
+        ) ? getRequestStr('tk_where') : 'all';
+        $_REQUEST['tk_how']   = $sHow;
         $_REQUEST['tk_where'] = $sWhere;
 
 
         $sTags = trim($sTags, ', ');
         if ($sTags) {
             $aTags = preg_split("#, *#", $sTags);
-        } else {
+        }
+        else {
             $aTags = array();
         }
 
@@ -42,8 +43,12 @@ class PluginTagskit_ActionTag extends PluginTagskit_Inherit_ActionTag
             'how'              => $sHow,
             'where'            => $sWhere,
         );
-        $aResult = $this->PluginTagskit_Main_GetTopicsByTags($aTags, $aParams, $iPage,
-            Config::Get('module.topic.per_page'));
+        $aResult = $this->PluginTagskit_Main_GetTopicsByTags(
+            $aTags,
+            $aParams,
+            $iPage,
+            Config::Get('module.topic.per_page')
+        );
         $aTopics = $aResult['collection'];
         /**
          * Вызов хуков
@@ -52,9 +57,14 @@ class PluginTagskit_ActionTag extends PluginTagskit_Inherit_ActionTag
         /**
          * Формируем постраничность
          */
-        $aPaging = $this->Viewer_MakePaging($aResult['count'], $iPage, Config::Get('module.topic.per_page'),
-            Config::Get('pagination.pages.count'), Router::GetPath('tag'),
-            array('tags' => $sTags, 'tk_how' => $sHow, 'tk_where' => $sWhere));
+        $aPaging = $this->Viewer_MakePaging(
+            $aResult['count'],
+            $iPage,
+            Config::Get('module.topic.per_page'),
+            Config::Get('pagination.pages.count'),
+            Router::GetPath('tag'),
+            array('tags' => $sTags, 'tk_how' => $sHow, 'tk_where' => $sWhere)
+        );
         /**
          * Загружаем переменные в шаблон
          */

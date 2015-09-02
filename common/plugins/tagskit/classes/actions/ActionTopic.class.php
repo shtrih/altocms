@@ -10,13 +10,12 @@ class PluginTagskit_ActionTopic extends PluginTagskit_Inherit_ActionTopic
      *
      * @return bool
      */
-    protected function checkTopicFields($oTopic)
-    {
+    protected function checkTopicFields($oTopic) {
         $bResult = parent::checkTopicFields($oTopic);
         if ($bResult) {
             $bResult = $this->PluginTagskit_Main_CheckTopicFields($oTopic);
         }
+
         return $bResult;
     }
-
 }

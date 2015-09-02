@@ -3,8 +3,7 @@
 class PluginTagskit_ActionAjax extends PluginTagskit_Inherit_ActionAjax
 {
 
-    protected function RegisterEvent()
-    {
+    protected function RegisterEvent() {
         $this->AddEventPreg('/^tk$/i', '/^load-white-tags$/', 'EventTkLoadWhiteTags');
         $this->AddEventPreg('/^tk$/i', '/^auto-search-tags$/', 'EventTkAutoSearchTags');
         parent::RegisterEvent();
@@ -13,17 +12,25 @@ class PluginTagskit_ActionAjax extends PluginTagskit_Inherit_ActionAjax
     /**
      * Загружает список белых тегов
      */
-    public function EventTkLoadWhiteTags()
-    {
+    public function EventTkLoadWhiteTags() {
         $iPage = (int)getRequestStr('page');
         if ($iPage < 1) {
             $iPage = 1;
         }
 
-        $aResult = $this->PluginTagskit_Main_GetTopicTagsByTags(Config::Get('plugin.tagskit.tags_list_white'), Config::Get('plugin.tagskit.white_list_sort'),
-            $iPage, Config::Get('plugin.tagskit.white_list_per_page'));
-        $aPaging = $this->Viewer_MakePaging($aResult['count'], $iPage,
-            Config::Get('plugin.tagskit.white_list_per_page'), Config::Get('pagination.pages.count'), '');
+        $aResult = $this->PluginTagskit_Main_GetTopicTagsByTags(
+            Config::Get('plugin.tagskit.tags_list_white'),
+            Config::Get('plugin.tagskit.white_list_sort'),
+            $iPage,
+            Config::Get('plugin.tagskit.white_list_per_page')
+        );
+        $aPaging = $this->Viewer_MakePaging(
+            $aResult['count'],
+            $iPage,
+            Config::Get('plugin.tagskit.white_list_per_page'),
+            Config::Get('pagination.pages.count'),
+            ''
+        );
 
         $oViewer = $this->Viewer_GetLocalViewer();
         $oViewer->Assign('aTagsTkWhite', $aResult['collection']);
@@ -35,8 +42,7 @@ class PluginTagskit_ActionAjax extends PluginTagskit_Inherit_ActionAjax
     /**
      * Выполняет автоматический поиск белых тегов в тексте
      */
-    public function EventTkAutoSearchTags()
-    {
+    public function EventTkAutoSearchTags() {
         $aTags = $this->PluginTagskit_Main_SearchWhiteTags(getRequestStr('text'));
 
         if (!$aTags) {
@@ -45,5 +51,4 @@ class PluginTagskit_ActionAjax extends PluginTagskit_Inherit_ActionAjax
 
         $this->Viewer_AssignAjax('aTags', $aTags);
     }
-
 }

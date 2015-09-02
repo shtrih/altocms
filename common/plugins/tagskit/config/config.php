@@ -49,6 +49,6 @@ $config['tags_list_black'] = array(
  * Системные настройки
  */
 $config['$root$']['db']['table']['tagskit_main_tag'] = '___db.table.prefix___tk_tag';
-$config['$root$']['router']['page']['tk_admin'] = 'PluginTagskit_ActionTkadmin';
+$config['$root$']['router']['page']['tk_admin']      = 'PluginTagskit_ActionTkadmin';
 
 return $config;
