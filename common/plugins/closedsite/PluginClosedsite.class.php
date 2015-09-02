@@ -1,21 +1,20 @@
 <?php
 
 if (!class_exists('Plugin')) {
-	die('Hammmmmmmmmmertimmme!');
+    die('Hammmmmmmmmmertimmme!');
 }
 
-class PluginClosedsite extends Plugin {
+class PluginClosedsite extends Plugin
+{
 
-	public function Activate() {
-		return true;
-	}
+    public function Activate() {
+        return true;
+    }
 
-	public function  Deactivate() {
-		return true;
-	}
+    public function  Deactivate() {
+        return true;
+    }
 
-	public function Init(){
-	}
-
+    public function Init() {
+    }
 }
-?>
