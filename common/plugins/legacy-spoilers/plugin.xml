@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <id>legacyspoilers</id>
+    <name>
+        <lang name="default">Legacy Spoilers</lang>
+    </name>
+    <author>
+        <lang name="default">shtrih</lang>
+    </author>
+    <homepage>http://4otaku.org</homepage>
+    <version>1.0.0</version>
+    <dirname>legacy-spoilers</dirname>
+    <requires>
+        <alto>
+            <version>1.1.0</version>
+        </alto>
+        <system>
+            <php>5.3.0</php>
+        </system>
+        <plugins>
+            <plugin>betterspoilers</plugin>
+        </plugins>
+    </requires>
+    <description>
+        <lang name="default">Replaces design [hide] Hidden Text [/hide] on spoler.</lang>
+        <lang name="russian">Заменяет конструкцию {hide}Скрытый текст{/hide} на спойлер, расширяет стандартные спойлеры, добавляя неограниченную вложенность. На основе плагина «HideSpoiler» для LS, за авторством Konstantine. Не добавляет кнопки в панель редактора, только работает с Уже написанными тегами «spoiler» и «hide» в старых постах.</lang>
+    </description>
+</plugin>
