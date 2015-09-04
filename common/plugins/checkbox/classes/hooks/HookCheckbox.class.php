@@ -29,22 +29,25 @@ class PluginCheckbox_HookCheckbox extends Hook {
      * Будет вызвана функция func_init_action($Var) в том месте движка, где стоит данный хук
      */
     public function RegisterHook() {
-        $this->AddHook('template_admin_content_add_field_list', 'RenderSelectOption');
-        $this->AddHook('content_field_proccess', 'SaveValue');
+        $this->AddHook('template_admin_content_add_field_list', 'renderSelectOption');
+        $this->AddHook('content_field_proccess', 'saveValue');
+        $this->AddHook('template_admin_content_add_field_properties', 'renderProperties');
     }
 
-    public function RenderSelectOption(array $aVars) {
+    public function renderSelectOption(array $aVars) {
         return E::ModuleViewer()->Fetch(Plugin::GetTemplateFile(__CLASS__, 'tpls/content-field-select-option.tpl'), $aVars);
     }
 
-    public function SaveValue(array &$aVars) {
+    public function saveValue(array &$aVars) {
         $oField = $aVars['oField'];
         if ('checkbox' == $oField->getFieldType()) {
             if (!empty($_REQUEST['fields'][$oField->getFieldId()])) {
-                $aVars['sData'] = 'checked';
+                $aVars['sData'] = join(',', (array)$_REQUEST['fields'][$oField->getFieldId()]);
             }
         }
     }
-}
 
-// EOF
+    public function renderProperties() {
+        return E::ModuleViewer()->Fetch(Plugin::GetTemplateFile(__CLASS__, 'tpls/hooks/hook.admin_content_add_field_properties.tpl'));
+    }
+}
