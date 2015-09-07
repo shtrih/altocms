@@ -42,7 +42,7 @@ class PluginCheckbox_HookCheckbox extends Hook {
         $oField = $aVars['oField'];
         if ('checkbox' == $oField->getFieldType()) {
             if (!empty($_REQUEST['fields'][$oField->getFieldId()])) {
-                $aVars['sData'] = join(',', (array)$_REQUEST['fields'][$oField->getFieldId()]);
+                $aVars['sData'] = (array)$_REQUEST['fields'][$oField->getFieldId()];
             }
         }
     }

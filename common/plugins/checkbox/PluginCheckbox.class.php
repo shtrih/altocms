@@ -54,6 +54,11 @@ class PluginCheckbox extends Plugin {
         * PluginAbcplugin_ModuleTopic_EntityTopic (/plugins/abcplugin/classes/modules/entity/Topic.entity.class.php) - новые или замена существующих
         *
         */
+
+        'action' => array(
+            'ModuleTopic',
+            'ModuleTopic_EntityContentValues',
+        )
     );
 
     // Активация плагина
@@ -71,4 +76,3 @@ class PluginCheckbox extends Plugin {
     public function Init() {
     }
 }
-?>

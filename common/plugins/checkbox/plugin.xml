@@ -8,11 +8,11 @@
         <lang name="default">shtrih</lang>
     </author>
     <homepage>http://4otaku.org</homepage>
-    <version>1.0.2</version>
+    <version>1.1.0</version>
     <dirname>checkbox</dirname>
     <requires>
         <alto>
-             <version>1.1.0-b2</version>
+             <version>1.1.0</version>
         </alto>
         <system>
             <php>5.3.0</php>
@@ -20,6 +20,6 @@
     </requires>
     <description>
         <lang name="default">It allows to create the "checkbox" fields for content types.</lang>
-        <lang name="russian">Позволяет в админке создавать простое поле «чекбокс» для типов контента.</lang>
+        <lang name="russian">Позволяет в админке создавать поле типа «чекбокс» для типов контента, которое может содержать одно или несколько значений для выбора.</lang>
     </description>
 </plugin>
