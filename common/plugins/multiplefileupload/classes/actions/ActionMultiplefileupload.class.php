@@ -156,9 +156,12 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
             header('Content-Type: ' . $sType);
             header('Content-Length: ' . $iFileSize);
 
+            $sFileName = $oMresource->getParamValue('original_filename');
+            $sFileExtension = F::File_GetExtension($sFileName, true);
             // Файл, размером большим, чем указано в конфиге, отдаем как attachment, в ином случае, без оного заголовка, чтобы браузер сам решил, что с ним делать
-            if ($iFileSize > Config::Get('plugin.multiplefileupload.attachment-header-max-file-size')) {
-                header('Content-Disposition: attachment; filename="' . $oMresource->getParamValue('original_filename') . '"');
+            if ($iFileSize > F::MemSize2Int(Config::Get('plugin.multiplefileupload.attachment-header-max-file-size'))
+                || !in_array($sFileExtension, Config::Get('plugin.multiplefileupload.attachment-header-extensions'))) {
+                header('Content-Disposition: attachment; filename="' . $sFileName . '"');
             }
 
             // TODO: вынести в настройки
