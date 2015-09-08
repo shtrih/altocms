@@ -1,7 +1,7 @@
 <?php
 
-$config['widgets'][] = array(
-    'name'     => 'unattached.tpl',
+$config['widgets']['unattached.tpl'] = array(
+    'name'     => 'widgets/widget.unattached.tpl',
     'group'    => 'mfu-after-file-list',
     'priority' => 0,
     'plugin'   => 'multiplefileupload',
