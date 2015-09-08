@@ -5,7 +5,7 @@
  * Date: 30.07.15
  * Time: 18:24
  */
-$config['widgets'][] = array(
+$config['widgets']['last'] = array(
     'name'     => 'last',
     'group'    => 'right',
     'priority' => 51,
