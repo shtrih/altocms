@@ -1,4 +1,4 @@
-{*{strip}
+{strip}{*{strip}
 <div class="spoiler">
     <div class="spoiler-title">
         {if $aParams.title}{$aParams.title}{/if}
@@ -10,7 +10,7 @@
         {$aParams.snippet_text}
     </div>
 </div>
-{/strip}*}{strip}
+{/strip}*}
 <div class="betterspoiler">
     <input type="checkbox" tabindex="-1" />
     <div class="btrsplr-box">

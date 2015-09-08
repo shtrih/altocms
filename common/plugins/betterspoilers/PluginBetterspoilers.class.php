@@ -4,7 +4,7 @@
  * Запрещаем напрямую через браузер обращение к этому файлу.
  */
 if (!class_exists('Plugin')) {
-    die('Hacking attemp!');
+    die('Hacking attempt!');
 }
 
 class PluginBetterspoilers extends Plugin {
@@ -29,31 +29,27 @@ class PluginBetterspoilers extends Plugin {
 
     protected $aInherits = array(
         'modules' => array(
-            'ModuleTopic',
             'ModuleText',
             'ModuleViewer',
-            'ModuleComment_EntityComment',
         ),
         'actions' => array(
-            'ActionAjax',
         ),
     );
 
     // Активация плагина
     public function Activate() {
-        return TRUE;
+        return true;
     }
 
     // Деактивация плагина
     public function Deactivate() {
-        return TRUE;
+        return true;
     }
 
     // Инициализация плагина
     public function Init() {
         $sTemplateDir = Plugin::GetTemplateDir(__CLASS__);
         E::ModuleViewer()->AppendScript($sTemplateDir . "assets/js/betterspoilers.js");
-        E::ModuleViewer()->AppendStyle($sTemplateDir . "assets/css/hidespoiler.backward.css");
         E::ModuleViewer()->AppendStyle($sTemplateDir . "assets/css/betterspoilers.css");
     }
 }

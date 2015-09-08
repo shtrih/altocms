@@ -6,22 +6,8 @@ class PluginBetterspoilers_HookBetterspoilers extends Hook {
      * Регистрация хуков
      */
     public function RegisterHook() {
-        $this->AddHook('topic_show', 'correctTopic');
         $this->AddHook('template_markitup_before_init', 'markitupBeforeInit');
         $this->AddHook('snippet_spoiler', 'snippetSpoiler');
-    }
-
-    /**
-     * Хук, выполняющий смену содержимого топика
-     *
-     * @param array() $params
-     */
-    public function correctTopic($aParams) {
-        /** @var ModuleTopic_EntityTopic $oTopic Открываемый топик */
-        if (Config::Get('plugin.betterspoilers.use_hook')) {
-            $oTopic = $aParams['oTopic'];
-            $oTopic->setText(E::Module('PluginBetterspoilers_ModuleBetterspoilers')->MakeCorrection($oTopic->getText()));
-        }
     }
 
     public function markitupBeforeInit($aParams) {
@@ -37,14 +23,18 @@ class PluginBetterspoilers_HookBetterspoilers extends Hook {
                 $iEndPos = reset($aSpoilersPositions);
                 $iStartPos = key($aSpoilersPositions);
                 $iLength = ($iEndPos - $iStartPos + 15 /* 15 — это длина </alto:spoiler> */);
-                preg_match('|^<alto:spoiler(?:\s+title=[\'"]([^\'"]*)[\'"]\s*)?>(.+?)</alto:spoiler>$|is', substr($sText, $iStartPos, $iLength), $aMatches);
+                preg_match('~^<alto:spoiler(?:\s*(\w+)=(?:["]([^"]*)["]|[\']([^\']*)[\'])\s*)*>(.*?)</alto:spoiler>$~is', substr($sText, $iStartPos, $iLength), $aMatches);
+                list( , $sAttr, $sValue1, $sValue2, $sContent) = $aMatches;
 
                 $sSpoilerParsed = E::ModuleViewer()->GetLocalViewer()->Fetch(
                     'tpls/snippets/snippet.spoiler.tpl',
                     array(
                         'aParams' => array(
-                            'title'        => $aMatches[1],
-                            'snippet_text' => $aMatches[2],
+                            'title' =>
+                                ('title' == $sAttr)
+                                    ? ($sValue1 ?: $sValue2)
+                                    : '',
+                            'snippet_text' => $sContent,
                         )
                     )
                 );
@@ -57,28 +47,29 @@ class PluginBetterspoilers_HookBetterspoilers extends Hook {
     }
 
     protected function getSpoilersPositions($sText) {
-        $spoilers = array(
+        static $sTagStart = '<alto:spoiler';
+        static $sTagEnd = '</alto:spoiler>';
+        $aSpoilersPos = array(
             'start' => array(),
             'end' => array(),
         );
-        $offset_start = 0;
-        $offset_end = 0;
+        $iOffsetStart = 0;
+        $iOffsetEnd = 0;
         do {
-            $posstart = strpos($sText, '<alto:spoiler', $offset_start);
-            if (false !== $posstart) {
-                $spoilers['start'][] = $posstart;
-                $offset_start = $posstart + 7;
+            $iPosStart = strpos($sText, $sTagStart, $iOffsetStart);
+            if (false !== $iPosStart) {
+                $aSpoilersPos['start'][] = $iPosStart;
+                $iOffsetStart = $iPosStart + strlen($sTagStart);
             }
 
-            $posend = strpos($sText, '</alto:spoiler>', $offset_end);
-            if (false !== $posend) {
-                $spoilers['end'][] = $posend;
-                $offset_end = $posend + 10;
+            $iPosEnd = strpos($sText, $sTagEnd, $iOffsetEnd);
+            if (false !== $iPosEnd) {
+                $aSpoilersPos['end'][] = $iPosEnd;
+                $iOffsetEnd = $iPosEnd + strlen($sTagEnd);
             }
-        } while(false !== $posstart || false !== $posend);
-        // var_dump($spoilers);
+        } while(false !== $iPosStart || false !== $iPosEnd);
 
-        $haslower = function($numstart, $numend, array $array) {
+        $fHasLower = function($numstart, $numend, array $array) {
             foreach($array as $v) {
                 if ($v > $numstart && $v < $numend) {
                     return $v;
@@ -88,23 +79,23 @@ class PluginBetterspoilers_HookBetterspoilers extends Hook {
             return false;
         };
 
-        $candidates_simple = $candidates_hard = array();
-        foreach ($spoilers['start'] as $startpos) {
-            foreach ($spoilers['end'] as $endpos) {
+        $aCandidatesSimple = $aCandidatesNested = array();
+        foreach ($aSpoilersPos['start'] as $startpos) {
+            foreach ($aSpoilersPos['end'] as $endpos) {
                 if ($startpos < $endpos) {
-                    $middle = $haslower($startpos, $endpos, $spoilers['start']);
+                    $middle = $fHasLower($startpos, $endpos, $aSpoilersPos['start']);
                     if (false === $middle) {
                         // var_dump('между ' . $startpos . ' и ' . $endpos . ' ничего нет');
-                        $candidates_simple[$startpos][$endpos] = $endpos;
+                        $aCandidatesSimple[$startpos][$endpos] = $endpos;
                     }
-                    elseif (!isset($candidates_simple[$startpos])) {
-                        $candidates_hard[$startpos][$endpos] = $endpos;
+                    elseif (!isset($aCandidatesSimple[$startpos])) {
+                        $aCandidatesNested[$startpos][$endpos] = $endpos;
                         // var_dump($middle . ' между ' . $startpos . ' и ' . $endpos);
                     }
                 }
             }
         }
-        $array_min = function (array $a) {
+        $fArrayMin = function (array $a) {
             $result = null;
             foreach ($a as $v) {
                 if (null === $result)
@@ -114,7 +105,7 @@ class PluginBetterspoilers_HookBetterspoilers extends Hook {
             }
             return $result;
         };
-        $array_max = function (array $a) {
+        $fArrayMax = function (array $a) {
             $result = null;
             foreach ($a as $v) {
                 if (null === $result)
@@ -126,19 +117,19 @@ class PluginBetterspoilers_HookBetterspoilers extends Hook {
         };
         // var_dump($candidates_simple, $candidates_hard);
 
-        $simple = $hard = array();
-        foreach ($candidates_simple as $posstart => $candidates) {
-            $simple[$posstart] = $array_min($candidates);
+        $aResultSimple = $aResultNested = array();
+        foreach ($aCandidatesSimple as $iPosStart => $candidates) {
+            $aResultSimple[$iPosStart] = $fArrayMin($candidates);
 
-            foreach ($candidates_hard as &$chard) {
-                unset($chard[ $simple[$posstart] ]);
+            foreach ($aCandidatesNested as &$chard) {
+                unset($chard[ $aResultSimple[$iPosStart] ]);
             }
         }
 
-        foreach ($candidates_hard as $posstart => $chard) {
-            $hard[$posstart] = $array_max($chard);
+        foreach ($aCandidatesNested as $iPosStart => $chard) {
+            $aResultNested[$iPosStart] = $fArrayMax($chard);
         }
 
-        return $simple + $hard;
+        return $aResultSimple + $aResultNested;
     }
 }

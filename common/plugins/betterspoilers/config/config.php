@@ -1,7 +1,7 @@
 <?php
-/** @var array $config Массив конфигурацонных параметров */
-$config = array(
-    'use_hook' => false,
+/** @var array $aConfig Массив конфигурацонных параметров */
+$aConfig = array(
+
 );
 
-return $config;
+return $aConfig;
