@@ -156,11 +156,11 @@ class PluginLegacyspoilers_ModuleLegacyspoilers extends Module {
 		foreach ($aMatches as $Match) {
 			$filename   = $Match[1] . '_full.' . $Match[2];
 			$file       = rtrim(Config::Get('path.root.server'), "/") . $Match[1] . '_full.' . $Match[2];
-			$dimensions = $this->Cache_Get('fullimg_' . md5($filename));
+			$dimensions = E::ModuleCache()->Get('fullimg_' . md5($filename));
 			if (!$dimensions && file_exists($file)) {
 				$size       = getimagesize($file);
 				$dimensions = $size[0] . 'x' . $size[1];
-				$this->Cache_Set($dimensions, 'fullimg_' . md5($filename), array(), 60 * 60 * 24 * 30);
+				E::ModuleCache()->Set($dimensions, 'fullimg_' . md5($filename), array(), 60 * 60 * 24 * 30);
 			}
 			if ($dimensions) {
 				$filesize = $this->getHumanizedSize(filesize($file));
