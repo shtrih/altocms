@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin>
+    <id>pixelatensfw</id>
     <name>
         <lang name="default">PixelateNsfw</lang>
     </name>
@@ -8,8 +9,11 @@
     </author>
     <homepage>http://4otaku.org</homepage>
     <version>1.0.0</version>
+    <dirname>pixelatensfw</dirname>
     <requires>
-        <livestreet>0.5.1</livestreet>
+        <alto>
+            <version>1.1.0</version>
+        </alto>
         <plugins>
         </plugins>
     </requires>
