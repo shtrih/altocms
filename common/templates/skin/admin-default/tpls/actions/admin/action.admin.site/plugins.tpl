@@ -31,7 +31,7 @@
                         <th>
                             <input type="checkbox" name="" onclick="admin.selectAllRows(this);"/>
                         </th>
-                        <th class="name">{$aLang.action.admin.plugin_name}</th>
+                        <th class="name col-md-4">{$aLang.action.admin.plugin_name}</th>
                         <th class="name"></th>
                         <th class="version">{$aLang.action.admin.plugin_version}</th>
                         <th class="author">{$aLang.action.admin.plugin_author}</th>
