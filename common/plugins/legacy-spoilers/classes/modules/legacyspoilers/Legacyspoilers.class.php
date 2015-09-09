@@ -78,31 +78,11 @@ class PluginLegacyspoilers_ModuleLegacyspoilers extends Module {
 					}
 				}
 			}
-			$array_min = function (array $a) {
-				$result = null;
-				foreach ($a as $v) {
-					if (null === $result)
-						$result = $v;
-					else
-						$result = min($result, $v);
-				}
-				return $result;
-			};
-			$array_max = function (array $a) {
-				$result = null;
-				foreach ($a as $v) {
-					if (null === $result)
-						$result = $v;
-					else
-						$result = max($result, $v);
-				}
-				return $result;
-			};
 			// var_dump($candidates_simple, $candidates_hard);
 
 			$simple = $hard = array();
 			foreach ($candidates_simple as $posstart => $candidates) {
-				$simple[$posstart] = $array_min($candidates);
+				$simple[$posstart] = min($candidates);
 
 				foreach ($candidates_hard as &$chard) {
 					unset($chard[ $simple[$posstart] ]);
@@ -110,7 +90,7 @@ class PluginLegacyspoilers_ModuleLegacyspoilers extends Module {
 			}
 
 			foreach ($candidates_hard as $posstart => $chard) {
-				$hard[$posstart] = $array_max($chard);
+				$hard[$posstart] = max($chard);
 			}
 
 			return $simple + $hard;
