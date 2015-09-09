@@ -23,6 +23,7 @@ class PluginBetterspoilers extends Plugin {
          */
         'template' => array(
             'editors/editor.markitup.tpl' => '_editors/editor.markitup.tpl',
+            'editors/editor.tinymce.tpl' => '_editors/editor.tinymce.tpl',
             'tpls/snippets/snippet.spoiler.tpl' => '_tpls/snippets/snippet.spoiler.tpl',
         )
     );
