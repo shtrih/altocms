@@ -93,7 +93,7 @@ $(window).on('load', function () {
             $(this).children('i').addClass('fa-check');
             a_notpixelate.children('i').removeClass('fa-check');
 
-            $.cookie('pixelatensfw', 1, {path: '/', expires: 5 * 365});
+            $.cookie('pixelatensfw', 1, {path: '/', expires: 365});
 
             if (!initialized)
                 init_pixelate();
@@ -105,7 +105,7 @@ $(window).on('load', function () {
             $(this).children('i').addClass('fa-check');
             a_pixelate.children('i').removeClass('fa-check');
 
-            $.cookie('pixelatensfw', 0, {path: '/'});
+            $.cookie('pixelatensfw', 0, {path: '/', expires: 365});
 
             destroy_pixelate();
 
