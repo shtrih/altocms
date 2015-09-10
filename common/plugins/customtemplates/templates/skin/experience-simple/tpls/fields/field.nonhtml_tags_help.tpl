@@ -1,5 +1,5 @@
 <a href="#" class="link-dotted help-link" onclick="jQuery('#topic-tags-help').toggleClass('hide'); return false;">Какие теги ставить?</a>
-<div class="help clearfix hide" id="topic-tags-help">
+<div class="bg-warning clearfix hide" id="topic-tags-help">
     <p>Теги это слова или фразы, которые предназначены для поиска топиков схожей тематики.</p>
     <p>Что <strong>не нужно писать</strong> в теги: название альбома, игры́, которые публикуются в топике. Шутки из разряда «теги никто не читает». Уникальные теги, вероятность появления которых в других топиках близка к нулю.</p>
     <p>Кликните, чтобы добавить или удалить тег:</p>
