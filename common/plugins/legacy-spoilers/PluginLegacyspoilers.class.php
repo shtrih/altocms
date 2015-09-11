@@ -45,7 +45,8 @@ class PluginLegacyspoilers extends Plugin
 
     // Инициализация плагина
     public function Init() {
-        $sTemplateDir = Plugin::GetTemplateDir(__CLASS__);
+//        $sTemplateDir = Plugin::GetTemplateDir(__CLASS__);
+        $sTemplateDir = Plugin::GetTemplateDir('legacy-spoilers');
         E::ModuleViewer()->AppendStyle($sTemplateDir . "assets/css/hidespoiler.backward.css");
     }
 }
