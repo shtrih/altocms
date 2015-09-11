@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <id>audiofilepreview</id>
+    <name>
+        <lang name="default">Audiofile Preview</lang>
+    </name>
+    <author>
+        <lang name="default">shtrih</lang>
+    </author>
+    <homepage>http://4otaku.org</homepage>
+    <version>1.0.0</version>
+    <dirname>audiofile-preview</dirname>
+    <requires>
+        <alto>
+             <version>1.1.5</version>
+        </alto>
+        <system>
+            <php>5.3.0</php>
+        </system>
+        <plugins>
+            <!-- Атрибуты name, version и condition необязательны -->
+            <!-- Возможные значения атрибута condition соответствуют описанию параметра «operator» на странице http://php.net/manual/ru/function.version-compare.php  -->
+            <!-- <plugin name="plugin_name" version="1.0.0" condition="eq">plugin_id</plugin> -->
+            <plugin name="Multiple File Upload">multiplefileupload</plugin>
+        </plugins>
+    </requires>
+    <description>
+        <lang name="default">Description of plugin Audiofilepreview</lang>
+        <lang name="russian">Описание плагина Audiofilepreview</lang>
+    </description>
+</plugin>
