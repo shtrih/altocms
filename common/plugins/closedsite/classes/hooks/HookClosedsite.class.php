@@ -24,10 +24,10 @@ class PluginClosedsite_HookClosedsite extends Hook
             $sCurrentEvent = 'index';
         }
 
-        $aAllowedElements = Config::Get('plugin.closedsite.allowedelements');
+        $aAllowedElements = Config::Get('plugin.closedsite.allowed-elements');
         $aAllowedActions  = array_keys($aAllowedElements);
 
-        $aDisallowedElements = Config::Get('plugin.closedsite.disallowedelements');
+        $aDisallowedElements = Config::Get('plugin.closedsite.disallowed-elements');
         $aDisallowedActions  = array_keys($aDisallowedElements);
 
         // Текущее действие не в списке разрешенных

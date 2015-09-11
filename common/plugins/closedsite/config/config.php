@@ -8,7 +8,7 @@
 */
 $config = array(
     // Разрешить всё, что указано (или разрешить все ивенты указанного действия — array())
-    'allowedelements'    => array( // если пустой массив, то всё разрешить
+    'allowed-elements'    => array( // если пустой массив, то всё разрешить
         /*
         'index' 		=> array('index')			,	// Главная страница
         'blog' 		=> array()			,
@@ -21,9 +21,10 @@ $config = array(
         */
     ),
     // Запретить все, что перечислено
-    'disallowedelements' => array(
+    'disallowed-elements' => array(
         'profile'  => array(),
         'comments' => array(),
+        'multiplefileupload' => array(),
     )
 );
 
