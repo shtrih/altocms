@@ -69,6 +69,9 @@ class PluginAudiofilepreview_HookAudiofilepreview extends Hook {
         $oTopic = $aVars['topic'];
         $aVars['aFiles'] = E::Module('PluginAudiofilepreview_ModuleAudiofilepreview')->getAttachedFiles($oTopic->getId());
 
+        if (!$aVars['aFiles'])
+            return null;
+
         return E::ModuleViewer()->Fetch(
             Config::Get('plugin.audiofilepreview.plugin-dir') . '/templates/skin/default/tpls/hooks/hook.template_topic_content_begin.tpl'
             /*Plugin::GetTemplateFile(__CLASS__, 'tpls/hooks/hook.template_topic_content_begin.tpl'*/,
