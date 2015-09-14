@@ -4,8 +4,6 @@
  */
 
 $config = array(
-    'plugin-dir' => realpath(__DIR__ . '/..'),
-
     /*
      * HTML5: mp3, mp4 (AAC/H.264), ogg (Vorbis/Theora), webm (Vorbis/VP8), wav
      * Flash: mp3, mp4 (AAC/H.264), rtmp, flv

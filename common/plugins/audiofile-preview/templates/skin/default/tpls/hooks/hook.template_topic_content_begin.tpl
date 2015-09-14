@@ -9,13 +9,13 @@
             [
                 {foreach $aFiles as $oFile}
                 {
-                    title: '{substr($oFile->name, 0, -4)|escape:javascript}',
+                    title: '{substr($oFile->name, 0, -(strlen($oFile->extension) + 1))|escape:javascript}',
                     {$oFile->extension|escape:javascript}: '{$oFile->url|escape:javascript}',
                     free: true
                 },
                 {/foreach}
             ], {
-                swfPath: "{cfg name="plugin.audiofilepreview.plugin-dir"}/templates/frontend/vendors/jPlayer-2.9.2/dist/jplayer/",
+                swfPath: "{Plugin::GetUrl('Audiofilepreview')}templates/frontend/vendors/jPlayer-2.9.2/dist/jplayer/",
                 supplied: 'mp3',
                 solution: 'html, flash',
                 useStateClassSkin: true,
