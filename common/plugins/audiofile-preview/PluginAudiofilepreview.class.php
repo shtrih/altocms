@@ -74,13 +74,14 @@ class PluginAudiofilepreview extends Plugin {
 
     // Инициализация плагина
     public function Init() {
-//        E::ModuleViewer()->AppendStyle(Plugin::GetTemplateDir(__CLASS__)."assets/css/style.css"); // Добавление своего CSS
-//        E::ModuleViewer()->AppendScript(Plugin::GetTemplateDir(__CLASS__)."assets/js/script.js"); // Добавление своего JS
-
-        //E::ModuleViewer()->AddMenu('blog',Plugin::GetTemplateDir(__CLASS__).'menu.blog.tpl'); // например, задаем свой вид меню
+        // Old Audiorecordslight for LS
+        if (!E::ModulePlugin()->IsActivePlugin('audiorecordslight')) {
+            $sTemplatesDir = Plugin::GetDir(__CLASS__);
+            E::ModuleViewer()->AppendStyle($sTemplatesDir . "templates/frontend/vendors/jPlayer-2.9.2/dist/skin/4otaku/css/jplayer.4otaku.css");
+            E::ModuleViewer()->AppendScript($sTemplatesDir . "templates/frontend/vendors/jPlayer-2.9.2/dist/jplayer/jquery.jplayer.min.js");
+            E::ModuleViewer()->AppendScript($sTemplatesDir . "templates/frontend/vendors/jPlayer-2.9.2/dist/add-on/jplayer.playlist.min.js");
+        }
 
         return true;
     }
 }
-
-// EOF

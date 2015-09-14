@@ -21,7 +21,7 @@ class PluginAudiorecordslight_HookAudiorecordslight extends Hook {
 	// ---
 
 	public function AddStylesAndJS () {
-		$sTemplateWebPath = Plugin::GetTemplateWebPath (__CLASS__);
+		$sTemplateWebPath = Plugin::GetTemplateDir(__CLASS__);
 		//$this -> Viewer_AppendStyle ($sTemplateWebPath . 'css/style.css');
 		//$sLibPath = Config::Get('path.root.engine_lib') . '/external/jPlayer-2.9.2/dist';
 		$this -> Viewer_AppendStyle ($sTemplateWebPath . 'jPlayer-2.9.2/dist/skin/4otaku/css/jplayer.4otaku.css');
