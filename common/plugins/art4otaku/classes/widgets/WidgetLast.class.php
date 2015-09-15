@@ -12,7 +12,7 @@ class PluginArt4otaku_WidgetLast extends Widget {
 	 *
 	 */
 	public function Exec() {
-		F::IncludeFile(F::GetPluginsDir() . 'art4otaku/lib/4otakuAPIClient/Client4otaku/autoloader.php');
+		F::IncludeFile(Plugin::GetDir(__CLASS__) . 'lib/4otakuAPIClient/Client4otaku/autoloader.php');
 
 		if (!($aArtList = E::ModuleCache()->Get('art4otaku'))) {
 			$artList = new Client4otaku\ReadArtList();
