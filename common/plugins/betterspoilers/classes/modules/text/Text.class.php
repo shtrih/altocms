@@ -93,7 +93,8 @@ class PluginBetterspoilers_ModuleText extends PluginBetterspoilers_Inherits_Modu
      * @version 0.1 Базовый функционал
      * @version 0.2 Добавлены блочный и шаблонный сниппеты
      *
-     * @param $sText
+     * @param string $sText
+     *
      * @return string
      */
     public function SnippetParser($sText) {
@@ -149,7 +150,7 @@ class PluginBetterspoilers_ModuleText extends PluginBetterspoilers_Inherits_Modu
                     // Попытаемся получить результат от обработчика
                     // Может сниппет уже был в обработке, тогда просто возьмем его из кэша
                     $sCacheKey = $sSnippetName . md5(serialize($aParams));
-                    if (FALSE === ($sResult = E::ModuleCache()->GetLife($sCacheKey))) {
+                    if (false === ($sResult = E::ModuleCache()->GetTmp($sCacheKey))) {
 
                         // Определим тип сниппета, может быть шаблонным, а может и исполняемым
                         // по умолчанию сниппет ссчитаем исполняемым. Если шаблонный, то его
@@ -161,12 +162,12 @@ class PluginBetterspoilers_ModuleText extends PluginBetterspoilers_Inherits_Modu
 
                         // Установим хук
                         E::ModuleHook()->Run($sHookName, array(
-                                'params' => &$aParams,
-                                'result' => &$sResult,
-                            ));
+                            'params' => &$aParams,
+                            'result' => &$sResult,
+                        ));
 
                         // Запишем результат обработки в кэш
-                        E::ModuleCache()->SetLife($sResult, $sCacheKey);
+                        E::ModuleCache()->SetTmp($sResult, $sCacheKey);
 
                     }
 
@@ -175,7 +176,7 @@ class PluginBetterspoilers_ModuleText extends PluginBetterspoilers_Inherits_Modu
                     // Заменяем только для конструкций, не являющимися спойлерами.
                     // Для спойлеров у нас свой хук, который возвращает полный текст с уже замененными спойлерами.
                     // Потому удаляем тексты со спойлерами из массивов для замены.
-                    // В остальном, данный метод ничем не отличается от оригинального.
+                    // В остальном, данный метод SnippetParser ничем не отличается от оригинального.
                     if ('spoiler' == $sSnippetName) {
                         $sText = $sResult;
                         unset($aReplaceData[$k], $aMatches[0][$k]);
