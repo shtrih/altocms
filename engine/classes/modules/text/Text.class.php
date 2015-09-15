@@ -49,11 +49,13 @@ class ModuleText extends Module {
                 'link'        => 'src',                             // какой атрибут контролировать
                 'type'        => ModuleMresource::TYPE_IMAGE,       // тип медиа-ресурса
                 'restoreFunc' => array($this, '_restoreLocalUrl'),  // функция для восстановления URL
+                'pairedTag'   => false,                             // короткий тег
             ),
             'a'   => array(
                 'link'        => 'href',
                 'type'        => ModuleMresource::TYPE_HREF,
                 'restoreFunc' => array($this, '_restoreLocalUrl'),
+                'pairedTag'   => true,
             ),
         );
 
@@ -141,6 +143,8 @@ class ModuleText extends Module {
                 $this->oTextParser->cfgSetTagParamDefault('a', 'rel', 'nofollow', true);
             }
         }
+
+        $this->oTextParser->cfgSetTagCallbackFull('ls', array($this, 'CallbackTagLs'));
     }
 
     /**
@@ -160,7 +164,7 @@ class ModuleText extends Module {
         if ($bClear) {
             $this->oTextParser->tagsRules = array();
         }
-        $aConfig = Config::Get('jevix.' . $sType);
+        $aConfig = Config::Get('qevix.' . $sType);
         if (is_array($aConfig)) {
             foreach ($aConfig as $sMethod => $aExec) {
                 foreach ($aExec as $aParams) {
@@ -590,7 +594,7 @@ class ModuleText extends Module {
      *
      * @return string
      */
-    public function CallbackCheckLinks($sTag, $aParams, $sContent, $sText) {
+    public function CallbackCheckLinks($sTag, $aParams, $sContent, $sText = null) {
 
         if (isset($this->aCheckTagLinks[$sTag])) {
             if (isset($aParams[$this->aCheckTagLinks[$sTag]['link']])) {
@@ -608,10 +612,10 @@ class ModuleText extends Module {
                     }
                     $sText .= $sKey . '="' . $sVal . '" ';
                 }
-                if (is_null($sContent)) {
-                    $sText .= '/>';
+                if (is_null($sContent) || empty($this->aCheckTagLinks[$sTag]['pairedTag'])) {
+                    $sText = trim($sText) . '>';
                 } else {
-                    $sText .= '>' . $sContent . '</' . $sTag . '>';
+                    $sText = trim($sText) . '>' . $sContent . '</' . $sTag . '>';
                 }
             }
         }
