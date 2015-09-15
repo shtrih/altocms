@@ -33,8 +33,8 @@ class PluginBetterspoilers_ModuleText extends PluginBetterspoilers_Inherits_Modu
             $this->JevixAppendAllowTagParam('input', 'type', 'checkbox');
             $this->JevixAppendAllowTagParam('input', 'tabindex', '-1');
 
-            $this->JevixAppendAllowTagParam('span', 'class', array('btrsplr-text', 'btrsplr-trigger'));
-            $this->JevixAppendAllowTagParam('div', 'class', array('betterspoiler', 'btrsplr-box'));
+            $this->JevixAppendAllowTagParam('span', 'class', array('btrsplr-trigger'));
+            $this->JevixAppendAllowTagParam('div', 'class', array('betterspoiler', 'btrsplr-box', 'btrsplr-text'));
             $this->oTextParser->cfgSetTagBlockType(array('div'));
             //endregion
             //region snippet.hide.tpl
