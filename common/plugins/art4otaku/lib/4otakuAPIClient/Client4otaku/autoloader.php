@@ -16,5 +16,8 @@ spl_autoload_register(function ($class) {
 	$className = preg_split('/(?<!^)(?=[A-Z])/', $className);
 	$folders = array_merge($folders, $className);
 
-	include_once(join(DIRECTORY_SEPARATOR, $folders) . '.php');
+	$path = join(DIRECTORY_SEPARATOR, $folders) . '.php';
+	if (file_exists($path)) {
+		include_once($path);
+	}
 });
