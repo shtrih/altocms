@@ -1,6 +1,6 @@
 {strip}
 <div class="betterspoiler">
-    <input type="checkbox" tabindex="-1" />
+    <input class="js-no-jq" type="checkbox" tabindex="-1" />
     <div class="btrsplr-box">
         <span class="btrsplr-trigger">
             <span>
