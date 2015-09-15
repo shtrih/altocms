@@ -83,18 +83,16 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
                         if ($oMresource) {
                             $iUserId = E::UserId();
 
-                            $oMresource->setType(self::TARGET_TYPE);
+                            // Нет константы для всех остальных файлов
+                            $oMresource->setType(128);
                             $oMresource->setUserId($iUserId);
 
                             $oMresource->setParams(array('original_filename' => $oFile->name));
                             E::ModuleMresource()->UpdateParams($oMresource);
 
-                            if (Config::Get('plugin.multiplefileupload.hide-direct-links')) {
-                                $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresource->GetId();
-                            }
-                            else {
-                                $oFile->url = $oMresource->getWebPath();
-                            }
+                            $oFile->extension = F::File_GetExtension($oFile->name, true);
+                            $oFile->url = $this->getFileUrl($oMresource, $oFile);
+
                             //E::ModuleMresource()->UnlinkFile(self::TARGET_TYPE, 0, E::UserId());
                             E::ModuleMresource()->AddTargetRel($oMresource, self::TARGET_TYPE, $iTargetId);
 
@@ -173,20 +171,13 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
 //            $oFile->id = $oMresourceRel->getId();
             $oFile->id = $oMresource->GetId();
             $oFile->name = $oMresource->getParamValue('original_filename');
-            if (!$oFile->name)
+            if (!$oFile->name) {
                 $oFile->name = basename($oMresource->getPathUrl());
-
-            // Пока привызяваемся к идентификатору ресурса вместо идентификатора связи
-            if (Config::Get('plugin.multiplefileupload.hide-direct-links')) {
-                // $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresourceRel->getId();
-                $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresource->GetId();
             }
-            else {
-                $oFile->url = $oMresource->getWebPath();
-            }
-
+            $oFile->extension = F::File_GetExtension($oFile->name, true);
             $sFilePath = $oMresource->GetFile();
             $oFile->size = file_exists($sFilePath) ? filesize($sFilePath) : 0;
+            $oFile->url = $this->getFileUrl($oMresource, $oFile);
 
             $aResult[] = $oFile;
         }
@@ -202,5 +193,23 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
             $i++;
         }
         return rtrim(rtrim(sprintf('%.2f', $iSize), '0'), ',.') . "\xc2\xa0" . $aSizes[$i];
+    }
+
+    public function getFileUrl(ModuleMresource_EntityMresource $oMresource, stdClass $oFile) {
+        if (Config::Get('plugin.multiplefileupload.hide-direct-links')) {
+            // Пока привызяваемся к идентификатору ресурса вместо идентификатора связи
+            // $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresourceRel->getId() . '/';
+            $sResult = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresource->getId() . '/';
+
+            if ($oFile->size <= F::MemSize2Int(Config::Get('plugin.multiplefileupload.attachment-header-max-file-size'))
+                && in_array($oFile->extension, Config::Get('plugin.multiplefileupload.attachment-header-extensions'))) {
+                $sResult .= $oFile->name;
+            }
+        }
+        else {
+            $sResult = $oMresource->getWebPath();
+        }
+
+        return $sResult;
     }
 }

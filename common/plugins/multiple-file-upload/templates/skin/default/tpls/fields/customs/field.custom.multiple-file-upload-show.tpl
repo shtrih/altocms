@@ -8,7 +8,7 @@
         <ul class="list-unstyled multiple-file-upload">
         {foreach $aFiles as $oFile}
             <li{if $oFile@index gte $iMaxShow} class="hide"{/if}>
-                <a href="{$oFile->url}" title="{$oFile->name|escape:'htmlall'}">{$oFile->name|escape}</a>
+                <a href="{$oFile->url|escape:'htmlall'}" title="{$oFile->name|escape:'htmlall'}">{$oFile->name|escape}</a>
                 <span class="pull-right">{PluginMultiplefileupload_ModuleMultiplefileupload::sizeFormat($oFile->size)}</span>
             </li>
             {if $oFile@index eq $iMaxShow}

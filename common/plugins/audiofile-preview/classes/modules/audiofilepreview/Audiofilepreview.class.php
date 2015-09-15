@@ -34,25 +34,21 @@ class PluginAudiofilepreview_ModuleAudiofilepreview extends Module {
 //            $oFile->id = $oMresourceRel->getId();
             $oFile->id = $oMresource->GetId();
             $oFile->name = $oMresource->getParamValue('original_filename');
-            $oFile->extension = $sExtension;
-            if (!$oFile->name)
+            if (!$oFile->name) {
                 $oFile->name = basename($oMresource->getPathUrl());
-
-            // Пока привызяваемся к идентификатору ресурса вместо идентификатора связи
-            if (Config::Get('plugin.multiplefileupload.hide-direct-links')) {
-                // $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresourceRel->getId();
-                $oFile->url = Config::Get('path.root.web') . 'multiplefileupload/get/' . $oMresource->GetId();
             }
-            else {
-                $oFile->url = $oMresource->getWebPath();
-            }
-
+            $oFile->extension = $sExtension;
             $sFilePath = $oMresource->GetFile();
             $oFile->size = file_exists($sFilePath) ? filesize($sFilePath) : 0;
+            $oFile->url = $this->getFileUrl($oMresource, $oFile);
 
             $aResult[] = $oFile;
         }
 
         return $aResult;
+    }
+
+    public function getFileUrl(ModuleMresource_EntityMresource $oMresource, stdClass $oFile) {
+        return E::Module('PluginMultiplefileupload_ModuleMultiplefileupload')->getFileUrl($oMresource, $oFile);
     }
 }

@@ -12,7 +12,7 @@
     <dirname>multiple-file-upload</dirname>
     <requires>
         <alto>
-             <version>1.1.5</version>
+             <version>1.1.9</version>
         </alto>
         <system>
             <php>5.3.0</php>
