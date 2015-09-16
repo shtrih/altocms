@@ -153,12 +153,24 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
             $rFinfo = finfo_open(FILEINFO_MIME_TYPE);
             $sType = finfo_file($rFinfo, $sFilePath);
             finfo_close($rFinfo);
-            header('Content-Type: ' . $sType);
-            header('Content-Length: ' . $iFileSize);
 
             $sFileName = $oMresource->getParamValue('original_filename');
             $sFileExtension = F::File_GetExtension($sFileName, true);
-            // Файл, размером большим, чем указано в конфиге, отдаем как attachment, в ином случае, без оного заголовка, чтобы браузер сам решил, что с ним делать
+
+            // Позволяем запрашивать файл с любым именем, но если расширение отличается, то файл не отдаем
+            $sUrlFileName = $this->GetParam(1);
+            if ($sUrlFileName) {
+                $sUrlExtension = F::File_GetExtension($sUrlFileName, true);
+                if ($sUrlExtension != $sFileExtension) {
+                    return parent::EventNotFound();
+                }
+            }
+
+            header('Content-Type: ' . $sType);
+            header('Content-Length: ' . $iFileSize);
+
+            // Файл, размером большим, чем указано в конфиге, отдаем как attachment, в ином случае, без оного заголовка,
+            // чтобы браузер сам решил, что с ним делать
             if ($iFileSize > F::MemSize2Int(Config::Get('plugin.multiplefileupload.attachment-header-max-file-size'))
                 || !in_array($sFileExtension, Config::Get('plugin.multiplefileupload.attachment-header-extensions'))) {
                 header('Content-Disposition: attachment; filename="' . $sFileName . '"');
