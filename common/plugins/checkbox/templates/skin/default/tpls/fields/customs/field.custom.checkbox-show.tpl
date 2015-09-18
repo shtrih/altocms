@@ -1,7 +1,7 @@
 {strip}
 {if $oField}
     {$oTopicField = $oTopic->getField($oField->getFieldId())}
-    {$aPresetValues = $oField->getSelectVal()}
+    {$aPresetValues = array_map('trim', $oField->getSelectVal())}
     {if $oTopicField}
         <p>
         {if count($aPresetValues) <= 1}
@@ -15,11 +15,11 @@
             {$aValues = $oTopicField->getValueExploded()}
             {if $aValues}
                 <strong>{$oField->getFieldName()}</strong>:&nbsp;
-                {foreach $oTopicField->getValueExploded() as $sValue}
+                {foreach $aValues as $sValue}
                     {if in_array($sValue, $aPresetValues)}
                         {$sValue|escape}
+                        {if !$sValue@last}, {/if}
                     {/if}
-                    {if !$sValue@last}, {/if}
                 {/foreach}
             {/if}
         {/if}
