@@ -2,7 +2,7 @@
 /**
  * Русский языковой файл плагина
  */
-return array(
+return [
     'contenttypes_field'              => 'Множественная загрузка файлов',
     'contenttypes_field_notice'       => '',
 
@@ -58,6 +58,6 @@ return array(
     'btn_attach'       => 'Прикрепить',
     'btn_attach_title' => 'Прикрепить к этому топику',
     'empty_list' => 'Список пуст.',
-);
+];
 
 

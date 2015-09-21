@@ -34,7 +34,7 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
         E::ModuleViewer()->SetResponseAjax('json');
 
         $iTargetId = (int)F::GetRequest('topic_id');
-        $aFiles = array();
+        $aFiles = [];
 
         // Проверяем, целевой объект и права на его редактирование
         if (!E::ModuleUploader()->CheckAccessAndGetTarget('topic', $iTargetId)) {

@@ -23,7 +23,7 @@ class PluginMultiplefileupload_ModuleMresource extends PluginMultiplefileupload_
      * @return ModuleMresource_EntityMresource|null
      */
     public function GetMresourceByRelId($iId) {
-        $xResult = array();
+        $xResult = [];
         $aMrecourcesRel = $this->oMapper->GetMresourcesRelById($iId);
         $oMresourceRel = array_pop($aMrecourcesRel);
 

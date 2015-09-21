@@ -52,7 +52,7 @@ class PluginMultiplefileupload_HookMultiplefileupload extends Hook {
         $oTopic = $aVars['oTopic'];
         $iTopicId = $oTopic->getId();
         if ('add' == $aVars['sType'] && 'multiple-file-upload' == $oField->getFieldType()) {
-            $aValues = isset($_REQUEST['fields'][$oField->getFieldId()]) ? $_REQUEST['fields'][$oField->getFieldId()] : array();
+            $aValues = isset($_REQUEST['fields'][$oField->getFieldId()]) ? $_REQUEST['fields'][$oField->getFieldId()] : [];
             if (is_array($aValues) && count($aValues)) {
                 foreach ($aValues as $iMresourceId) {
                     if (is_numeric($iMresourceId)) {

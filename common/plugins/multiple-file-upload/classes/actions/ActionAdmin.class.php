@@ -11,7 +11,7 @@ class PluginMultiplefileupload_ActionAdmin extends PluginMultiplefileupload_Inhe
         $sContentType = F::GetRequest('field_type');
         if ('multiple-file-upload' == $sContentType) {
             $bExists = false;
-            $aContentFields = E::ModuleTopic()->getContentFields(array('content_id' => $this->GetParam(0)));
+            $aContentFields = E::ModuleTopic()->getContentFields(['content_id' => $this->GetParam(0)]);
             foreach ($aContentFields as $oEntityField) {
                 if ($sContentType == $oEntityField->getFieldType()) {
                     $bExists = true;

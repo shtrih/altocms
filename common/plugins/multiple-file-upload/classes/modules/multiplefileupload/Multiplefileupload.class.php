@@ -9,7 +9,7 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
 
     const TARGET_TYPE = 'multiple-file-upload';
 
-    protected static $aUploadErrors = array(
+    protected static $aUploadErrors = [
         UPLOAD_ERR_INI_SIZE                       => 'plugin.multiplefileupload.upload_err_ini_size',
         UPLOAD_ERR_FORM_SIZE                      => 'plugin.multiplefileupload.upload_err_form_size',
         UPLOAD_ERR_PARTIAL                        => 'plugin.multiplefileupload.upload_err_partial',
@@ -32,7 +32,7 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
         ModuleUploader::ERR_IMG_LARGE_WIDTH       => 'plugin.multiplefileupload.upload_err_img_large_width',
         ModuleUploader::ERR_IMG_LARGE_HEIGHT      => 'plugin.multiplefileupload.upload_err_img_large_height',
         ModuleUploader::ERR_TRANSFORM_IMAGE       => 'plugin.multiplefileupload.upload_err_transform_image',
-    );
+    ];
 
     public function Init() {
 

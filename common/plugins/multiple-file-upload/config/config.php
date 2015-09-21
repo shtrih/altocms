@@ -10,7 +10,7 @@
  * Чтобы переопределить языковые переменные, скопируйте языковой файл из common/plugins/multiple-file-upload/templates/language
  *     в папку «app/plugins/multiple-file-upload/templates/language/».
  */
-$aConfig = array(
+$aConfig = [
     // Сколько файлов показывать до ссылки «Показать остальные».
     'files-show-count' => 3,
 
@@ -50,10 +50,10 @@ $aConfig = array(
     'apache2-xsendfile' => false,
     // Если настроен мод XSendFile для nginx
     'nginx-xsendfile' => false,
-);
+];
 
 // Настройки загружаемых файлов
-$aConfig[Config::KEY_ROOT]['module']['uploader']['files']['multiple-file-upload'] = array(
+$aConfig[Config::KEY_ROOT]['module']['uploader']['files']['multiple-file-upload'] = [
 
     /* Максимальный размер загружаемого файла. Установка нулевого размера отключает лимит.
      * Чтобы использовать значение основного конфига сайта, закомментируйте эту настройку.
@@ -70,7 +70,7 @@ $aConfig[Config::KEY_ROOT]['module']['uploader']['files']['multiple-file-upload'
     Config::KEY_EXTENDS => '___module.uploader.files.default___',
     Config::KEY_RESET => true,
     'file_extensions' => empty($aConfig['accept-file-types']) ? array() : $aConfig['accept-file-types'],
-);
+];
 
 Config::Set(
     'router.uri',

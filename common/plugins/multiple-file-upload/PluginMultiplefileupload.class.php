@@ -9,13 +9,13 @@
  * Запрещаем напрямую через браузер обращение к этому файлу.
  */
 if (!class_exists('Plugin')) {
-    die('Hacking attemp!');
+    die('Hacking attempt!');
 }
 
 class PluginMultiplefileupload extends Plugin {
 
     // Объявление делегирований (нужны для того, чтобы назначить свои экшны и шаблоны)
-    public $aDelegates = array(
+    public $aDelegates = [
             /**
              * 'action' => array('ActionIndex'=>'_ActionSomepage'),
              * Замена экшна ActionIndex на ActionSomepage из папки плагина
@@ -26,14 +26,14 @@ class PluginMultiplefileupload extends Plugin {
              * 'template'=>array('actions/ActionIndex/index.tpl'=>'_actions/ActionTest/index.tpl'),
              * Замена index.tpl из скина из папки actions/ActionIndex/ файлом /common/plugins/abcplugin/templates/skin/default/actions/ActionTest/index.tpl
              */
-        'template' => array(
+        'template' => [
             'tpls/fields/customs/field.custom.multiple-file-upload-edit.tpl'=>'_tpls/fields/customs/field.custom.multiple-file-upload-edit.tpl',
             'tpls/fields/customs/field.custom.multiple-file-upload-show.tpl'=>'_tpls/fields/customs/field.custom.multiple-file-upload-show.tpl',
-        ),
-    );
+        ],
+    ];
 
     // Объявление переопределений (модули, мапперы и сущности)
-    protected $aInherits=array(
+    protected $aInherits = [
        /**
         * Переопределение модулей (функционал):
         * 'module'  =>array('ModuleTopic'=>'_ModuleTopic'),
@@ -58,28 +58,24 @@ class PluginMultiplefileupload extends Plugin {
         * PluginAbcplugin_ModuleTopic_EntityTopic (/plugins/abcplugin/classes/modules/entity/Topic.entity.class.php) - новые или замена существующих
         *
         */
-        'module' => array(
+        'module' => [
             'ModuleTopic',
             'ModuleMresource',
             'ModuleMresource_MapperMresource'
-        ),
-        'action' => array(
+        ],
+        'action' => [
             'ActionAdmin'
-        ),
-    );
+        ],
+    ];
 
-    // Активация плагина
     public function Activate() {
         return true;
     }
 
-    // Деактивация плагина
     public function Deactivate(){
         return true;
     }
 
-
-    // Инициализация плагина
     public function Init() {
         Config::Set('router.page.multiplefileupload', 'PluginMultiplefileupload_ActionMultiplefileupload');
 
@@ -114,4 +110,3 @@ class PluginMultiplefileupload extends Plugin {
         $oModuleViewer->AppendStyle($sTemplateDir . 'assets/css/fileupload-init.css');
     }
 }
-

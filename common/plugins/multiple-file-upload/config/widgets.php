@@ -5,7 +5,7 @@ $config['widgets']['unattached.tpl'] = array(
     'group'    => 'mfu-after-file-list',
     'priority' => 0,
     'plugin'   => 'multiplefileupload',
-    'action'   => array(
-        'content' => array('add', 'edit'),
-    ),
+    'action'   => [
+        'content' => ['add', 'edit'],
+    ],
 );

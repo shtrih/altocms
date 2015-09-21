@@ -11,7 +11,7 @@ class PluginMultiplefileupload_ModuleTopic extends PluginMultiplefileupload_Inhe
         parent::DeleteMresources($aTopics);
 
         if (!is_array($aTopics)) {
-            $aTopics = array($aTopics);
+            $aTopics = [$aTopics];
         }
         /** @var ModuleTopic_EntityTopic $oTopic */
         foreach ($aTopics as $oTopic) {

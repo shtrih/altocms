@@ -15,7 +15,7 @@
              <version>1.1.9</version>
         </alto>
         <system>
-            <php>5.3.0</php>
+            <php>5.4.0</php>
         </system>
     </requires>
     <description>
