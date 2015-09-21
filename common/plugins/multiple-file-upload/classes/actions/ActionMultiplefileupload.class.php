@@ -185,13 +185,12 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
             }
             // Nginx as frontend server
             // http://wiki.nginx.org/XSendfile
-            elseif (Config::Get('plugin.multiplefileupload.nginx-frontend')) {
-                // http://mailman.nginx.org/pipermail/nginx-ru/2005-May/002145.html
+            elseif (Config::Get('plugin.multiplefileupload.nginx-xsendfile')) {
                 /*
+                // http://mailman.nginx.org/pipermail/nginx-ru/2005-May/002145.html
                 header("HTTP/1.1 206 Partial Content");
                 header("Accept-Ranges: bytes");
                 header("Content-Range: bytes 0-");
-                header("X-Accel-Redirect: " . $sFilePath);
                 */
                 header("X-Accel-Redirect: " . $sFilePath);
             }
