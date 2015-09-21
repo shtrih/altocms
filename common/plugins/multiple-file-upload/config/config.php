@@ -5,9 +5,9 @@
  */
 
 /* Для изменения настроек, не нужно вносить правки в этом файле, ибо он может перезаписаться с обновлением плагина.
- * Скопируйте его в папку «/app/plugins/multiplefileupload/config/» и редактируйте там всё, что надо.
+ * Скопируйте его в папку «/app/plugins/multiple-file-upload/config/» и редактируйте там всё, что надо.
  *
- * Чтобы переопределить языковые переменные, скопируйте языковой файл в папку «app/plugins/multiplefileupload/templates/language/»
+ * Чтобы переопределить языковые переменные, скопируйте языковой файл в папку «app/plugins/multiple-file-upload/templates/language/»
  */
 $aConfig = array(
     // Сколько файлов показывать до ссылки «Показать остальные».
@@ -57,10 +57,18 @@ $aConfig[Config::KEY_ROOT]['module']['uploader']['files']['multiple-file-upload'
     'url_maxsize'     => '10Mb',
 
 
-    // Дальше ничего не трогать.
+    /* Дальше ничего не трогать. */
     Config::KEY_EXTENDS => '___module.uploader.files.default___',
     Config::KEY_RESET => true,
     'file_extensions' => empty($aConfig['accept-file-types']) ? array() : $aConfig['accept-file-types'],
+);
+
+Config::Set(
+    'router.uri',
+    [
+        '[~^(multiplefileupload/get/\d+)/.+$~i]' => '$1',
+        Config::KEY_REPLACE                      => true,
+    ] + Config::Get('router.uri')
 );
 
 return $aConfig;
