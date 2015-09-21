@@ -9,6 +9,21 @@
 	vertical-align: top;
 }
 
+.nsfw-pictures canvas[align="right"] {
+	float: right;
+	margin: 0 0 12px 12px;
+}
+
+.nsfw-pictures canvas[align="left"] {
+	float: left;
+	margin: 0 12px 12px 0;
+}
+
+.nsfw-pictures canvas.image-center {
+	display: block;
+	margin: 0 auto;
+}
+
 .no-js .nsfw-pictures .topic-text img,
 .no-js .nsfw-pictures .topic-photoset img {
 	-webkit-filter: blur(3px);
