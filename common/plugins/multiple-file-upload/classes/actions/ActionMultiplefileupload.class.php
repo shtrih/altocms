@@ -176,7 +176,6 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
                 header('Content-Disposition: attachment; filename="' . $sFileName . '"');
             }
 
-            // TODO: вынести в настройки
             // Apache XSendFile
             // https://tn123.org/mod_xsendfile/
             if (in_array('mod_xsendfile', apache_get_modules()) && Config::Get('plugin.multiplefileupload.apache2-xsendfile')) {

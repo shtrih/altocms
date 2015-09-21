@@ -75,7 +75,7 @@ $aConfig[Config::KEY_ROOT]['module']['uploader']['files']['multiple-file-upload'
 Config::Set(
     'router.uri',
     [
-        '[~^(multiplefileupload/get/\d+)/.+$~i]' => '$1',
+        '[~^(multiplefileupload/get/\d+/.+)$~i]' => '$1',
         Config::KEY_REPLACE                      => true,
     ] + Config::Get('router.uri')
 );
