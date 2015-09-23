@@ -7,7 +7,7 @@
                 {if $aParams.title}
                     {$aParams.title}
                 {else}
-                    {$aLang.plugin.betterspoilers.trigger_text}
+                    {$aLang.plugin.betterspoilers.trigger-text}
                 {/if}
             </span>
         </span>
@@ -15,5 +15,6 @@
             <span>{$aParams.snippet_text}</span>
         </div>
     </div>
+    <a title="{$aLang.plugin.betterspoilers.close-link-title|escape:'htmlall'}" href="#"></a>
 </div>
 {/strip}
