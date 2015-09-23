@@ -6,7 +6,10 @@
                 $('.betterspoiler > [class^="icheckbox_"] input, .spoiler > [class^="icheckbox_"] input').iCheck('destroy');
 
                 $('.betterspoiler > input ~ a:last-of-type').on('click', function () {
-                    $(this).prevAll('input[type=checkbox]').trigger('click');
+                    var self = $(this);
+                    self.prevAll('input[type=checkbox]').trigger('click');
+
+                    $.scrollTo(self.parent(), 500, {interrupt: true});
 
                     return false;
                 });
