@@ -194,6 +194,7 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
                 header("X-Accel-Redirect: " . $sFilePath);
             }
             else {
+                // TODO: Поддержка заголовка Range
                 ob_clean();
                 flush();
                 readfile($sFilePath);

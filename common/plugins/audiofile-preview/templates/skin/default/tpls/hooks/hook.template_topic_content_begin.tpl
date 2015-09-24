@@ -1,4 +1,5 @@
 {$iTopicId = $topic->getId()}
+{strip}
 <script type="text/javascript">
     $(document).ready(function () {
         $('[id^=jp_container_]').css('display', 'block');
@@ -7,16 +8,23 @@
                 cssSelectorAncestor: "#jp_container_{$iTopicId}"
             },
             [
+                {$aFormats = ['webm' => 'webmv', 'mp4' => 'm4v']}
                 {foreach $aFiles as $oFile}
                 {
                     title: '{substr($oFile->name, 0, -(strlen($oFile->extension) + 1))|escape:javascript}',
-                    {$oFile->extension|escape:javascript}: '{$oFile->url|escape:javascript}',
-                    free: true
+                    {* artist:"The Artist", // Optional *}
+                    {if isset($aFormats[$oFile->extension])}
+                        {$aFormats[$oFile->extension]}
+                    {else}
+                        {$oFile->extension|escape:javascript}
+                    {/if}: '{$oFile->url|escape:javascript}',
+                    free: true,
+                    poster: 'http://www.jplayer.org/audio/poster/Miaow_640x360.png'
                 },
                 {/foreach}
             ], {
                 swfPath: "{Plugin::GetUrl('Audiofilepreview')}templates/frontend/vendors/jPlayer-2.9.2/dist/jplayer/",
-                supplied: 'mp3',
+                supplied: 'mp3, m4a, webma, webmv, oga, ogv, wav, fla, flv, rtmpa, rtmpv',
                 solution: 'html, flash',
                 useStateClassSkin: true,
                 autoBlur: false,
@@ -26,7 +34,12 @@
                 toggleDuration: true,
                 preload: 'none',
                 globalVolume: true,
-                volume: 0.5
+                volume: 0.5,
+                size: {
+                    width: $('.topic-text').width() + 'px',
+                    height: Math.round($('.topic-text').width() / 1.77) + 'px',
+                    cssClass: ''
+                }
             }
         );
     });
@@ -76,3 +89,4 @@
         </div>
     </div>
 </div>
+{/strip}
