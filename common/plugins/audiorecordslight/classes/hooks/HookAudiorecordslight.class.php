@@ -11,7 +11,9 @@
 class PluginAudiorecordslight_HookAudiorecordslight extends Hook {
 
 	public function RegisterHook () {
-		$this -> AddHook ('engine_init_complete', 'AddStylesAndJS');
+        if (!E::ModulePlugin()->IsActivePlugin('multiplefileupload')) {
+            $this -> AddHook ('engine_init_complete', 'AddStylesAndJS');
+        }
 		//$this -> AddHook ('template_form_add_topic_topic_end', 'NewTopicEnd');
 		//$this -> AddHook ('template_topic_show_info', 'TopicShowInfo');
 		//$this -> AddHook ('template_body_begin', 'BodyBegin');
