@@ -5,7 +5,7 @@ $(window).on('load', function () {
     ;
 
     function init_pixelate() {
-        $('.topic-text img,.topic-photoset img', topics_nsfw).pixelate({
+        $('.topic-text img:not(id^=jp_poster_),.topic-photoset img:not(id^=jp_poster_)', topics_nsfw).pixelate({
             value: PIXELATENSFW_VALUE,
             reveal:PIXELATENSFW_REVEAL,
             revealonclick: PIXELATENSFW_REVEALONCLICK
