@@ -83,8 +83,8 @@ class PluginMultiplefileupload_ModuleMultiplefileupload extends Module {
                         if ($oMresource) {
                             $iUserId = E::UserId();
 
-                            // Нет константы для всех остальных файлов
-                            $oMresource->setType(128);
+                            // TODO: определять тип ресурса
+                            $oMresource->setType(ModuleMresource::TYPE_OTHERS);
                             $oMresource->setUserId($iUserId);
 
                             $oMresource->setParams(array('original_filename' => $oFile->name));
