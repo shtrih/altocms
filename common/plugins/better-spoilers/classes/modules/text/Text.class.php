@@ -8,13 +8,8 @@ class PluginBetterspoilers_ModuleText extends PluginBetterspoilers_Inherits_Modu
      * @param string $sType     Тип конфига
      * @param bool   $bClear    Очищать предыдущий конфиг или нет
      */
-    public function LoadJevixConfig($sType = 'default', $bClear = true) {
-        parent::LoadJevixConfig($sType, $bClear);
-        $this->InjectTags($sType);
-    }
-
-    public function LoadQevixConfig($sType = 'default', $bClear = true) {
-        parent::LoadQevixConfig($sType, $bClear);
+    public function _loadTextParserConfig($sType = 'default', $bClear = true) {
+        parent::_loadTextParserConfig($sType, $bClear);
         $this->InjectTags($sType);
     }
 
@@ -61,7 +56,7 @@ class PluginBetterspoilers_ModuleText extends PluginBetterspoilers_Inherits_Modu
     }
 
     /**
-     * Добавить в список разрешённыз значений атрибута свои значения
+     * Добавить в список разрешённых значений атрибута свои значения
      * @param $sTag    string
      * @param $sParam  string
      * @param $saValue string|array Строка или несколько строк в массиве
