@@ -4,3 +4,6 @@
 [submodule "common/plugins/drafts"]
 	path = common/plugins/drafts
 	url = git@github.com:shtrih/livestreet_drafts.git
+[submodule "common/plugins/better-spoilers"]
+	path = common/plugins/better-spoilers
+	url = git@github.com:shtrih/altocms-plugin-betterspoilers.git
