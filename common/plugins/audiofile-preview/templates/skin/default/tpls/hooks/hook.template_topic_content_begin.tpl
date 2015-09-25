@@ -37,7 +37,7 @@
                 volume: 0.5,
                 size: {
                     width: $('.topic-text').width() + 'px',
-                    height: Math.round($('.topic-text').width() / 1.77) + 'px',
+                    height: 10 + Math.round($('.topic-text').width() / 1.77) + 'px',
                     cssClass: ''
                 }
             }
