@@ -1,6 +1,7 @@
 {strip}
 {$iTopicId = $topic->getId()}
-{$oContentType = $oTopic->getContentType()}
+{$oContentType = $topic->getContentType()}
+<!-- TODO: settings -->
 {$oField = $oContentType->getFieldByName('oblozhka')}
 {if $oField}
     <!-- TODO: settings -->
