@@ -1,5 +1,19 @@
-{$iTopicId = $topic->getId()}
 {strip}
+{$iTopicId = $topic->getId()}
+{$oContentType = $oTopic->getContentType()}
+{$oField = $oContentType->getFieldByName('oblozhka')}
+{if $oField}
+    <!-- TODO: settings -->
+    {$sImagePath = $topic->getSingleImage($oField->getFieldId(), '682x395')}
+{/if}
+{if !$sImagePath}
+    {$sImagePath = $topic->getPhotosetMainPhotoUrl(false, '682x395')}
+{/if}
+<!-- TODO: отличать видео от аудио -->
+{$aFormats = ['webm' => 'webmv', 'mp4' => 'm4v']}
+{* http://jplayer.org/latest/developer-guide/
+   http://jplayer.org/latest/demo-02-jPlayerPlaylist/
+*}
 <script type="text/javascript">
     $(document).ready(function () {
         $('[id^=jp_container_]').css('display', 'block');
@@ -8,7 +22,6 @@
                 cssSelectorAncestor: "#jp_container_{$iTopicId}"
             },
             [
-                {$aFormats = ['webm' => 'webmv', 'mp4' => 'm4v']}
                 {foreach $aFiles as $oFile}
                 {
                     title: '{substr($oFile->name, 0, -(strlen($oFile->extension) + 1))|escape:javascript}',
@@ -18,9 +31,12 @@
                     {else}
                         {$oFile->extension|escape:javascript}
                     {/if}: '{$oFile->url|escape:javascript}',
-                    free: true,
-                    poster: 'http://www.jplayer.org/audio/poster/Miaow_640x360.png'
-                },
+                    /* TODO: settings */
+                    free: true
+                    {if $sImagePath && $bHasVideo}
+                        , poster: '{$sImagePath|escape:'javascript'}'
+                    {/if}
+                }{if !$oFile@last},{/if}
                 {/foreach}
             ], {
                 swfPath: "{Plugin::GetUrl('Audiofilepreview')}templates/frontend/vendors/jPlayer-2.9.2/dist/jplayer/",

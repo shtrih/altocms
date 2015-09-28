@@ -72,6 +72,14 @@ class PluginAudiofilepreview_HookAudiofilepreview extends Hook {
         if (!$aVars['aFiles'])
             return null;
 
+        $aVars['bHasVideo'] = false;
+        foreach($aVars['aFiles'] as $oFile) {
+            if (in_array($oFile->extension, Config::Get('plugin.audiofilepreview.video-extensions'))) {
+                $aVars['bHasVideo'] = true;
+                break;
+            }
+        }
+
         return E::ModuleViewer()->Fetch(
             Plugin::GetTemplateFile(__CLASS__, 'tpls/hooks/hook.template_topic_content_begin.tpl'),
             $aVars

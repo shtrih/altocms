@@ -12,10 +12,21 @@ $config = array(
         'mp3',
         'mp4',
         'ogg',
+        'oga',
         'webm',
         'wav',
         'rtmp',
-        'flv'
+        'flv',
+        'flac'
+    ),
+    'video-extensions' => array(
+        'mp4',
+        'm4v',
+        'ogv',
+//        'ogg',
+        'webm',
+        'flv',
+        'rtmp',
     )
 );
 
