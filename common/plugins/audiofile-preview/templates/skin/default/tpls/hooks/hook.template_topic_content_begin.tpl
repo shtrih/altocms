@@ -61,7 +61,7 @@
         );
     });
 </script>
-<div id="jquery_jplayer_{$iTopicId}" class="jp-jplayer"></div>
+<div id="jquery_jplayer_{$iTopicId}" class="jp-jplayer"  style="clear: both;"></div>
 <div id="jp_container_{$iTopicId}" class="jp-audio" style="clear: both;" role="application" aria-label="media player">
     <div class="jp-type-playlist">
         <div class="jp-gui jp-interface">
