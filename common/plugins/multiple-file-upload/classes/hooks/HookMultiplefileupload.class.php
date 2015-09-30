@@ -37,6 +37,10 @@ class PluginMultiplefileupload_HookMultiplefileupload extends Hook {
         $this->AddHook('template_admin_content_add_field_list', 'RenderSelectOption');
         $this->AddHook('content_field_proccess', 'SaveFormValues');
         $this->AddHook('template_html_head_tags', 'htmlHeadTags');
+
+        if (Config::Get('plugin.multiplefileupload.use-hook')) {
+            $this->AddHook('template_topic_content_end', 'topicContentEnd');
+        }
     }
 
     public function RenderSelectOption(array $aVars) {
@@ -80,5 +84,11 @@ class PluginMultiplefileupload_HookMultiplefileupload extends Hook {
         ];
 
         return E::ModuleViewer()->Fetch(Plugin::GetTemplateFile(__CLASS__, 'tpls/hooks/hook.template_html_head_tags.tpl'), $aVars);
+    }
+
+    public function topicContentEnd($aVars) {
+        E::ModuleViewer()->Assign('oTopic', $aVars['topic']);
+        E::ModuleViewer()->Assign('bTopicList', !empty($aVars['bTopicList']));
+        return E::ModuleViewer()->Fetch(Plugin::GetTemplateFile(__CLASS__, 'tpls/hooks/hook.template_topic_content_end.tpl'));
     }
 }
