@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <id>feedback</id>
+    <name>
+        <lang name="default">Feedback</lang>
+        <lang name="russian">Feedback</lang>
+    </name>
+    <author>
+        <lang name="default">author</lang>
+        <lang name="russian">автор</lang>
+    </author>
+    <homepage>http://altocms.ru</homepage>
+    <version>1.0.0</version>
+    <dirname>feedback</dirname>
+    <settings>admin/settings-feedback</settings>
+    <requires>
+        <alto>
+             <version>1.1.9</version>
+        </alto>
+        <system>
+            <php>5.4.0</php>
+        </system>
+        <plugins>
+            <!-- Атрибуты name, version и condition необязательны -->
+            <!-- Возможные значения атрибута condition соответствуют описанию параметра «operator» на странице http://php.net/manual/ru/function.version-compare.php  -->
+            <!-- <plugin name="plugin_name" version="1.0.0" condition="eq">plugin_id</plugin> -->
+        </plugins>
+    </requires>
+    <description>
+        <lang name="default">Description of plugin Feedback</lang>
+        <lang name="russian">Описание плагина Feedback</lang>
+    </description>
+</plugin>
