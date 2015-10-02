@@ -58,7 +58,7 @@
             <table class="table table-striped table-uploaded"><tbody></tbody></table>
             <table role="presentation" class="table table-striped table-files"><tbody class="files"></tbody></table>
 
-            {wgroup group="mfu-after-file-list"}
+            {wgroup group="mfu-after-file-list" params=[]}
         </div>
         </div>
     </div>
