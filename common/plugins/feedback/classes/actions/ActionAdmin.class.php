@@ -19,10 +19,15 @@ class PluginFeedback_ActionAdmin extends PluginFeedback_ActionAdmin_Inherits_Act
             E::Module('PluginFeedback_ModuleFeedback')->update(
                 1,
                 F::GetRequestStr('feedback_webpath', 'feedback'),
-                F::GetRequestStr('feedback_title', 'Написать администрации'),
                 F::GetRequestStr('feedback_active', '0'),
+                F::GetRequestStr('feedback_title', 'Написать администрации'),
                 F::GetRequestStr('feedback_description', '')
             );
+
+            Router::Location(Router::GetPathWebCurrent());
+        }
+        else {
+
         }
     }
 
