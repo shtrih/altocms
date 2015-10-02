@@ -1,14 +1,16 @@
 {strip}
 {$iTopicId = $topic->getId()}
-{$oContentType = $topic->getContentType()}
-<!-- TODO: settings -->
-{$oField = $oContentType->getFieldByName('oblozhka')}
-{if $oField}
+{if $bHasVideo}
+    {$oContentType = $topic->getContentType()}
     <!-- TODO: settings -->
-    {$sImagePath = $topic->getSingleImage($oField->getFieldId(), '682x395')}
-{/if}
-{if !$sImagePath}
-    {$sImagePath = $topic->getPhotosetMainPhotoUrl(false, '682x395')}
+    {$oField = $oContentType->getFieldByName('oblozhka')}
+    {if $oField}
+        <!-- TODO: settings -->
+        {$sImagePath = $topic->getSingleImage($oField->getFieldId(), '682x395')}
+    {/if}
+    {if !$sImagePath}
+        {$sImagePath = $topic->getPhotosetMainPhotoUrl(false, '682x395')}
+    {/if}
 {/if}
 <!-- TODO: отличать видео от аудио -->
 {$aFormats = ['webm' => 'webmv', 'mp4' => 'm4v']}
@@ -34,14 +36,18 @@
                     {/if}: '{$oFile->url|escape:javascript}',
                     /* TODO: settings */
                     free: true
-                    {if $sImagePath && $bHasVideo}
+                    {if $sImagePath}
                         , poster: '{$sImagePath|escape:'javascript'}'
                     {/if}
                 }{if !$oFile@last},{/if}
                 {/foreach}
             ], {
                 swfPath: "{Plugin::GetUrl('Audiofilepreview')}templates/frontend/vendors/jPlayer-2.9.2/dist/jplayer/",
-                supplied: 'mp3, m4a, webma, webmv, oga, ogv, wav, fla, flv, rtmpa, rtmpv',
+                {if $bHasVideo}
+                    supplied: 'mp3, m4a, webma, webmv, oga, ogv, wav, flv, rtmpa, rtmpv',
+                {else}
+                    supplied: 'mp3, m4a, webma, oga, wav, rtmpa',
+                {/if}
                 solution: 'html, flash',
                 useStateClassSkin: true,
                 autoBlur: false,
@@ -51,12 +57,14 @@
                 toggleDuration: true,
                 preload: 'none',
                 globalVolume: true,
-                volume: 0.5,
-                size: {
+                volume: 0.5
+                {if $bHasVideo}
+                , size: {
                     width: $('.topic-text').width() + 'px',
                     height: 10 + Math.round($('.topic-text').width() / 1.77) + 'px',
                     cssClass: ''
                 }
+                {/if}
             }
         );
     });

@@ -28,6 +28,6 @@ $config['class_aliases'] = array(
 /*
  * Error handler
  */
-$config['errors']['whoops'] = true;
+$config['errors']['whoops'] = false;
 
 // EOF
