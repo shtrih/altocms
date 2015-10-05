@@ -15,9 +15,18 @@ class PluginFeedback_ModuleFeedback extends Module {
 
     }
 
-    public function update($iFeedbackId, $sWebPath, $bActive, $sTitle, $sContent) {
-        $sParsedContent = E::ModuleText()->Parser($sContent);
+    public function updateFeedback(PluginFeedback_ModuleFeedback_EntityFeedback $oFeedback) {
+        $this->oMapper->updateFeedback(
+            $oFeedback->getFeedbackId(),
+            $oFeedback->getFeedbackWebpath(),
+            $oFeedback->getFeedbackActive(),
+            $oFeedback->getFeedbackTitle(),
+            $oFeedback->getFeedbackText(),
+            $oFeedback->getFeedbackTextSource()
+        );
+    }
 
-        $this->oMapper->update($iFeedbackId, $sWebPath, $bActive, $sTitle, $sParsedContent, $sContent);
+    public function getFeedbackById($iItemId) {
+        return $this->oMapper->getFeedbackById($iItemId);
     }
 }

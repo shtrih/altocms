@@ -14,20 +14,30 @@ class PluginFeedback_ActionAdmin extends PluginFeedback_ActionAdmin_Inherits_Act
     protected function settingsFeedback() {
         $this->_setTitle('Настройки формы обратной связи');
 //        $this->SetTemplateAction('settings-feedback');
-        $aPostParams = $this->getPost();
-        if ($aPostParams && E::ModuleSecurity()->ValidateSecurityKey()) {
-            E::Module('PluginFeedback_ModuleFeedback')->update(
-                1,
-                F::GetRequestStr('feedback_webpath', 'feedback'),
-                F::GetRequestStr('feedback_active', '0'),
-                F::GetRequestStr('feedback_title', 'Написать администрации'),
-                F::GetRequestStr('feedback_description', '')
-            );
+
+        /**
+         * @var PluginFeedback_ModuleFeedback
+         */
+        $oModuleFeedback = E::Module('PluginFeedback_ModuleFeedback');
+        $oFeedback = $oModuleFeedback->getFeedbackById(1);
+
+        if (F::isPost('security_key') && E::ModuleSecurity()->ValidateSecurityKey()) {
+            $oFeedback->setFeedbackId(1);
+            $oFeedback->setFeedbackWebpath(F::GetRequestStr('feedback_webpath', 'feedback'));
+            $oFeedback->setFeedbackActive(F::GetRequestStr('feedback_active', '0'));
+            $oFeedback->setFeedbackTitle(F::GetRequestStr('feedback_title', 'Написать администрации'));
+            $oFeedback->setFeedbackText(F::GetRequestStr('feedback_description', ''));
+            $oFeedback->setFeedbackTextSource(E::ModuleText()->Parser(F::GetRequestStr('feedback_description', '')));
+
+            $oModuleFeedback->updateFeedback($oFeedback);
 
             Router::Location(Router::GetPathWebCurrent());
         }
         else {
-
+            $_REQUEST['feedback_webpath'] = $oFeedback->getFeedbackWebpath();
+            $_REQUEST['feedback_active'] = $oFeedback->getFeedbackActive();
+            $_REQUEST['feedback_title'] = $oFeedback->getFeedbackTitle();
+            $_REQUEST['feedback_description'] = $oFeedback->getFeedbackTextSource();
         }
     }
 
