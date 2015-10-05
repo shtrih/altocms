@@ -34,6 +34,8 @@ class PluginFeedback_ActionAdmin extends PluginFeedback_ActionAdmin_Inherits_Act
             Router::Location(Router::GetPathWebCurrent());
         }
         else {
+            E::ModuleViewer()->Assign('aFields', $oFeedback->getFields());
+
             $_REQUEST['feedback_webpath'] = $oFeedback->getFeedbackWebpath();
             $_REQUEST['feedback_active'] = $oFeedback->getFeedbackActive();
             $_REQUEST['feedback_title'] = $oFeedback->getFeedbackTitle();

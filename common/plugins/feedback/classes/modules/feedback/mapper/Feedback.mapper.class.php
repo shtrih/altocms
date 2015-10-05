@@ -77,4 +77,25 @@ class PluginFeedback_ModuleFeedback_MapperFeedback extends Mapper
         }
         return false;
     }
+
+    /**
+     * Список полей
+     *
+     * @param $iFeedbackId
+     * @return ModuleTopic_EntityField[]
+     */
+    public function getFields($iFeedbackId) {
+        $sql = 'SELECT
+    *, field_id AS ARRAY_KEY
+FROM '.Config::Get('db.table.prefix').'feedback_fields
+WHERE feedback_id = ?d
+ORDER BY field_sort DESC';
+
+        $aResult = array();
+        $aRows = $this->oDb->select($sql, $iFeedbackId);
+        if ($aRows) {
+            $aResult = E::GetEntityRows('Topic_Field', $aRows);
+        }
+        return $aResult;
+    }
 }
