@@ -29,4 +29,8 @@ class PluginFeedback_ModuleFeedback extends Module {
     public function getFeedbackById($iItemId) {
         return $this->oMapper->getFeedbackById($iItemId);
     }
+
+    public function addField(ModuleTopic_EntityField $oField) {
+        return $this->oMapper->addField($oField);
+    }
 }

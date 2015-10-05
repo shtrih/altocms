@@ -28,7 +28,7 @@ class PluginFeedback_ModuleFeedback_MapperFeedback extends Mapper
         $oResult = null;
 
         $aRow = $this->oDb->selectRow(
-            'SELECT * FROM `feedback` WHERE `feedback_id` = ?d', $iItemId
+            'SELECT * FROM `'.Config::Get('db.table.prefix').'feedback` WHERE `feedback_id` = ?d', $iItemId
         );
 
         if ($aRow) {
@@ -36,5 +36,45 @@ class PluginFeedback_ModuleFeedback_MapperFeedback extends Mapper
         }
 
         return $oResult;
+    }
+
+    /**
+     * Добавляет поле
+     *
+     * @param ModuleTopic_EntityField $oField    Объект поля
+     *
+     * @return int|bool
+     */
+    public function addField(ModuleTopic_EntityField $oField) {
+
+        $sql = 'INSERT INTO '.Config::Get('db.table.prefix').'feedback_fields
+			(
+			feedback_id,
+			field_unique_name,
+			field_name,
+			field_type,
+			field_description,
+			field_options,
+			field_required,
+			field_postfix
+			)
+			VALUES(?d, ?, ?, ?, ?, ?, ?d, ?)
+		';
+        if ($iId = $this->oDb->query(
+            $sql,
+            $oField->getFeedbackId(),
+            $oField->getFieldUniqueName() ?: null,
+            $oField->getFieldName(),
+            $oField->getFieldType(),
+            $oField->getFieldDescription(),
+            $oField->getFieldOptions(),
+            $oField->getFieldRequired() ? 1 : 0,
+            $oField->getFieldPostfix()
+        )
+        ) {
+            $oField->setFieldId($iId);
+            return $iId;
+        }
+        return false;
     }
 }

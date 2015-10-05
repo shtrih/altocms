@@ -45,7 +45,26 @@ class PluginFeedback_ActionAdmin extends PluginFeedback_ActionAdmin_Inherits_Act
         $this->_setTitle('Добавить поле');
 
         $this->SetTemplateAction('field-add');
-        E::ModuleViewer()->Assign('aTypes', []);
+
+        if (F::isPost('security_key') && E::ModuleSecurity()->ValidateSecurityKey()) {
+            $oField = E::GetEntity('Topic_Field');
+            $oField->setFieldType(F::GetRequest('field_type'));
+            $oField->setFeedbackId(1);
+            $oField->setFieldName(F::GetRequest('field_name'));
+            $oField->setFieldUniqueName(F::GetRequest('field_unique_name'));
+            $oField->setFieldDescription(F::GetRequest('field_description'));
+            $oField->setFieldRequired(F::GetRequest('field_required'));
+            if (F::GetRequest('field_type') == 'select') {
+                $oField->setOptionValue('select', F::GetRequest('field_values'));
+            }
+
+            if (E::Module('PluginFeedback_ModuleFeedback')->addField($oField)) {
+                E::ModuleMessage()->AddNoticeSingle(E::ModuleLang()->Get('action.admin.contenttypes_success_fieldadd'), null, true);
+                R::Location(dirname(Router::RealUrl()));
+            }
+        }
+
+        return false;
     }
 
     protected function fieldEdit() {
