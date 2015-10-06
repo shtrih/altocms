@@ -120,7 +120,7 @@ class PluginFeedback_ActionAdmin extends PluginFeedback_ActionAdmin_Inherits_Act
                 try {
                     if ($oModuleFeedback->updateField($oField)) {
                         E::ModuleMessage()->AddNoticeSingle(E::ModuleLang()->Get('action.admin.contenttypes_success_fieldedit'), null, true);
-                        R::Location(Router::Url('path'));
+                        R::Location(dirname(dirname(Router::RealUrl())));
                     }
                 }
                 catch (Exception $e) {
@@ -154,6 +154,13 @@ class PluginFeedback_ActionAdmin extends PluginFeedback_ActionAdmin_Inherits_Act
     }
 
     protected function fieldRemove() {
+        $iFieldId = Router::GetParam(1);
+        if ($iFieldId && E::ModuleSecurity()->ValidateSecurityKey()) {
+            E::Module('PluginFeedback_ModuleFeedback')->removeField($iFieldId);
 
+            R::Location(dirname(dirname(Router::RealUrl())));
+        }
+
+        return parent::EventNotFound();
     }
 }

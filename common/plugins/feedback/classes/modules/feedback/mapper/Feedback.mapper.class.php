@@ -152,4 +152,13 @@ ORDER BY field_sort DESC';
         return $bResult !== false;
     }
 
+    public function removeField($iFieldId) {
+        $sql = '
+            DELETE FROM '.Config::Get('db.table.prefix').'feedback_fields
+            WHERE
+                field_id = ?d
+        ';
+
+        return $this->oDb->query($sql, $iFieldId) !== false;
+    }
 }

@@ -41,4 +41,8 @@ class PluginFeedback_ModuleFeedback extends Module {
     public function updateField(ModuleTopic_EntityField $oField) {
         return $this->oMapper->updateField($oField);
     }
+
+    public function removeField($iFieldId) {
+        return $this->oMapper->removeField($iFieldId);
+    }
 }
