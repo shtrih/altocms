@@ -33,4 +33,12 @@ class PluginFeedback_ModuleFeedback extends Module {
     public function getFields($iFeedbackId) {
         return $this->oMapper->getFields($iFeedbackId);
     }
+
+    public function getField($iFieldId) {
+        return $this->oMapper->getField($iFieldId);
+    }
+
+    public function updateField(ModuleTopic_EntityField $oField) {
+        return $this->oMapper->updateField($oField);
+    }
 }

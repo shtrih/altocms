@@ -48,18 +48,18 @@ class PluginFeedback_ModuleFeedback_MapperFeedback extends Mapper
     public function addField(ModuleTopic_EntityField $oField) {
 
         $sql = 'INSERT INTO '.Config::Get('db.table.prefix').'feedback_fields
-			(
-			feedback_id,
-			field_unique_name,
-			field_name,
-			field_type,
-			field_description,
-			field_options,
-			field_required,
-			field_postfix
-			)
-			VALUES(?d, ?, ?, ?, ?, ?, ?d, ?)
-		';
+            (
+            feedback_id,
+            field_unique_name,
+            field_name,
+            field_type,
+            field_description,
+            field_options,
+            field_required,
+            field_postfix
+            )
+            VALUES(?d, ?, ?, ?, ?, ?, ?d, ?)
+        ';
         if ($iId = $this->oDb->query(
             $sql,
             $oField->getFeedbackId(),
@@ -98,4 +98,58 @@ ORDER BY field_sort DESC';
         }
         return $aResult;
     }
+
+    public function getField($iFieldId) {
+        $oResult = null;
+
+        $aRow = $this->oDb->selectRow(
+            'SELECT * FROM '.Config::Get('db.table.prefix').'feedback_fields WHERE field_id = ?d',
+            $iFieldId
+        );
+        if ($aRow) {
+            $oResult = E::GetEntity('Topic_Field', $aRow);
+        }
+
+        return $oResult;
+    }
+
+    /**
+     * Обновляет поле
+     *
+     * @param ModuleTopic_EntityField $oField    Объект поля
+     *
+     * @return bool
+     */
+    public function updateField(ModuleTopic_EntityField $oField) {
+
+        $sql = 'UPDATE feedback_fields
+            SET
+                feedback_id=?d,
+                field_unique_name=?,
+                field_name=?,
+                field_sort=?d,
+                field_type=?,
+                field_description=?,
+                field_options=?,
+                field_required=?d,
+                field_postfix=?
+            WHERE
+                field_id = ?d
+        ';
+        $bResult = $this->oDb->query(
+            $sql,
+            $oField->getFeedbackId(),
+            $oField->getFieldUniqueName() ?: null,
+            $oField->getFieldName(),
+            $oField->getFieldSort(),
+            $oField->getFieldType(),
+            $oField->getFieldDescription(),
+            $oField->getFieldOptions(),
+            $oField->getFieldRequired() ? 1 : 0,
+            $oField->getFieldPostfix(),
+            $oField->getFieldId()
+        );
+        return $bResult !== false;
+    }
+
 }

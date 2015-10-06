@@ -16,7 +16,7 @@ class PluginFeedback_ActionAdmin extends PluginFeedback_ActionAdmin_Inherits_Act
 //        $this->SetTemplateAction('settings-feedback');
 
         /**
-         * @var PluginFeedback_ModuleFeedback
+         * @var PluginFeedback_ModuleFeedback $oModuleFeedback
          */
         $oModuleFeedback = E::Module('PluginFeedback_ModuleFeedback');
         $oFeedback = $oModuleFeedback->getFeedbackById(1);
@@ -49,20 +49,40 @@ class PluginFeedback_ActionAdmin extends PluginFeedback_ActionAdmin_Inherits_Act
         $this->SetTemplateAction('field-add');
 
         if (F::isPost('security_key') && E::ModuleSecurity()->ValidateSecurityKey()) {
+            /**
+             * @var ModuleTopic_EntityField $oField
+             */
             $oField = E::GetEntity('Topic_Field');
             $oField->setFieldType(F::GetRequest('field_type'));
             $oField->setFeedbackId(1);
             $oField->setFieldName(F::GetRequest('field_name'));
-            $oField->setFieldUniqueName(F::GetRequest('field_unique_name'));
             $oField->setFieldDescription(F::GetRequest('field_description'));
             $oField->setFieldRequired(F::GetRequest('field_required'));
             if (F::GetRequest('field_type') == 'select') {
                 $oField->setOptionValue('select', F::GetRequest('field_values'));
             }
 
-            if (E::Module('PluginFeedback_ModuleFeedback')->addField($oField)) {
-                E::ModuleMessage()->AddNoticeSingle(E::ModuleLang()->Get('action.admin.contenttypes_success_fieldadd'), null, true);
-                R::Location(dirname(Router::RealUrl()));
+            $sFieldUniqueName = F::TranslitUrl(F::GetRequest('field_unique_name'));
+            if (F::GetRequest('field_unique_name_translit'))
+                $sFieldUniqueName = F::TranslitUrl(F::GetRequest('field_name'));
+
+            $oField->setFieldUniqueName($sFieldUniqueName);
+
+            try {
+                if (E::Module('PluginFeedback_ModuleFeedback')->addField($oField)) {
+                    E::ModuleMessage()->AddNoticeSingle(E::ModuleLang()->Get('action.admin.contenttypes_success_fieldadd'), null, true);
+                    R::Location(dirname(Router::RealUrl()));
+                }
+            }
+            catch (Exception $e) {
+                // Если ошибка дублирования уникального ключа, то выводим соответствующее сообщение
+                if (1062 == $e->getCode()) {
+                    E::ModuleMessage()->AddErrorSingle(
+                        E::ModuleLang()->Get('plugin.contentfieldsx.error_field_unique_name_duplicate', array('unique_name' => htmlspecialchars($sFieldUniqueName))),
+                        null,
+                        false
+                    );
+                }
             }
         }
 
@@ -71,9 +91,66 @@ class PluginFeedback_ActionAdmin extends PluginFeedback_ActionAdmin_Inherits_Act
 
     protected function fieldEdit() {
         $this->_setTitle('Редактировать поле');
-
         $this->SetTemplateAction('field-add');
-        E::ModuleViewer()->Assign('aTypes', []);
+
+        $iFieldId = Router::GetParam(1);
+        /**
+         * @var PluginFeedback_ModuleFeedback $oModuleFeedback
+         */
+        $oModuleFeedback = E::Module('PluginFeedback_ModuleFeedback');
+        /**
+         * @var ModuleTopic_EntityField $oField
+         */
+        $oField = $oModuleFeedback->getField($iFieldId);
+        if ($oField) {
+            if (F::isPost('security_key') && E::ModuleSecurity()->ValidateSecurityKey()) {
+                $oField->setFieldName(F::GetRequest('field_name'));
+                $oField->setFieldDescription(F::GetRequest('field_description'));
+                $oField->setFieldRequired(F::GetRequest('field_required'));
+                if ($oField->getFieldType() == 'select') {
+                    $oField->setOptionValue('select', F::GetRequest('field_values'));
+                }
+
+                $sOldFieldUniqueName = $oField->getFieldUniqueName();
+                if (F::GetRequest('field_unique_name_translit'))
+                    $oField->setFieldUniqueName(F::TranslitUrl(F::GetRequest('field_name')));
+                else
+                    $oField->setFieldUniqueName(F::TranslitUrl(F::GetRequest('field_unique_name')));
+
+                try {
+                    if ($oModuleFeedback->updateField($oField)) {
+                        E::ModuleMessage()->AddNoticeSingle(E::ModuleLang()->Get('action.admin.contenttypes_success_fieldedit'), null, true);
+                        R::Location(Router::Url('path'));
+                    }
+                }
+                catch (Exception $e) {
+                    // Если ошибка дублирования уникального ключа, то выводим соответствующее сообщение
+                    if (1062 == $e->getCode()) {
+                        $sNewFieldUniqueName = $oField->getFieldUniqueName();
+                        $oField->setFieldUniqueName($sOldFieldUniqueName);
+                        E::ModuleMessage()->AddErrorSingle(
+                            E::ModuleLang()->Get('plugin.contentfieldsx.error_field_unique_name_duplicate', array('unique_name' => htmlspecialchars($sNewFieldUniqueName))),
+                            null,
+                            false
+                        );
+
+                    }
+                }
+            }
+            else {
+                $_REQUEST['field_type'] = $oField->getFieldType();
+                $_REQUEST['field_name'] = $oField->getFieldName();
+                $_REQUEST['field_unique_name'] = $oField->getFieldUniqueName();
+                $_REQUEST['field_description'] = $oField->getFieldDescription();
+                $_REQUEST['field_required'] = $oField->getFieldRequired();
+                $_REQUEST['field_values'] = $oField->getFieldValues();
+            }
+        }
+        else {
+            return parent::EventNotFound();
+        }
+
+        return false;
     }
 
     protected function fieldRemove() {
