@@ -2,7 +2,7 @@
 
 class PluginFeedback_ModuleFeedback_MapperFeedback extends Mapper
 {
-    public function add($sWebPath, $sActive, $sTitle, $sContent, $sContentSource) {
+    public function addFeedback($sWebPath, $sActive, $sTitle, $sContent, $sContentSource) {
         $this->oDb->query(
             'INSERT INTO `'.Config::Get('db.table.prefix').'feedback` ' .
             '(feedback_id, feedback_webpath, feedback_active, feedback_title, feedback_text, feedback_text_source) ' .
@@ -46,7 +46,6 @@ class PluginFeedback_ModuleFeedback_MapperFeedback extends Mapper
      * @return int|bool
      */
     public function addField(ModuleTopic_EntityField $oField) {
-
         $sql = 'INSERT INTO '.Config::Get('db.table.prefix').'feedback_fields
             (
             feedback_id,
@@ -60,6 +59,8 @@ class PluginFeedback_ModuleFeedback_MapperFeedback extends Mapper
             )
             VALUES(?d, ?, ?, ?, ?, ?, ?d, ?)
         ';
+
+        $cOldErrorHandler = $this->oDb->setErrorHandler(array($this, 'SqlErrorHandler'));
         if ($iId = $this->oDb->query(
             $sql,
             $oField->getFeedbackId(),
@@ -72,9 +73,12 @@ class PluginFeedback_ModuleFeedback_MapperFeedback extends Mapper
             $oField->getFieldPostfix()
         )
         ) {
+            $this->oDb->setErrorHandler($cOldErrorHandler);
             $oField->setFieldId($iId);
+
             return $iId;
         }
+
         return false;
     }
 
@@ -96,6 +100,7 @@ ORDER BY field_sort DESC';
         if ($aRows) {
             $aResult = E::GetEntityRows('Topic_Field', $aRows);
         }
+
         return $aResult;
     }
 
@@ -122,7 +127,7 @@ ORDER BY field_sort DESC';
      */
     public function updateField(ModuleTopic_EntityField $oField) {
 
-        $sql = 'UPDATE feedback_fields
+        $sql = 'UPDATE '.Config::Get('db.table.prefix').'feedback_fields
             SET
                 feedback_id=?d,
                 field_unique_name=?,
@@ -136,6 +141,8 @@ ORDER BY field_sort DESC';
             WHERE
                 field_id = ?d
         ';
+
+        $cOldErrorHandler = $this->oDb->setErrorHandler(array($this, 'SqlErrorHandler'));
         $bResult = $this->oDb->query(
             $sql,
             $oField->getFeedbackId(),
@@ -149,6 +156,8 @@ ORDER BY field_sort DESC';
             $oField->getFieldPostfix(),
             $oField->getFieldId()
         );
+        $this->oDb->setErrorHandler($cOldErrorHandler);
+
         return $bResult !== false;
     }
 
@@ -160,5 +169,18 @@ ORDER BY field_sort DESC';
         ';
 
         return $this->oDb->query($sql, $iFieldId) !== false;
+    }
+
+    /**
+     * Функция для перехвата SQL ошибок
+     *
+     * @param   string  $sMessage Сообщение об ошибке
+     * @param   array   $aInfo Информация об ошибке
+     * @throws Exception
+     */
+    public function SqlErrorHandler($sMessage, $aInfo) {
+        $this->oDb->rollback();
+
+        throw new Exception($sMessage, $aInfo['code']);
     }
 }
