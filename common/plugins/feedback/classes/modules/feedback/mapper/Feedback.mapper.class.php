@@ -172,6 +172,16 @@ ORDER BY field_sort DESC';
     }
 
     /**
+     * @return array|null
+     */
+    public function getFeedbackWebpaths() {
+        return $this->oDb->select(
+            'SELECT `feedback_id` AS ARRAY_KEY, `feedback_webpath` FROM `'.Config::Get('db.table.prefix').'feedback` ' .
+            'WHERE `feedback_active` = 1'
+        );
+    }
+
+    /**
      * Функция для перехвата SQL ошибок
      *
      * @param   string  $sMessage Сообщение об ошибке

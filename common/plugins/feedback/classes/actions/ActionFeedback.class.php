@@ -13,11 +13,18 @@ class PluginFeedback_ActionFeedback extends ActionPlugin {
      * Регистрируем евенты
      */
     protected function RegisterEvent() {
-        $this->AddEvent('index','EventIndex');
+        $this->AddEvent('index', 'index');
+        $this->AddEventPreg('~^\d+$~', 'showFeedback');
     }
 
-    protected function EventIndex() {
+    protected function index() {
+        var_dump(__FUNCTION__);exit;
+        return parent::EventNotFound();
+    }
 
+    protected function showFeedback() {
+var_dump(__FUNCTION__);exit;
+        E::Module('PluginFeedback_ModuleFeedback')->getFeedbackBy;
         E::ModuleViewer()->Assign('aFields', []);
     }
 

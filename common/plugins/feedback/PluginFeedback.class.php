@@ -72,8 +72,6 @@ class PluginFeedback extends Plugin {
 
     // Инициализация плагина
     public function Init() {
-        Config::Set('router.page.feedback', 'PluginFeedback_ActionFeedback');
-
 //        E::ModuleViewer()->AppendStyle(Plugin::GetTemplateDir(__CLASS__)."assets/css/style.css"); // Добавление своего CSS
 //        E::ModuleViewer()->AppendScript(Plugin::GetTemplateDir(__CLASS__)."assets/js/script.js"); // Добавление своего JS
 
