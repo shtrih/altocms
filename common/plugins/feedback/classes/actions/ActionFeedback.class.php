@@ -14,18 +14,32 @@ class PluginFeedback_ActionFeedback extends ActionPlugin {
      */
     protected function RegisterEvent() {
         $this->AddEvent('index', 'index');
-        $this->AddEventPreg('~^\d+$~', 'showFeedback');
+        $this->AddEventPreg('~^\d+$~', 'showFeedbackPage');
     }
 
     protected function index() {
-        var_dump(__FUNCTION__);exit;
         return parent::EventNotFound();
     }
 
-    protected function showFeedback() {
-var_dump(__FUNCTION__);exit;
-        E::Module('PluginFeedback_ModuleFeedback')->getFeedbackBy;
-        E::ModuleViewer()->Assign('aFields', []);
+    protected function showFeedbackPage() {
+        $this->SetTemplateAction('index');
+
+        // У нас в ивенте передаётся идентификатор
+        $iFeedbackId = $this->sCurrentEvent;
+
+        /**
+         * @var PluginFeedback_ModuleFeedback_EntityFeedback $oFeedback
+         */
+        $oFeedback = E::Module('PluginFeedback_ModuleFeedback')->getFeedbackById($iFeedbackId);
+
+        $this->_setTitle('Добавить поле');
+
+
+        $aFields = [];
+        if ($oFeedback)
+            $aFields = $oFeedback->getFields();
+
+        E::ModuleViewer()->Assign('aFields', $aFields);
     }
 
     /**

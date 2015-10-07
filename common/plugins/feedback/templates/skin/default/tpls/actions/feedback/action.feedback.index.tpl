@@ -16,8 +16,8 @@
         <input type="hidden" name="security_key" value="{$ALTO_SECURITY_KEY}"/>
         <input type="hidden" id="topic_id"  name="topic_id" value="{$_aRequest.topic_id}"/>
 
-        {if $oContentType}
-            {foreach from=$oContentType->getFields() item=oField}
+        {if $aFields}
+            {foreach $aFields as $oField}
                 {include file="fields/customs/field.custom.`$oField->getFieldType()`-edit.tpl" oField=$oField}
             {/foreach}
         {/if}
