@@ -133,13 +133,21 @@ class ModuleImg extends Module {
 
     /**
      * @param string $sFileExtension
+     * @param string $sPreset
      * @param array  $aOptions
      *
      * @return array
      */
-    public function GetOptions($sFileExtension = '*', $aOptions = array()) {
+    public function GetOptions($sFileExtension = '*', $sPreset = null, $aOptions = array()) {
 
-        $aConfigOptions = E::ModuleUploader()->GetConfig($sFileExtension);
+        if (is_array($sPreset) && empty($aOptions)) {
+            $aOptions = $sPreset;
+            $sPreset = null;
+        }
+        if (!$sPreset && $sPreset !== 'default') {
+            $sPreset = 'images.' . $sPreset;
+        }
+        $aConfigOptions = E::ModuleUploader()->GetConfig($sFileExtension, $sPreset);
         if ($aConfigOptions && $aOptions) {
             /** @var DataArray $aParams */
             $aOptions = F::Array_Merge($aConfigOptions, $aOptions);
@@ -587,8 +595,7 @@ class ModuleImg extends Module {
                 if ($iWidth || $iHeight) {
                     $oImg->Resize($iWidth, $iHeight, $bFit);
                 }
-                $oImg->Save($sDestination, $aOptions);
-                return $sDestination;
+                return $oImg->Save($sDestination, $aOptions);
             }
         } catch(ErrorException $oE) {
             $this->nError = -1;
