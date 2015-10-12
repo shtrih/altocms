@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*---------------------------------------------------------------------------
  * @Project: Alto CMS
  * @Project URI: http://altocms.com
@@ -47,8 +47,8 @@ return array(
     'menu_tools' => 'Tools',
     'menu_tools_reset' => 'Data reset',
     'menu_tools_commentstree' => 'Comments tree',
-    'menu_tools_recalcfavourites' => 'Favourites counters',
-    'menu_tools_recalcvotes' => 'Vote counters',
+    'menu_tools_recalcfavourites' => 'Counters of favourites',
+    'menu_tools_recalcvotes' => 'Counters of votes',
     'menu_tools_recalctopics' => 'Quantity of articles in blogs',
     'menu_tools_recalcblograting' => 'Recalculation of blogs\' rating',
     'menu_tools_checkdb' => 'DB Control',
@@ -424,9 +424,24 @@ return array(
     'set_links_topics_mode_id' => 'Article ID (numerical)',
     'set_links_topics_mode_day_name' => 'Day and name',
     'set_links_topics_mode_month_name' => 'Month and name',
-    'set_links_topics_mode_custom' => 'Any',
+    'set_links_topics_mode_custom' => 'Other',
     'set_links_topics_mode_help_title' => 'Admissible parameters',
-    'set_links_topics_mode_help_text' => '%year% — year of publication %month% — month %day% — day %hour% — hour %minute% — minutes %second% — seconds %login% — topic author login %blog_url% — blog url (for personal blogs it will be replaced with author\'s login) %topic_id% — publication id %topic_url% — relative URL publications (usually — transliteration of its heading) For compatibility with Wordpress parameters are supported: %post_id% — analog of %topic_id% %postname% — analog of %topic_url% IMPORTANT: existence of the termination of .html isn\'t obligatory, but is recommended since it\'ll allow to avoid possible problems and conflicts with addresses of site\'s other pages',
+    'set_links_topics_mode_help_text' => '%year% — year of publication
+    %month% — month
+    %day% — day
+    %hour% — hour
+    %minute% — minutes
+    %second% — seconds
+    %login% — topic author login
+    %blog_url% — blog url (for personal blogs it will be replaced with author\'s login)
+    %topic_id% — publication id
+    %topic_url% — relative URL publications (usually — transliteration of its heading)
+
+    For compatibility with Wordpress parameters are supported:
+    %post_id% — analog of %topic_id%
+    %postname% — analog of %topic_url%
+
+    IMPORTANT: existence of the extension of .html isn\'t obligatory, but is recommended since it\'ll allow to avoid possible problems and conflicts with addresses of site\'s other pages',
     'set_links_generate' => 'Generation of links',
     'set_links_generate_text' => 'You can execute generation of links for all articles. It can be necessary if you passed to Alto CMS from any other control system of the site. You also can execute this operation for each article separately, entering a mode of article\'s editing.',
     'set_links_generate_button' => 'Execute generation of links for articles',
@@ -656,31 +671,31 @@ return array(
     /***
      * TOOLS
      */
-    'reset_title' => 'Dumping of data',
-    'menu_reset_cache' => 'Cach dumping',
-    'menu_reset_config' => 'Configuration dumping',
+    'reset_title' => 'Data reset',
+    'menu_reset_cache' => 'Cach reset',
+    'menu_reset_config' => 'Configuration reset',
     'cache_clear_data' => 'Cleaning cach data',
-    'cache_clear_data_notice' => 'Dumping of data cach-storage',
+    'cache_clear_data_notice' => 'Reset of data cach-storage',
     'cache_clear_assets' => 'Cleaning js- and css-files cach',
-    'cache_clear_assets_notice' => 'Dumping of js-kesh-storage and css-files',
+    'cache_clear_assets_notice' => 'Reset of js-kesh-storage and css-files',
     'cache_clear_smarty' => 'Cleaning Smarty cach',
-    'cache_clear_smarty_notice' => 'Dumping of the compiled Smarty files cach-storage',
-    'cache_clean' => 'Dumping cach',
+    'cache_clear_smarty_notice' => 'Reset of the compiled Smarty files cach-storage',
+    'cache_clean' => 'Reset cach',
     'cache_clean_notice' => 'Establish if you want to dump cach',
-    'reset_config_data' => 'Dumping of configuration\'s changed parameters',
-    'reset_config_data_notice' => 'All parameters which you changed through Adminpanel, will be dumped in initial value, i.e. that are set in configuration files',
+    'reset_config_data' => 'Reset of configuration\'s changed parameters',
+    'reset_config_data_notice' => 'All parameters which you changed through Adminpanel, will be reset in initial value, i.e. that are set in configuration files',
     'action_for_admin_only' => 'This action is available only for administrators',
     'cannot_clear_dir' => 'It\'s impossible to  clear the folder %%dir%%. It is recommended to make this manually',
     'comments_tree_title' => 'Evolution of comment tree',
     'comments_tree_message' => 'The tree of comments will be reconstructed. Attention! Operation can take a long time!',
     'comments_tree_disabled' => 'This action is inaccessible',
     'comments_tree_restored' => 'The tree of comments is reconstructed',
-    'recalcfavourites_title' => 'Recalculation of elite counters',
-    'recalcfavourites_message' => 'Counters of the chosen articles and comments for all users will be counted.<br><br> Attention! Operation can take a long time!',
-    'favourites_recalculated' => 'Counters of the elite are counted',
+    'recalcfavourites_title' => 'Recalculation of counters of favourites',
+    'recalcfavourites_message' => 'Counters of the favourite articles and comments for all users will be recalculated.<br><br> Attention! Operation can take a long time!',
+    'favourites_recalculated' => 'Counters of favourites are recalculated',
     'recalcvotes_title' => 'Recalculation of vote counters',
-    'recalcvotes_message' => 'The vote counters will be counted.<br><br>Attention! Operation can take a long time!',
-    'votes_recalculated' => 'Vote counters are counted',
+    'recalcvotes_message' => 'The counters of votes will be recalculated.<br><br>Attention! Operation can take a long time!',
+    'votes_recalculated' => 'Counters of votes are recalculated',
     'recalctopics_title' => 'Recalculation the number of blog articles',
     'recalctopics_message' => 'The number of articles in all blogs will be counted. <br><br> Attention! Operation can take a long time!',
     'topics_recalculated' => 'The number of articles is counted',
@@ -688,8 +703,8 @@ return array(
     'recalcblograting_message' => 'The blogs\' rating will be counted. <br><br> Attention! Operation can take a long time!',
     'blograting_recalculated' => 'The blog rating is counted',
     'checkdb_title' => 'Database control',
-    'checkdb_deleted_blogs' => 'Verification of remote blogs',
-    'checkdb_deleted_topics' => 'Verification of remote articles',
+    'checkdb_deleted_blogs' => 'Verification of deleted blogs',
+    'checkdb_deleted_topics' => 'Verification of deleted topics',
     'checkdb_blogs_joined' => 'Remote blogs in which users\' consist',
     'checkdb_blogs_comments_online' => 'Remote blogs with online comments',
     'checkdb_clear_unlinked_blogs' => 'Remove communications',
