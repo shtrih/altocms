@@ -24,17 +24,26 @@ class PluginFeedback_ModuleFeedback extends Module {
 
         //region Записываем в WritePluginConfig, потому что только так мы сможем прочитать урлы при загрузке конфига и задать правила роутинга
         $sPluginName = strtolower(Plugin::GetPluginName(__CLASS__));
-        $aConfigWebpaths = (array)Config::ReadPluginConfig($sPluginName, 'webpaths');
-        Config::ResetPluginConfig($sPluginName, 'webpaths');
+        $aConfigRoot = Config::ReadPluginConfig($sPluginName, Config::KEY_ROOT);
+        if (!isset($aConfigRoot['router.uri'])) {
+            $aConfigRoot['router.uri'] = [];
+        }
+        $aConfigWebpaths = &$aConfigRoot['router.uri'];
 
+        $sActionRegex = '[~^'.preg_quote(trim($oFeedback->getFeedbackWebpath(), '/'), '~').'$~iu]';
         if ($oFeedback->getFeedbackActive()) {
-            $aConfigWebpaths[ $oFeedback->getFeedbackId() ] = $oFeedback->getFeedbackWebpath();
+            $aConfigWebpaths[ $sActionRegex ] = Config::Get('plugin.feedback.action') . '/' . $oFeedback->getFeedbackId();
         }
         else {
-            unset($aConfigWebpaths[ $oFeedback->getFeedbackId() ]);
+            unset($aConfigWebpaths[ $sActionRegex ]);
         }
+//        $aConfigWebpaths[Config::KEY_REPLACE] = true;
+        unset($aConfigWebpaths);
+//        Config::ResetPluginConfig($sPluginName, Config::KEY_ROOT);
+        Config::WritePluginConfig($sPluginName, [Config::KEY_ROOT => $aConfigRoot]);
 
-        Config::WritePluginConfig($sPluginName, ['webpaths' => $aConfigWebpaths]);
+        $aConfigWebpaths = (array)Config::ReadPluginConfig($sPluginName);
+        var_dump($aConfigRoot, $aConfigWebpaths);exit;
         //endregion
 
         $this->oMapper->updateFeedback(
