@@ -32,14 +32,29 @@ class PluginFeedback_ActionFeedback extends ActionPlugin {
          */
         $oFeedback = E::Module('PluginFeedback_ModuleFeedback')->getFeedbackById($iFeedbackId);
 
-        $this->_setTitle('Добавить поле');
+        if (!$oFeedback) {
+            return parent::EventNotFound();
+        }
 
-
-        $aFields = [];
-        if ($oFeedback)
-            $aFields = $oFeedback->getFields();
-
+        $aFields = $oFeedback->getFields();
         E::ModuleViewer()->Assign('aFields', $aFields);
+        E::ModuleViewer()->Assign('header', $oFeedback->getTitle());
+        E::ModuleViewer()->AddHtmlTitle($oFeedback->getTitle());
+
+        if (F::GetPost('security_key')) {
+            if (!E::ModuleSecurity()->ValidateSecurityKey()) {
+                E::ModuleMessage()->AddError('Что-то пошло не так.');
+                R::Location(R::GetPathWebCurrent());
+            }
+
+//            E::ModuleCaptcha()->Verify(F::GetPostStr('captcha'));
+
+            /** @var ModuleTopic_EntityField $oField */
+            foreach ($aFields as $oField) {
+                var_dump($oField);
+            }
+            exit;
+        }
     }
 
     /**

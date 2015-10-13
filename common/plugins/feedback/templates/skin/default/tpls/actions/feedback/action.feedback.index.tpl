@@ -5,25 +5,31 @@
 {/block}
 
 {block name="layout_content"}
-    {*{include file='topics/topic.list.tpl'}*}
-    <h1>Написать администрации</h1>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h1 class="panel-header">{$header|escape}</h1>
 
+            <form action="" method="POST" enctype="multipart/form-data" id="form-feedback">
+                <input type="hidden" name="security_key" value="{$ALTO_SECURITY_KEY}"/>
+                <input type="hidden" id="topic_id"  name="topic_id" value="{$_aRequest.topic_id}"/>
 
+                {if $aFields}
+                    {foreach $aFields as $oField}
+                        {include file="fields/customs/field.custom.`$oField->getFieldType()`-edit.tpl" oField=$oField}
+                    {/foreach}
+                {/if}
 
-    <form action="" method="POST" enctype="multipart/form-data" id="form-feedback">
-        {hook run='form_add_topic_begin'}
+                <script>
+                    $(function () {
+                        $('.captcha-image').prop('src', ls.routerUrl('captcha') + '?n=' + Math.random());
+                    });
+                </script>
+                {hook run="registration_captcha"}
 
-        <input type="hidden" name="security_key" value="{$ALTO_SECURITY_KEY}"/>
-        <input type="hidden" id="topic_id"  name="topic_id" value="{$_aRequest.topic_id}"/>
-
-        {if $aFields}
-            {foreach $aFields as $oField}
-                {include file="fields/customs/field.custom.`$oField->getFieldType()`-edit.tpl" oField=$oField}
-            {/foreach}
-        {/if}
-
-        <button type="submit" name="submit_topic_draft" class="btn btn-light btn-normal corner-no">
-            {$aLang.topic_create_submit_publish}
-        </button>
-    </form>
+                <button type="submit" name="submit" class="btn btn-light btn-normal corner-no">
+                    Отправить
+                </button>
+            </form>
+        </div>
+    </div>
 {/block}

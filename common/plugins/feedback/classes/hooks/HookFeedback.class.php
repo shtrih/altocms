@@ -69,5 +69,3 @@ class PluginFeedback_HookFeedback extends Hook {
         }
     }
 }
-
-// EOF
