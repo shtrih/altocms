@@ -41,19 +41,50 @@ class PluginFeedback_ActionFeedback extends ActionPlugin {
         E::ModuleViewer()->Assign('header', $oFeedback->getTitle());
         E::ModuleViewer()->AddHtmlTitle($oFeedback->getTitle());
 
-        if (F::GetPost('security_key')) {
+        if ($this->isPost()) {
             if (!E::ModuleSecurity()->ValidateSecurityKey()) {
-                E::ModuleMessage()->AddError('Что-то пошло не так.');
+                E::ModuleMessage()->AddError('Что-то пошло не так.', null, true);
                 R::Location(R::GetPathWebCurrent());
             }
 
 //            E::ModuleCaptcha()->Verify(F::GetPostStr('captcha'));
 
+            $bError = false;
+            $sMessage = '';
             /** @var ModuleTopic_EntityField $oField */
             foreach ($aFields as $oField) {
-                var_dump($oField);
+                $sMessage .= htmlspecialchars($oField->getFieldName());
+                $sMessage .= ': ';
+                $sFieldsValues = (array)F::GetPost('fields');
+                $sValue = isset($sFieldsValues[$oField->getFieldId()]) ? $sFieldsValues[$oField->getFieldId()] : false;
+                if ($sValue) {
+                    $sMessage .= nl2br(htmlspecialchars($sValue));
+                }
+                elseif ($oField->getFieldRequired()) {
+                    E::ModuleMessage()->AddError(sprintf('Поле «%s» должно быть обязательно заполнено.', htmlspecialchars($oField->getFieldName())));
+
+                    $bError = true;
+                    break;
+                }
+                $sMessage .= "<br />\n";
             }
-            exit;
+
+            if (!$bError) {
+                $aAdmins = Config::Get('plugin.feedback.to-user-id');
+                if (!$aAdmins) {
+                    $aAdmins = E::ModuleUser()->GetUsersByFilter(['admin' => true], ['user_id' => 'asc'], 1, 10);
+                }
+                E::ModuleTalk()->SendTalk(
+                    'Сообщение со страницы обратной связи (' . $oFeedback->getFeedbackWebpath() . ')',
+                    $sMessage,
+                    Config::Get('plugin.feedback.from-user-id'),
+                    $aAdmins,
+                    Config::Get('plugin.feedback.email-notify')
+                );
+                E::ModuleMessage()->AddNotice('Сообщение успешно отправлено.', null, true);
+
+                R::Location(R::GetPathWebCurrent());
+            }
         }
     }
 
