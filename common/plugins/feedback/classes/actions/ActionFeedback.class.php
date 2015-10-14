@@ -43,13 +43,13 @@ class PluginFeedback_ActionFeedback extends ActionPlugin {
 
         if ($this->isPost()) {
             if (!E::ModuleSecurity()->ValidateSecurityKey()) {
-                E::ModuleMessage()->AddError('Что-то пошло не так. Ты что, хакер?');
+                E::ModuleMessage()->AddError(E::ModuleLang()->Get('plugin.feedback.error_security_key'));
 
                 return null;
             }
 
             if (E::ModuleCaptcha()->Verify(F::GetPostStr('captcha'))) {
-                E::ModuleMessage()->AddError('Проверка каптча не пройдена.');
+                E::ModuleMessage()->AddError(E::ModuleLang()->Get('plugin.feedback.error_captcha'));
 
                 return null;
             }
@@ -59,7 +59,7 @@ class PluginFeedback_ActionFeedback extends ActionPlugin {
 
             if ($oUser = E::ModuleUser()->GetUserCurrent()) {
                 $sMessage .= sprintf(
-                    '<strong>Отправлено пользователем</strong>: <a href="%susers-list/profile/%3$d/">%s</a> (ID: %d)',
+                    E::ModuleLang()->Get('plugin.feedback.talk_user'),
                     R::GetPath('admin'),
                     $oUser->getUserLogin(),
                     $oUser->getId()
@@ -78,7 +78,7 @@ class PluginFeedback_ActionFeedback extends ActionPlugin {
                     $sMessage .= nl2br(htmlspecialchars($sValue));
                 }
                 elseif ($oField->getFieldRequired()) {
-                    E::ModuleMessage()->AddError(sprintf('Поле «%s» должно быть обязательно заполнено.', htmlspecialchars($oField->getFieldName())));
+                    E::ModuleMessage()->AddError(E::ModuleLang()->Get('plugin.feedback.error_field_required', ['field' => htmlspecialchars($oField->getFieldName())]));
 
                     $bError = true;
                     break;
@@ -93,13 +93,13 @@ class PluginFeedback_ActionFeedback extends ActionPlugin {
                 }
 
                 E::ModuleTalk()->SendTalk(
-                    'Сообщение со страницы обратной связи (' . $oFeedback->getFeedbackWebpath() . ')',
+                    E::ModuleLang()->Get('plugin.feedback.talk_header', ['webpath' => htmlspecialchars($oFeedback->getFeedbackWebpath())]),
                     $sMessage,
                     Config::Get('plugin.feedback.from-user-id'),
                     $aAdmins,
                     Config::Get('plugin.feedback.email-notify')
                 );
-                E::ModuleMessage()->AddNotice('Сообщение успешно отправлено.', null, true);
+                E::ModuleMessage()->AddNotice(E::ModuleLang()->Get('plugin.feedback.success_sent'), null, true);
 
                 R::Location(R::GetPathWebCurrent());
             }

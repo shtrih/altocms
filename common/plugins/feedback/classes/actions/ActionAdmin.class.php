@@ -12,7 +12,7 @@ class PluginFeedback_ActionAdmin extends PluginFeedback_ActionAdmin_Inherits_Act
     }
 
     protected function settingsFeedback() {
-        $this->_setTitle('Настройки формы обратной связи');
+        $this->_setTitle(E::ModuleLang()->Get('plugin.feedback.header_edit'));
 //        $this->SetTemplateAction('settings-feedback');
 
         /**
@@ -44,7 +44,7 @@ class PluginFeedback_ActionAdmin extends PluginFeedback_ActionAdmin_Inherits_Act
     }
 
     protected function fieldAdd() {
-        $this->_setTitle('Добавить поле');
+        $this->_setTitle(E::ModuleLang()->Get('plugin.feedback.field_add'));
 
         $this->SetTemplateAction('field-add');
 
@@ -78,7 +78,7 @@ class PluginFeedback_ActionAdmin extends PluginFeedback_ActionAdmin_Inherits_Act
                 // Если ошибка дублирования уникального ключа, то выводим соответствующее сообщение
                 if (1062 == $e->getCode()) {
                     E::ModuleMessage()->AddErrorSingle(
-                        E::ModuleLang()->Get('plugin.contentfieldsx.error_field_unique_name_duplicate', array('unique_name' => htmlspecialchars($sFieldUniqueName))),
+                        E::ModuleLang()->Get('plugin.feedback.error_field_unique_name_duplicate', ['unique_name' => htmlspecialchars($sFieldUniqueName)]),
                         null,
                         false
                     );
@@ -129,7 +129,7 @@ class PluginFeedback_ActionAdmin extends PluginFeedback_ActionAdmin_Inherits_Act
                         $sNewFieldUniqueName = $oField->getFieldUniqueName();
                         $oField->setFieldUniqueName($sOldFieldUniqueName);
                         E::ModuleMessage()->AddErrorSingle(
-                            E::ModuleLang()->Get('plugin.contentfieldsx.error_field_unique_name_duplicate', array('unique_name' => htmlspecialchars($sNewFieldUniqueName))),
+                            E::ModuleLang()->Get('plugin.feedback.error_field_unique_name_duplicate', ['unique_name' => htmlspecialchars($sNewFieldUniqueName)]),
                             null,
                             false
                         );

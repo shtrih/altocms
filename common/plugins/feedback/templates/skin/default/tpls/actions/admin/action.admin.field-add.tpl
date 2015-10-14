@@ -4,7 +4,7 @@
     {$sMainMenuItem='settings'}
 {/block}
 
-{block name="content-bar"}Назначение странице с формой адреса.
+{block name="content-bar"}
 
 {/block}
 

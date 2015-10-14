@@ -4,7 +4,7 @@
     {$sMainMenuItem='settings'}
 {/block}
 
-{block name="content-bar"}Назначение странице с формой адреса.
+{block name="content-bar"}
 
 {/block}
 
@@ -14,7 +14,7 @@
     <div class="b-wbox">
         <div class="b-wbox-header">
             <div class="b-wbox-header-title">
-                Редактирование формы обратной связи
+                {$aLang.plugin.feedback.header_edit}
             </div>
         </div>
 
@@ -26,35 +26,35 @@
             <div class="b-wbox-content nopadding">
                 <div class="control-group">
                     <label for="feedback_webpath" class="control-label">
-                        Адрес формы обратной связи:
+                        {$aLang.plugin.feedback.field_webpath}
                     </label>
 
                     <div class="controls">
                         <input type="text" name="feedback_webpath" value="{$_aRequest.feedback_webpath}" class="input-text">
-                        <span class="help-block">Адрес страницы с обратной связью, от корня сайта. Например, «/mypage/feedback»</span>
+                        <span class="help-block">{$aLang.plugin.feedback.field_webpath_help}</span>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label for="feedback_title" class="control-label">
-                        Заголовок:
+                        {$aLang.plugin.feedback.field_title}
                     </label>
 
                     <div class="controls">
                         <input type="text" name="feedback_title" value="{$_aRequest.feedback_title}" class="input-text">
-                        <span class="help-block">Будет отображён на странице обратной связи.</span>
+                        <span class="help-block">{$aLang.plugin.feedback.field_title_help}</span>
                     </div>
                 </div>
 
                 <div class="control-group">
                     <label class="control-label">
-                        Активна:
+                        {$aLang.plugin.feedback.field_active}
                     </label>
 
                     <div class="controls">
                         <label><input type="radio" name="feedback_active" value="0"{if !$_aRequest.feedback_active} checked="checked"{/if} class="input-radio">Нет</label>
                         <label><input type="radio" name="feedback_active" value="1"{if $_aRequest.feedback_active} checked="checked"{/if} class="input-radio">Да</label>
-                        <span class="help-block"></span>
+                        <span class="help-block">{$aLang.plugin.feedback.field_active_help}</span>
                     </div>
                 </div>
 
@@ -70,7 +70,7 @@
                         {else}
                             {include_once file="editors/editor.markitup.tpl"}
                         {/if}
-                        <span class="help-block">Будет отображено под заголовком на странице обратной связи.</span>
+                        <span class="help-block">{$aLang.plugin.feedback.field_description_help}</span>
                     </div>
                 </div>
 
@@ -120,7 +120,7 @@
                         </td>
                     </tr>
                 {/foreach}
-                {if !$aFields}<tr><td colspan="5">Нет ни одного поля.</td></tr>{/if}
+                {if !$aFields}<tr><td colspan="5">{$aLang.plugin.feedback.fields_empty}</td></tr>{/if}
                 </tbody>
             </table>
             <div class="control-group">

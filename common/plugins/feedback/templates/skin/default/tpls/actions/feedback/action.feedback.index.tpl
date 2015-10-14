@@ -31,7 +31,7 @@
                 {hook run="registration_captcha"}
 
                 <button type="submit" name="submit" class="btn btn-light btn-normal corner-no">
-                    Отправить
+                    {$aLang.plugin.feedback.feedback_submit}
                 </button>
             </form>
         </div>
