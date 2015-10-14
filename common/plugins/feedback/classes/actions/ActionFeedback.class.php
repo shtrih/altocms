@@ -56,10 +56,22 @@ class PluginFeedback_ActionFeedback extends ActionPlugin {
 
             $bError = false;
             $sMessage = '';
+
+            if ($oUser = E::ModuleUser()->GetUserCurrent()) {
+                $sMessage .= sprintf(
+                    '<strong>Отправлено пользователем</strong>: <a href="%susers-list/profile/%3$d/">%s</a> (ID: %d)',
+                    R::GetPath('admin'),
+                    $oUser->getUserLogin(),
+                    $oUser->getId()
+                );
+                $sMessage .= "<br />\n";
+            }
+
             /** @var ModuleTopic_EntityField $oField */
             foreach ($aFields as $oField) {
+                $sMessage .= '<strong>';
                 $sMessage .= htmlspecialchars($oField->getFieldName());
-                $sMessage .= ': ';
+                $sMessage .= '</strong>: ';
                 $sFieldsValues = (array)F::GetPost('fields');
                 $sValue = isset($sFieldsValues[$oField->getFieldId()]) ? $sFieldsValues[$oField->getFieldId()] : false;
                 if ($sValue) {
@@ -77,8 +89,9 @@ class PluginFeedback_ActionFeedback extends ActionPlugin {
             if (!$bError) {
                 $aAdmins = Config::Get('plugin.feedback.to-user-id');
                 if (!$aAdmins) {
-                    $aAdmins = E::ModuleUser()->GetUsersByFilter(['admin' => true], ['user_id' => 'asc'], 1, 10);
+                    $aAdmins = E::ModuleUser()->GetUsersByFilter(['admin' => true], ['user_id' => 'asc'], 1, 10)['collection'];
                 }
+
                 E::ModuleTalk()->SendTalk(
                     'Сообщение со страницы обратной связи (' . $oFeedback->getFeedbackWebpath() . ')',
                     $sMessage,
