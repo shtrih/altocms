@@ -26,8 +26,8 @@ class PluginFeedback_ActionAdmin extends PluginFeedback_ActionAdmin_Inherits_Act
             $oFeedback->setFeedbackWebpath(F::GetRequestStr('feedback_webpath', 'feedback'));
             $oFeedback->setFeedbackActive(F::GetRequestStr('feedback_active', '0'));
             $oFeedback->setFeedbackTitle(F::GetRequestStr('feedback_title', 'Написать администрации'));
-            $oFeedback->setFeedbackText(F::GetRequestStr('feedback_description', ''));
-            $oFeedback->setFeedbackTextSource(E::ModuleText()->Parser(F::GetRequestStr('feedback_description', '')));
+            $oFeedback->setFeedbackText(E::ModuleText()->Parser(F::GetRequestStr('feedback_description', '')));
+            $oFeedback->setFeedbackTextSource(F::GetRequestStr('feedback_description', ''));
 
             $oModuleFeedback->updateFeedback($oFeedback);
 

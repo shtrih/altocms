@@ -7,8 +7,12 @@
 {block name="layout_content"}
     <div class="panel panel-default">
         <div class="panel-body">
-            <h1 class="panel-header">{$header|escape}</h1>
+            <h1 class="panel-header">{$oFeedback->getFeedbackTitle()|escape}</h1>
 
+            <p>{$oFeedback->getFeedbackText()}</p>
+
+            <div class="clearfix"></div>
+            <hr />
             <form action="" method="POST" enctype="multipart/form-data" id="form-feedback">
                 <input type="hidden" name="security_key" value="{$ALTO_SECURITY_KEY}"/>
                 <input type="hidden" id="topic_id"  name="topic_id" value="{$_aRequest.topic_id}"/>

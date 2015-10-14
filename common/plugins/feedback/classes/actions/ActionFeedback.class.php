@@ -38,7 +38,7 @@ class PluginFeedback_ActionFeedback extends ActionPlugin {
 
         $aFields = $oFeedback->getFields();
         E::ModuleViewer()->Assign('aFields', $aFields);
-        E::ModuleViewer()->Assign('header', $oFeedback->getTitle());
+        E::ModuleViewer()->Assign('oFeedback', $oFeedback);
         E::ModuleViewer()->AddHtmlTitle($oFeedback->getTitle());
 
         if ($this->isPost()) {
@@ -72,8 +72,8 @@ class PluginFeedback_ActionFeedback extends ActionPlugin {
                 $sMessage .= '<strong>';
                 $sMessage .= htmlspecialchars($oField->getFieldName());
                 $sMessage .= '</strong>: ';
-                $sFieldsValues = (array)F::GetPost('fields');
-                $sValue = isset($sFieldsValues[$oField->getFieldId()]) ? $sFieldsValues[$oField->getFieldId()] : false;
+                $aFieldsValues = (array)F::GetPost('fields');
+                $sValue = isset($aFieldsValues[$oField->getFieldId()]) ? $aFieldsValues[$oField->getFieldId()] : false;
                 if ($sValue) {
                     $sMessage .= nl2br(htmlspecialchars($sValue));
                 }

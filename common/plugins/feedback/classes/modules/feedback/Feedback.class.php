@@ -37,13 +37,10 @@ class PluginFeedback_ModuleFeedback extends Module {
         else {
             unset($aConfigWebpaths[ $sActionRegex ]);
         }
-//        $aConfigWebpaths[Config::KEY_REPLACE] = true;
         unset($aConfigWebpaths);
-//        Config::ResetPluginConfig($sPluginName, Config::KEY_ROOT);
         Config::WritePluginConfig($sPluginName, [Config::KEY_ROOT => $aConfigRoot]);
 
         $aConfigWebpaths = (array)Config::ReadPluginConfig($sPluginName);
-        var_dump($aConfigRoot, $aConfigWebpaths);exit;
         //endregion
 
         $this->oMapper->updateFeedback(

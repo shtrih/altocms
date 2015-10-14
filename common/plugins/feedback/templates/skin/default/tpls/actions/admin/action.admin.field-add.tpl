@@ -12,7 +12,7 @@
 
 <div class="span12">
         {* Поведение функции admin.onSelectField можно расширить с помощью
-                хука admin_content_add_field_properties, добавив следующий код, например:
+                хука feedback_content_add_field_properties, добавив следующий код, например:
 
         {literal}
         <script>
@@ -88,11 +88,11 @@
                                     {$aLang.action.admin.contenttypes_field_date}</option>
                                 <option value="link" {if $_aRequest.field_type=='link'}selected{/if} title="{$aLang.action.admin.contenttypes_field_link_notice}">
                                     {$aLang.action.admin.contenttypes_field_link}</option>
-                                <option value="file" {if $_aRequest.field_type=='file'}selected{/if} title="{$aLang.action.admin.contenttypes_field_file_notice}">
+                                {*<option value="file" {if $_aRequest.field_type=='file'}selected{/if} title="{$aLang.action.admin.contenttypes_field_file_notice}">
                                     {$aLang.action.admin.contenttypes_field_file}</option>
                                 <option value="single-image-uploader" {if $_aRequest.field_type=='single-image-uploader'}selected{/if} title="{$aLang.action.admin.contenttypes_field_image_notice}">
-                                    {$aLang.action.admin.contenttypes_field_image}</option>
-                                {hook run='admin_content_add_field_list'}
+                                    {$aLang.action.admin.contenttypes_field_image}</option>*}
+                                {hook run='feedback_content_add_field_list'}
                             </select>
                         </div>
                     </div>
@@ -127,7 +127,7 @@
                         </div>
                     </div>
 
-                    {hook run='admin_content_add_field_properties'}
+                    {hook run='feedback_content_add_field_properties'}
 
                     <div class="form-actions">
                         <button type="submit"  name="submit_field" class="btn btn-primary" id="popup-field-submit">
