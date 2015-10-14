@@ -43,11 +43,16 @@ class PluginFeedback_ActionFeedback extends ActionPlugin {
 
         if ($this->isPost()) {
             if (!E::ModuleSecurity()->ValidateSecurityKey()) {
-                E::ModuleMessage()->AddError('Что-то пошло не так.', null, true);
-                R::Location(R::GetPathWebCurrent());
+                E::ModuleMessage()->AddError('Что-то пошло не так. Ты что, хакер?');
+
+                return null;
             }
 
-//            E::ModuleCaptcha()->Verify(F::GetPostStr('captcha'));
+            if (E::ModuleCaptcha()->Verify(F::GetPostStr('captcha'))) {
+                E::ModuleMessage()->AddError('Проверка каптча не пройдена.');
+
+                return null;
+            }
 
             $bError = false;
             $sMessage = '';
@@ -86,6 +91,8 @@ class PluginFeedback_ActionFeedback extends ActionPlugin {
                 R::Location(R::GetPathWebCurrent());
             }
         }
+
+        return true;
     }
 
     /**
