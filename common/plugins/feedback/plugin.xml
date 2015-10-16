@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <id>feedback</id>
+    <name>
+        <lang name="default">Feedback</lang>
+        <lang name="russian">Feedback / Форма обратной связи</lang>
+    </name>
+    <author>
+        <lang name="default">shtrih</lang>
+    </author>
+    <homepage>http://4otaku.org</homepage>
+    <version>1.0.0</version>
+    <dirname>feedback</dirname>
+    <settings>/admin/settings-feedback</settings>
+    <requires>
+        <alto>
+             <version>1.1.13</version>
+        </alto>
+        <system>
+            <php>5.4.0</php>
+        </system>
+        <plugins>
+            <!-- Атрибуты name, version и condition необязательны -->
+            <!-- Возможные значения атрибута condition соответствуют описанию параметра «operator» на странице http://php.net/manual/ru/function.version-compare.php  -->
+            <!-- <plugin name="plugin_name" version="1.0.0" condition="eq">plugin_id</plugin> -->
+        </plugins>
+    </requires>
+    <description>
+        <lang name="default">It allows you to create a feedback page.</lang>
+        <lang name="russian">Позволяет создавать страницу обратной связи.</lang>
+    </description>
+</plugin>
