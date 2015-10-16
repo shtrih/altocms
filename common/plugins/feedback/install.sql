@@ -1,13 +1,5 @@
 --
 -- SQL, которые надо выполнить движку при активации плагина админом. Вызывается на исполнение ВРУЧНУЮ в /common/plugins/PluginAbcplugin.class.php в методе Activate()
--- Например:
-
--- CREATE TABLE IF NOT EXISTS `prefix_tablename` (
---  `page_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
---  `page_pid` int(11) unsigned DEFAULT NULL,
---  PRIMARY KEY (`page_id`),
---  KEY `page_pid` (`page_pid`),
--- ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 CREATE TABLE IF NOT EXISTS `prefix_feedback_fields` (
   `field_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -37,5 +29,10 @@ CREATE TABLE IF NOT EXISTS `prefix_feedback` (
   UNIQUE KEY (`feedback_webpath`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `prefix_feedback` (`feedback_id`, `feedback_title`, `feedback_text`, `feedback_text_source`, `feedback_extra`, `feedback_webpath`, `feedback_active`)
-VALUES ('1', 'no', 'no', 'no', '', 'no', '0');
+INSERT IGNORE INTO `prefix_feedback_fields` (`field_id`, `feedback_id`, `field_unique_name`, `field_sort`, `field_type`, `field_name`, `field_description`, `field_options`, `field_required`, `field_postfix`) VALUES
+(1, 1, NULL, 3, 'input', 'Ваш e-mail', 'Чтобы мы могли связаться с вами', NULL, 1, NULL),
+(2, 1, NULL, 2, 'select', 'Тема', 'Выберите наиболее близкую тему', 'a:1:{s:6:"select";s:108:"Выберите вариант\r\nНашёл ошибку\r\nПредлагаю\r\nПомогите\r\nДругое";}', 0, NULL),
+(3, 1, NULL, 1, 'textarea', 'Текст сообщения', '', NULL, 1, NULL);
+
+INSERT IGNORE INTO `prefix_feedback` (`feedback_id`, `feedback_title`, `feedback_text`, `feedback_text_source`, `feedback_extra`, `feedback_webpath`, `feedback_active`) VALUES
+(1, 'Обратиться к администрации', 'Детально опишите вашу проблему. Если хотите получить ответ, заполните поле «е-мейл».', 'Детально опишите вашу проблему. Если хотите получить ответ, заполните поле «е-мейл».', '', '/feedback', 1);
