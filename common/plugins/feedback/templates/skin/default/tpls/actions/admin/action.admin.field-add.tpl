@@ -108,6 +108,16 @@
                     </div>
 
                     <div class="control-group">
+                        <label for="field_required" class="control-label">
+                            {$aLang.plugin.feedback.field_required}:
+                        </label>
+
+                        <div class="controls">
+                            <input id="field_required" type="checkbox" name="field_required" value="1" class="input-checkbox" {if $_aRequest.field_required}checked="checked"{/if} />
+                        </div>
+                    </div>
+
+                    <div class="control-group">
                         <label for="field_description" class="control-label">
                             {$aLang.action.admin.contenttypes_description}:
                         </label>
