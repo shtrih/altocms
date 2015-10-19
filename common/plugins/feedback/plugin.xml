@@ -9,12 +9,12 @@
         <lang name="default">shtrih</lang>
     </author>
     <homepage>http://4otaku.org</homepage>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <dirname>feedback</dirname>
     <settings>/admin/settings-feedback</settings>
     <requires>
         <alto>
-             <version>1.1.13</version>
+             <version>1.1.14</version>
         </alto>
         <system>
             <php>5.4.0</php>
