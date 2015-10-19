@@ -23,12 +23,24 @@
  * @since   1.0
  */
 abstract class Action extends LsObject {
+
+    const MATCH_TYPE_STR = 0;
+    const MATCH_TYPE_REG = 1;
+
     /**
      * Список зарегистрированных евентов
      *
      * @var array
      */
     protected $aRegisterEvent = array();
+
+    /**
+     * Index of selected event for execution
+     *
+     * @var int
+     */
+    protected $iRegisterEventIndex;
+
     /**
      * Список параметров из URL
      * <pre>/action/event/param0/param1/../paramN/</pre>
@@ -36,18 +48,21 @@ abstract class Action extends LsObject {
      * @var array
      */
     protected $aParams = array();
+
     /**
      * Список совпадений по регулярному выражению для евента
      *
      * @var array
      */
     protected $aParamsEventMatch = array('event' => array(), 'params' => array());
+
     /**
      * Объект ядра
      *
      * @var Engine|null
      */
     protected $oEngine = null;
+
     /**
      * Шаблон экшена
      * @see SetTemplate
@@ -56,6 +71,7 @@ abstract class Action extends LsObject {
      * @var string|null
      */
     protected $sActionTemplate = null;
+
     /**
      * Дефолтный евент
      * @see SetDefaultEvent
@@ -63,12 +79,14 @@ abstract class Action extends LsObject {
      * @var string|null
      */
     protected $sDefaultEvent = 'index';
+
     /**
      * Текущий евент
      *
      * @var string|null
      */
     protected $sCurrentEvent = null;
+
     /**
      * Имя текущий евента
      * Позволяет именовать экшены на основе регулярных выражений
@@ -76,12 +94,27 @@ abstract class Action extends LsObject {
      * @var string|null
      */
     protected $sCurrentEventName = null;
+
     /**
      * Текущий экшен
      *
      * @var null|string
      */
     protected $sCurrentAction = null;
+
+    /**
+     * Current request method
+     *
+     * @var string
+     */
+    protected $sRequestMethod = null;
+
+    /**
+     * Request data - POST, GET and other params
+     *
+     * @var array
+     */
+    protected $aRequestData = array();
 
     protected static $bPost = null;
 
@@ -101,6 +134,8 @@ abstract class Action extends LsObject {
             // LS-compatible
             $this->oEngine = $oEngine;
         }
+        $this->_prepareRequestData();
+
         //Engine::getInstance();
         $this->sCurrentAction = $sAction;
         $this->aParams = R::GetParams();
@@ -134,6 +169,173 @@ abstract class Action extends LsObject {
         }
     }
 
+    protected function _setRequestData($sType, $sKey, $xValue = null) {
+
+        if (is_array($sKey) && is_null($xValue)) {
+            foreach($sKey as $sDataKey => $xDataValue) {
+                $this->aRequestData[$sType][strtolower($sDataKey)] = $xDataValue;
+            }
+        } else {
+            $this->aRequestData[$sType][strtolower($sKey)] = $xValue;
+        }
+    }
+    /**
+     * Preparation of request data
+     */
+    protected function _prepareRequestData() {
+
+        $this->sRequestMethod = strtoupper(F::GetRequestMethod());
+        $this->_setRequestData('HEADERS', F::GetRequestHeaders());
+
+        if (isset($_GET) && is_array($_GET)) {
+            $this->_setRequestData('GET', $_GET);
+        }
+
+        if (isset($_POST) && is_array($_POST)) {
+            $this->_setRequestData('POST', $_POST);
+        }
+
+        if (isset($_FILES) && is_array($_FILES)) {
+            $this->_setRequestData('FILES', $_FILES);
+        }
+
+        $sBodyData = F::GetRequestBody();
+        if ($sBodyData) {
+            $aExplodedData = explode('&', $sBodyData);
+            foreach ($aExplodedData as $aPair) {
+                $item = explode('=', $aPair);
+                if (count($item) == 2) {
+                    $this->_setRequestData('BODY', urldecode($item[0]), urldecode($item[1]));
+                }
+            }
+        }
+    }
+
+    /**
+     * Return current request method
+     *
+     * @return string
+     */
+    protected function _getRequestMethod() {
+
+        return $this->sRequestMethod;
+    }
+
+    /**
+     * Return required request data
+     *
+     * @param string      $sType
+     * @param string|null $sName
+     *
+     * @return mixed
+     */
+    protected function _getRequestData($sType, $sName = null) {
+
+        $sType = strtoupper($sType);
+        if (in_array($sType, array('HEADERS', 'GET', 'POST', 'BODY', 'FILES'))) {
+            if (is_null($sName) && isset($this->aRequestData[$sType])) {
+                return $this->aRequestData[$sType];
+            } elseif (!is_null($sName) && isset($this->aRequestData[$sType][strtolower($sName)])) {
+                return $this->aRequestData[$sType][strtolower($sName)];
+            } else {
+                return null;
+            }
+        }
+        // $sType is request method
+        if ($this->_getRequestMethod() === $sType) {
+            if (is_null($sName)) {
+                return $this->aRequestData['BODY'];
+            } elseif (isset($this->aRequestData['BODY'][strtolower($sName)])) {
+                return $this->aRequestData['BODY'][strtolower($sName)];
+            } else {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Add event handler
+     *
+     * @param array $aArgs
+     * @param int   $iType
+     *
+     * @throws Exception
+     */
+    protected function _addEventHandler($aArgs, $iType) {
+
+        $iCountArgs = sizeof($aArgs);
+        if ($iCountArgs < 2) {
+            throw new Exception('Incorrect number of arguments when adding events');
+        }
+        $aEvent = array();
+        /**
+         * Последний параметр может быть массивом - содержать имя метода и имя евента(именованный евент)
+         * Если указан только метод, то имя будет равным названию метода
+         */
+        $aNames = (array)$aArgs[--$iCountArgs];
+        $aEvent['method'] = $aNames[0];
+        if (isset($aNames[1])) {
+            $aEvent['name'] = $aNames[1];
+        } else {
+            $aEvent['name'] = $aEvent['method'];
+        }
+        if (!$this->_eventExists($aEvent['method'])) {
+            throw new Exception('Method of the event not found: ' . $aEvent['method']);
+        }
+        $aEvent['type'] = $iType;
+        $aEvent['uri_event'] = $aArgs[0];
+        $aEvent['uri_params'] = array();
+        for ($i = 1; $i < $iCountArgs; $i++) {
+            $aEvent['uri_params'][] = $aArgs[$i];
+        }
+        $this->aRegisterEvent[] = $aEvent;
+    }
+
+    /**
+     * Return event handler
+     *
+     * @return array|bool
+     */
+    protected function _getEventHandler() {
+
+        foreach ($this->aRegisterEvent as $iEventKey => $aEvent) {
+            $bFound = false;
+            if ($aEvent['type'] == self::MATCH_TYPE_STR && $aEvent['uri_event'] == $this->sCurrentEvent) {
+                $this->aParamsEventMatch['key'] = $iEventKey;
+                $this->aParamsEventMatch['event'] = array($this->sCurrentEvent, $this->sCurrentEvent);
+                $this->aParamsEventMatch['params'] = array();
+                $bFound = true;
+                foreach ($aEvent['uri_params'] as $iKey => $sUriParam) {
+                    $sParam = $this->GetParam($iKey, '');
+                    if ($sUriParam == $sParam) {
+                        $this->aParamsEventMatch['params'][$iKey] = array($sParam, $sParam);
+                    } else {
+                        $bFound = false;
+                        break;
+                    }
+                }
+            } elseif ($aEvent['type'] == self::MATCH_TYPE_REG && preg_match($aEvent['uri_event'], $this->sCurrentEvent, $aMatch)) {
+                $this->aParamsEventMatch['key'] = $iEventKey;
+                $this->aParamsEventMatch['event'] = $aMatch;
+                $this->aParamsEventMatch['params'] = array();
+                $bFound = true;
+                foreach ($aEvent['uri_params'] as $iKey => $sUriParam) {
+                    if (preg_match($sUriParam, $this->GetParam($iKey, ''), $aMatch)) {
+                        $this->aParamsEventMatch['params'][$iKey] = $aMatch;
+                    } else {
+                        $bFound = false;
+                        break;
+                    }
+                }
+            }
+            if ($bFound) {
+                return $aEvent;
+            }
+        }
+        return false;
+    }
+
     /**
      * Добавляет евент в экшен
      * По сути является оберткой для AddEventPreg(), оставлен для простоты и совместимости с прошлыми версиями ядра
@@ -145,7 +347,7 @@ abstract class Action extends LsObject {
      */
     protected function AddEvent($sEventName, $sEventFunction) {
 
-        $this->AddEventPreg('/^' . preg_quote($sEventName) . '$/i', $sEventFunction);
+        $this->_addEventHandler(func_get_args(), self::MATCH_TYPE_STR);
     }
 
     /**
@@ -154,33 +356,14 @@ abstract class Action extends LsObject {
      */
     protected function AddEventPreg() {
 
-        $iCountArgs = func_num_args();
-        if ($iCountArgs < 2) {
-            throw new Exception('Incorrect number of arguments when adding events');
-        }
-        $aEvent = array();
-        /**
-         * Последний параметр может быть массивом - содержать имя метода и имя евента(именованный евент)
-         * Если указан только метод, то имя будет равным названию метода
-         */
-        $aNames = (array)func_get_arg($iCountArgs - 1);
-        $aEvent['method'] = $aNames[0];
-        if (isset($aNames[1])) {
-            $aEvent['name'] = $aNames[1];
-        } else {
-            $aEvent['name'] = $aEvent['method'];
-        }
-        if (!$this->_eventExists($aEvent['method'])) {
-            throw new Exception('Method of the event not found: ' . $aEvent['method']);
-        }
-        $aEvent['preg'] = func_get_arg(0);
-        $aEvent['params_preg'] = array();
-        for ($i = 1; $i < $iCountArgs - 1; $i++) {
-            $aEvent['params_preg'][] = func_get_arg($i);
-        }
-        $this->aRegisterEvent[] = $aEvent;
+        $this->_addEventHandler(func_get_args(), self::MATCH_TYPE_REG);
     }
 
+    /**
+     * @param string $sEvent
+     *
+     * @return bool
+     */
     protected function _eventExists($sEvent) {
 
         return method_exists($this, $sEvent);
@@ -188,7 +371,7 @@ abstract class Action extends LsObject {
 
     /**
      * Запускает евент на выполнение
-     * Если текущий евент не определен то  запускается тот которые определен по умолчанию(default event)
+     * Если текущий евент не определен то  запускается тот которые определен по умолчанию (default event)
      *
      * @return mixed
      */
@@ -202,29 +385,20 @@ abstract class Action extends LsObject {
             $this->sCurrentEvent = $this->GetDefaultEvent();
             R::SetActionEvent($this->sCurrentEvent);
         }
-        foreach ($this->aRegisterEvent as $aEvent) {
-            if (preg_match($aEvent['preg'], $this->sCurrentEvent, $aMatch)) {
-                $this->aParamsEventMatch['event'] = $aMatch;
-                $this->aParamsEventMatch['params'] = array();
-                foreach ($aEvent['params_preg'] as $iKey => $sParamPreg) {
-                    if (preg_match($sParamPreg, $this->GetParam($iKey, ''), $aMatch)) {
-                        $this->aParamsEventMatch['params'][$iKey] = $aMatch;
-                    } else {
-                        continue 2;
-                    }
-                }
-                $this->sCurrentEventName = $aEvent['name'];
-                $sMethod = $aEvent['method'];
-                $sHook = 'action_event_' . strtolower($this->sCurrentAction);
+        $aEvent = $this->_getEventHandler();
+        if ($aEvent !== false) {
+            $this->sCurrentEventName = $aEvent['name'];
+            $sMethod = $aEvent['method'];
+            $sHook = 'action_event_' . strtolower($this->sCurrentAction);
 
-                E::ModuleHook()->Run($sHook . '_before', array('event' => $this->sCurrentEvent, 'params' => $this->GetParams()));
-                //$result = call_user_func_array(array($this, $aEvent['method']), array());
-                $xResult = $this->$sMethod();
-                E::ModuleHook()->Run($sHook . '_after', array('event' => $this->sCurrentEvent, 'params' => $this->GetParams()));
+            E::ModuleHook()->Run($sHook . '_before', array('event' => $this->sCurrentEvent, 'params' => $this->GetParams()));
+            //$result = call_user_func_array(array($this, $aEvent['method']), array());
+            $xResult = $this->$sMethod();
+            E::ModuleHook()->Run($sHook . '_after', array('event' => $this->sCurrentEvent, 'params' => $this->GetParams()));
 
-                return $xResult;
-            }
+            return $xResult;
         }
+
         return $this->EventNotFound();
     }
 
@@ -431,7 +605,7 @@ abstract class Action extends LsObject {
     }
 
     /**
-     * Получить каталог с шаблонами экшена(совпадает с именем класса)
+     * Получить каталог с шаблонами экшена (совпадает с именем класса)
      * @see Router::GetActionClass
      *
      * @return string
@@ -498,11 +672,11 @@ abstract class Action extends LsObject {
      */
     protected function IsPost($sName = null) {
 
+        $aPostData = $this->_getRequestData('POST');
         if (is_null(self::$bPost)) {
             if (E::ModuleSecurity()->ValidateSendForm(false)
-                && isset($_SERVER['REQUEST_METHOD'])
-                && ($_SERVER['REQUEST_METHOD'] == 'POST')
-                && isset($_POST)
+                && ($this->_getRequestMethod() == 'POST')
+                && !is_null($aPostData)
             ) {
                 self::$bPost = true;
             } else {
@@ -511,9 +685,9 @@ abstract class Action extends LsObject {
         }
         if (self::$bPost) {
             if ($sName) {
-                return array_key_exists($sName, $_POST);
+                return array_key_exists($sName, $aPostData);
             } else {
-                return is_array($_POST);
+                return is_array($aPostData);
             }
         }
         return false;
@@ -530,10 +704,11 @@ abstract class Action extends LsObject {
     protected function GetPost($sName = null, $sDefault = null) {
 
         if ($this->IsPost($sName)) {
+            $aPostData = $this->_getRequestData('POST');
             if ($sName) {
-                return isset($_POST[(string)$sName]) ? $_POST[(string)$sName] : $sDefault;
+                return isset($aPostData[(string)$sName]) ? $aPostData[(string)$sName] : $sDefault;
             } else {
-                return $_POST;
+                return $aPostData;
             }
         }
         return null;
@@ -549,12 +724,14 @@ abstract class Action extends LsObject {
      */
     protected function GetUploadedFile($sName = null) {
 
-        $aFileData = false;
-        if (E::ModuleSecurity()->ValidateSendForm(false) && isset($_FILES)) {
-            if (is_null($sName) && is_array($_FILES) && sizeof($_FILES)) {
-                $aFileData = reset($_FILES);
-            } elseif (isset($_FILES[$sName])) {
-                $aFileData = $_FILES[$sName];
+        $aFiles = $this->_getRequestData('FILES');
+        if (E::ModuleSecurity()->ValidateSendForm(false) && !empty($aFiles)) {
+            if (is_null($sName)) {
+                $aFileData = reset($aFiles);
+            } elseif (isset($aFiles[$sName])) {
+                $aFileData = $aFiles[$sName];
+            } else {
+                $aFileData = false;
             }
             if ($aFileData && isset($aFileData['tmp_name']) && is_uploaded_file($aFileData['tmp_name'])) {
                 return $aFileData;
@@ -589,7 +766,12 @@ abstract class Action extends LsObject {
      */
     public function AccessDenied($sEvent = null) {
 
-        return $this->EventNotFound();
+        if (!F::AjaxRequest()) {
+            return $this->EventNotFound();
+        }
+        echo 'Access denied';
+
+        return null;
     }
 
 }
