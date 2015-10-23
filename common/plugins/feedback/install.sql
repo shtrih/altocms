@@ -35,4 +35,4 @@ INSERT IGNORE INTO `prefix_feedback_fields` (`field_id`, `feedback_id`, `field_u
 (3, 1, NULL, 1, 'textarea', 'Текст сообщения', '', NULL, 1, NULL);
 
 INSERT IGNORE INTO `prefix_feedback` (`feedback_id`, `feedback_title`, `feedback_text`, `feedback_text_source`, `feedback_extra`, `feedback_webpath`, `feedback_active`) VALUES
-(1, 'Обратиться к администрации', 'Детально опишите вашу проблему. Если хотите получить ответ, заполните поле «е-мейл».', 'Детально опишите вашу проблему. Если хотите получить ответ, заполните поле «е-мейл».', '', '/feedback', 1);
+(1, 'Обратиться к администрации', 'Детально опишите вашу проблему. Если хотите получить ответ, заполните поле «е-мейл».', 'Детально опишите вашу проблему. Если хотите получить ответ, заполните поле «е-мейл».', '', '/feedback', 0);
