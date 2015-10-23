@@ -2998,13 +2998,21 @@ class ActionAdmin extends Action {
         $this->SetTemplateAction('tools/checkdb_topics');
         $sDoAction = F::GetRequest('do_action');
         if ($sDoAction == 'clear_topics_co') {
-            $aCommentsOnlineBlogs = E::ModuleAdmin()->GetUnlinkedTopicsForCommentsOnline();
-            if ($aCommentsOnlineBlogs) {
-                E::ModuleAdmin()->DelUnlinkedTopicsForCommentsOnline(array_keys($aCommentsOnlineBlogs));
+            $aTopics = E::ModuleAdmin()->GetUnlinkedTopicsForCommentsOnline();
+            if ($aTopics) {
+                E::ModuleAdmin()->DelUnlinkedTopicsForCommentsOnline(array_keys($aTopics));
+            }
+            $aTopics = E::ModuleAdmin()->GetUnlinkedTopicsForComments();
+            if ($aTopics) {
+                E::ModuleAdmin()->DelUnlinkedTopicsForComments(array_keys($aTopics));
             }
         }
+
         $aCommentsOnlineTopics = E::ModuleAdmin()->GetUnlinkedTopicsForCommentsOnline();
         E::ModuleViewer()->Assign('aCommentsOnlineTopics', $aCommentsOnlineTopics);
+
+        $aCommentsTopics = E::ModuleAdmin()->GetUnlinkedTopicsForComments();
+        E::ModuleViewer()->Assign('aCommentsTopics', $aCommentsTopics);
     }
 
     /**********************************************************************************/
@@ -3874,39 +3882,22 @@ class ActionAdmin extends Action {
 
                 // Добавим имя в объявление
                 $aAllowedData = array_values(Config::Get("menu.data.{$sMenuId}.init.fill.list"));
-                if (count($aAllowedData) > 1 && isset($aAllowedData[0]) && $aAllowedData[0] == '*') {
-                    unset($aAllowedData[0]);
+                if (!empty($aAllowedData)) {
+                    if (isset($aAllowedData[0]) && $aAllowedData[0] == '*' && (count($aAllowedData) > 1)) {
+                        unset($aAllowedData[0]);
+                    }
+                    if (!empty($aAllowedData)) {
+                        $aAllowedData = array_keys(Config::Get("menu.data.{$oMenu->getId()}.list"));
+                        // Form new fill rules
+                        $aNewItems = array_merge(
+                            $aAllowedData,
+                            array($sItemName)
+                        );
+                        // Set fill rules
+                        $oMenu->SetConfig('init.fill.list', $aNewItems);
+                    }
                 }
-                if (is_array($aAllowedData) && isset($aAllowedData[0]) && $aAllowedData[0] == '*') {
-                    $aAllowedData = array_keys(Config::Get("menu.data.{$oMenu->getId()}.list"));
-                }
 
-                $aNewItems = array_merge(
-                    $aAllowedData,
-                    array($sItemName)
-                );
-
-                //$sMenuKey = "menu.data.{$oMenu->getId()}";
-                //$aMenu = C::Get($sMenuKey);
-                //$aMenu['init']['fill']['list'] = $aNewItems;
-                $oMenu->SetConfig('init.fill.list', $aNewItems);
-
-                // Добавим имя в список
-                //$aNewItemConfig = array(
-                //    $sItemName => array(
-                //    'text'        => $sItemTitle,
-                //    'link'        => $sItemLink,
-                //    'active'      => false,
-                //    )
-                //);
-                //$aNewItemConfig = array_merge(
-                //    Config::Get("menu.data.{$oMenu->getId()}.list"),
-                //    $aNewItemConfig
-                //);
-
-                //$aMenu['list'] = $aNewItemConfig;
-                //Config::WriteCustomConfig(array($sMenuKey => $aMenu), false);
-                //$oMenu->SetConfig('list', $aNewItemConfig);
                 $oMenuItem = E::ModuleMenu()->CreateMenuItem($sItemName, array(
                     'text' => $sItemTitle,
                     'link'    => $sItemLink,
