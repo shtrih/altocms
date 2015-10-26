@@ -65,10 +65,11 @@
 
                     <div class="controls">
                         <textarea name="feedback_description"  class="input-text js-editor-wysiwyg js-editor-markitup" rows="10">{$_aRequest.feedback_description}</textarea>
+                        {$sSkinPath = E::ModuleViewer()->GetTemplateDir()}
                         {if Config::Get('view.wysiwyg')}
-                            {include_once file="editors/editor.tinymce.tpl"}
+                            {include_once file="$sSkinPath/tpls/editors/editor.tinymce.tpl"}
                         {else}
-                            {include_once file="editors/editor.markitup.tpl"}
+                            {include_once file="$sSkinPath/tpls/editors/editor.markitup.tpl"}
                         {/if}
                         <span class="help-block">{$aLang.plugin.feedback.field_description_help}</span>
                     </div>
