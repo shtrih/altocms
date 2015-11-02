@@ -243,8 +243,13 @@ class Router extends LsObject {
 
         static::$aRequestURI = $aRequestUrl = $this->RewriteRequest($aRequestUrl);
 
-        static::$sAction = array_shift($aRequestUrl);
-        static::$sActionEvent = array_shift($aRequestUrl);
+        if (!empty($aRequestUrl)) {
+            static::$sAction = array_shift($aRequestUrl);
+            static::$sActionEvent = array_shift($aRequestUrl);
+        } else {
+            static::$sAction = null;
+            static::$sActionEvent = null;
+        }
         static::$aParams = $aRequestUrl;
 
         // Только для мультиязычных сайтов
@@ -608,19 +613,17 @@ class Router extends LsObject {
         if ($sInitResult === 'next') {
             $this->ExecAction();
         } else {
-            // Если инициализация экшена прошла успешно и метод провеки доступа вернул
-            // положительный результат то запускаем запрошенный ивент на исполнение.
-            if ($sInitResult !== false && $this->oAction->Access(self::GetActionEvent()) !== false) {
-                $res = $this->oAction->ExecEvent();
-                static::$sActionEventName = $this->oAction->GetCurrentEventName();
+            // Если инициализация экшена прошла успешно,
+            // то запускаем запрошенный ивент на исполнение.
+            if ($sInitResult !== false) {
+                $xEventResult = $this->oAction->ExecEvent();
 
+                static::$sActionEventName = $this->oAction->GetCurrentEventName();
                 $this->oAction->EventShutdown();
 
-                if ($res === 'next') {
+                if ($xEventResult === 'next') {
                     $this->ExecAction();
                 }
-            } else {
-                $this->oAction->AccessDenied();
             }
         }
         // Hook after action

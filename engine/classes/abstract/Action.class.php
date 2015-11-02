@@ -88,12 +88,17 @@ abstract class Action extends LsObject {
     protected $sCurrentEvent = null;
 
     /**
-     * Имя текущий евента
+     * Current event name
      * Позволяет именовать экшены на основе регулярных выражений
      *
      * @var string|null
      */
     protected $sCurrentEventName = null;
+
+    /**
+     * @var array|bool
+     */
+    protected $aCurrentEventHandler = null;
 
     /**
      * Текущий экшен
@@ -411,18 +416,23 @@ abstract class Action extends LsObject {
             $this->sCurrentEvent = $this->GetDefaultEvent();
             R::SetActionEvent($this->sCurrentEvent);
         }
-        $aEvent = $this->_getEventHandler();
-        if ($aEvent !== false) {
-            $this->sCurrentEventName = $aEvent['name'];
-            $sMethod = $aEvent['method'];
-            $sHook = 'action_event_' . strtolower($this->sCurrentAction);
+        $this->aCurrentEventHandler = $this->_getEventHandler();
+        if ($this->aCurrentEventHandler !== false) {
+            $this->sCurrentEventName = $this->aCurrentEventHandler['name'];
 
-            E::ModuleHook()->Run($sHook . '_before', array('event' => $this->sCurrentEvent, 'params' => $this->GetParams()));
-            //$result = call_user_func_array(array($this, $aEvent['method']), array());
-            $xResult = $this->$sMethod();
-            E::ModuleHook()->Run($sHook . '_after', array('event' => $this->sCurrentEvent, 'params' => $this->GetParams()));
+            if ($this->Access(R::GetActionEvent())) {
+                $sMethod = $this->aCurrentEventHandler['method'];
+                $sHook = 'action_event_' . strtolower($this->sCurrentAction);
 
-            return $xResult;
+                E::ModuleHook()->Run($sHook . '_before', array('event' => $this->sCurrentEvent, 'params' => $this->GetParams()));
+                $xResult = $this->$sMethod();
+                E::ModuleHook()->Run($sHook . '_after', array('event' => $this->sCurrentEvent, 'params' => $this->GetParams()));
+
+                return $xResult;
+            } else {
+                $this->AccessDenied(R::GetActionEvent());
+                return null;
+            }
         }
 
         return $this->EventNotFound();
@@ -711,7 +721,7 @@ abstract class Action extends LsObject {
         }
         if (self::$bPost) {
             if ($sName) {
-                return array_key_exists($sName, $aPostData);
+                return array_key_exists(strtolower($sName), $aPostData);
             } else {
                 return is_array($aPostData);
             }
@@ -732,7 +742,8 @@ abstract class Action extends LsObject {
         if ($this->IsPost($sName)) {
             $aPostData = $this->_getRequestData('POST');
             if ($sName) {
-                return isset($aPostData[(string)$sName]) ? $aPostData[(string)$sName] : $sDefault;
+                $sName = strtolower($sName);
+                return isset($aPostData[$sName]) ? $aPostData[$sName] : $sDefault;
             } else {
                 return $aPostData;
             }

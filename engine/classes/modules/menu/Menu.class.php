@@ -164,11 +164,12 @@ class ModuleMenu extends Module {
     /**
      * Возвращает меню по его идентификатору
      *
-     * @param $sMenuId
+     * @param string $sMenuId
+     * @param array  $aParams
      *
      * @return ModuleMenu_EntityMenu|bool
      */
-    public function GetMenu($sMenuId) {
+    public function GetMenu($sMenuId, $aParams = null) {
 
         if (!$sMenuId) {
             return null;
@@ -179,6 +180,9 @@ class ModuleMenu extends Module {
 
         // Настройки меню
         if ($aMenu = Config::Get('menu.data.' . $sMenuId)) {
+            if ($aParams) {
+                $aMenu = F::Array_Merge($aMenu, $aParams);
+            }
             // Такая форма вызова используется для того,
             // чтобы можно было повесить хук на этот метод
             $oMenu = E::ModuleMenu()->CreateMenu($sMenuId, $aMenu);
@@ -288,7 +292,8 @@ class ModuleMenu extends Module {
         Config::ResetCustomConfig("menu.data.{$sMenuId}");
         $this->ClearMenuCache($sMenuId);
 
-        $aMenu = Config::Get('menu.data.' . $sMenuId, Config::LEVEL_APP);
+        //$aMenu = Config::Get('menu.data.' . $sMenuId, Config::LEVEL_APP);
+        $aMenu = Config::Get('menu.data.' . $sMenuId, Config::LEVEL_SKIN);
         $aPreparedMenuData = E::ModuleMenu()->Prepare($sMenuId, $aMenu);
         $aPreparedMenuData['_cfg'] = $aMenu;
         $oMenu->setProps($aPreparedMenuData);
@@ -780,7 +785,22 @@ class ModuleMenu extends Module {
     public function CompareParam($iParam, $sParamData) {
 
         return R::GetParam($iParam) == $sParamData;
+    }
 
+    /**
+     * Вызывается по строке "compare_get_param"
+     *
+     * @param string $sParam
+     * @param mixed $mParamData
+     *
+     * @return bool
+     */
+    public function CompareGetParam($sParam, $mParamData) {
+
+        if (!empty($_GET[$sParam])) {
+            return $_GET[$sParam] == $mParamData;
+        }
+        return false;
     }
 
     /**
@@ -795,6 +815,11 @@ class ModuleMenu extends Module {
      */
     public function TopicKind($sTopicType) {
 
+        $sViewTopicFilter = E::ModuleViewer()->getTemplateVars('sTopicFilter');
+        if ($sViewTopicFilter && $sViewTopicFilter == $sTopicType) {
+            return true;
+        }
+
         if (R::GetAction() != 'index') {
             return false;
         }
@@ -804,7 +829,40 @@ class ModuleMenu extends Module {
         }
 
         return R::GetActionEvent() == $sTopicType;
+    }
 
+    /**
+     * Вызывается по строке "topic_filter"
+     *
+     * @param $sParamData
+     *
+     * @return bool
+     */
+    public function TopicFilter($sParamData) {
+
+        $sViewTopicFilter = E::ModuleViewer()->getTemplateVars('sTopicFilter');
+        if ($sViewTopicFilter && $sViewTopicFilter == $sParamData) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Вызывается по строке "topic_filter_period"
+     *
+     * @param $sParamData
+     *
+     * @return bool
+     */
+    public function TopicFilterPeriod($sParamData) {
+
+        $sViewTopicFilterPeriod = E::ModuleViewer()->getTemplateVars('sTopicFilterPeriod');
+        if ($sViewTopicFilterPeriod && $sViewTopicFilterPeriod == $sParamData) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
