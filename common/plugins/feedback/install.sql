@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `prefix_feedback` (
 
 INSERT IGNORE INTO `prefix_feedback_fields` (`field_id`, `feedback_id`, `field_unique_name`, `field_sort`, `field_type`, `field_name`, `field_description`, `field_options`, `field_required`, `field_postfix`) VALUES
 (1, 1, NULL, 3, 'input', 'Ваш e-mail', 'Чтобы мы могли связаться с вами', NULL, 1, NULL),
-(2, 1, NULL, 2, 'select', 'Тема', 'Выберите наиболее близкую тему', 'a:1:{s:6:"select";s:108:"Выберите вариант\r\nНашёл ошибку\r\nПредлагаю\r\nПомогите\r\nДругое";}', 0, NULL),
+(2, 1, NULL, 2, 'select', 'Тема', 'Укажите тему обращения', 'a:1:{s:6:"select";s:383:"Общие вопросы\r\nОшибка в работе сайта\r\nУязвимость на сайте\r\nНарушение правил сайта\r\nБлокировка аккаунта\r\nСмена данных (имя пользователя или почта)\r\nУдаление аккаунта\r\nГениальная идея\r\nПредложение сотрудничества";}', 0, NULL),
 (3, 1, NULL, 1, 'textarea', 'Текст сообщения', '', NULL, 1, NULL);
 
 INSERT IGNORE INTO `prefix_feedback` (`feedback_id`, `feedback_title`, `feedback_text`, `feedback_text_source`, `feedback_extra`, `feedback_webpath`, `feedback_active`) VALUES

@@ -9,7 +9,7 @@
         <lang name="default">shtrih</lang>
     </author>
     <homepage>http://4otaku.org</homepage>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <dirname>feedback</dirname>
     <settings>/admin/settings-feedback</settings>
     <requires>

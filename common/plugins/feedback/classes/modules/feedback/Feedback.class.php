@@ -39,8 +39,6 @@ class PluginFeedback_ModuleFeedback extends Module {
         }
         unset($aConfigWebpaths);
         Config::WritePluginConfig($sPluginName, [Config::KEY_ROOT => $aConfigRoot]);
-
-        $aConfigWebpaths = (array)Config::ReadPluginConfig($sPluginName);
         //endregion
 
         $this->oMapper->updateFeedback(

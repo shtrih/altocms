@@ -41,6 +41,12 @@ class PluginFeedback_ActionFeedback extends ActionPlugin {
         E::ModuleViewer()->Assign('oFeedback', $oFeedback);
         E::ModuleViewer()->AddHtmlTitle($oFeedback->getTitle());
 
+        $oUserFrom = E::ModuleUser()->GetUserById(Config::Get('plugin.feedback.from-user-id'));
+        if (!$oUserFrom) {
+            E::ModuleMessage()->AddError(E::ModuleLang()->Get('plugin.feedback.error_config_user_to'));
+            return null;
+        }
+
         if ($this->isPost()) {
             if (!E::ModuleSecurity()->ValidateSecurityKey()) {
                 E::ModuleMessage()->AddError(E::ModuleLang()->Get('plugin.feedback.error_security_key'));
