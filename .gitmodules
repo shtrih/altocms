@@ -7,3 +7,6 @@
 [submodule "common/plugins/better-spoilers"]
 	path = common/plugins/better-spoilers
 	url = git@github.com:shtrih/altocms-plugin-betterspoilers.git
+[submodule "common/plugins/dev"]
+	path = common/plugins/dev
+	url = git@github.com:altocms/alto-plugin-dev.git
