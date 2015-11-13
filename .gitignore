@@ -2,6 +2,7 @@
 .gitmodules
 uploads/*
 _tmp/*
+_dev/
 !.htaccess
 _run/*
 common/config/config.local.php
