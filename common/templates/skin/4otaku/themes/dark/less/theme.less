@@ -1,19 +1,19 @@
+@import "../../../assets/less/var.experience.less";
 @import "../../../assets/less/var.experience_simple.less";
 //**************************************************************************************************************
 //          ПЕРЕМЕННЫЕ ТЕКУЩЕЙ ТЕМЫ
-//**************************************************************************************************************
+//*********************************************s*****************************************************************
 
-
-@dark-blue:         rgb(28, 55, 76);
-@dark-blue-l-10:    lighten(@dark-blue, 10%);
-@navbar-main-default-background: @dark-blue;
-@navbar-main-default-submenu-divider:       @dark-blue-l-10;        // Цвет разделителя подменю
+@dark-blue-l:    lighten(@dark-blue, 7%);
+@navbar-main-default-background:            @blue;
+@navbar-main-default-border-color:          @dark-blue;
 @navbar-main-default-color:                 @white;                 // Дефолтный цвет ссылок
-@navbar-main-default-active-background:     @dark-blue-l-10;        // Цвет фона активного элемента
+@navbar-main-default-active-background:     @dark-blue;             // Цвет фона активного элемента
 @navbar-main-default-active-color:          @white;                 // Шрифт активного элемента
-@navbar-main-default-hover-color:           @red;                   // Цвет наведённой ссылки
-@navbar-main-default-submenu-background:    @dark-blue-l-10;        // Цвет подменю
-
+@navbar-main-default-hover-background:      @dark-blue-l;        // Цвет наведённой ссылки
+@navbar-main-default-hover-color:           @white;                 // Цвет наведённой ссылки
+@navbar-main-default-submenu-background:    @dark-blue;             // Цвет подменю
+@navbar-main-default-submenu-divider:       @dark-blue-l;        // Цвет разделителя подменю
 
 @navbar-content-default-background:         @light;                 // Цвет фона
 @navbar-content-default-active-background:  @lighten-gray;          // Цвет фона активного элемента
@@ -22,9 +22,15 @@
 
 
 @tooltip-background-color:                  @dark-blue;         // Тултип
-@active-link-color: @dark-blue-l-10;
+@active-link-color:                         @dark-blue-l;
 @toolbar-color:                             @dark-blue;             // Цвет иконок на кнопках туллбара
 @toolbar-active-background-color:           @dark-blue;             // Цвет фона иконок активных кнопок тулбара
+
+/** НАСТРОЙКИ ПОДВАЛА (6)
+______________________________________________________________________________________________________________________*/
+@footer-1-background-color:                 @blue;          // Цвет фона первого меню
+@footer-1-border-color:                     @dark-blue;
+@footer-2-background-color:                 @dark-blue;        // Цвет фона второго меню
 //**************************************************************************************************************
 @import "../../../assets/less/style.experience_simple.less";
 
@@ -55,7 +61,7 @@ _________________________________________________________*/
 
     .dropdown-menu.dropdown-user-menu & > li & > a:hover {
         color: @white !important;
-        background-color: @dark-blue-l-10 !important;
+        background-color: @dark-blue-l !important;
     }
 
     .user-button {

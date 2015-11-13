@@ -8,6 +8,7 @@
     border: 0;
     border-radius: 0;
     background-color: @navbar-main-default-background;
+    border-bottom: @navbar-main-default-border-color 5px solid;
 
     li.search {
         form {
@@ -58,9 +59,9 @@
             opacity: 1;
         }
         // Все наведённые ссылки
-        li a:hover, li.active a:hover {
+        li a:hover, li.active a:hover, li a:focus, li.active a:focus,  {
             color: @navbar-main-default-hover-color;
-            background-color: @navbar-main-default-active-background;
+            background-color: @navbar-main-default-hover-background;
             opacity: 1;
         }
         // Ссылка меню пользователя
@@ -137,11 +138,16 @@
                 }
 
                 .new-messages {
-                    color: @navbar-main-default-hover-color;
+                    color: @red;
+                    font-weight: bold;
+                }
+
+                &.hvr-leftline-reveal:before {
+                    background: @white;
                 }
             }
 
-            & > a:hover {
+            & > a:hover, & > a:focus {
                 color: @navbar-main-default-color;
             }
             & > a:hover i {
@@ -197,12 +203,12 @@
                     &.menu-item-user-comments a {
                         color: @navbar-main-default-color;
                         i {
-                            color: @blue;
+                            color: @navbar-main-default-color;
                             margin-right: 6px;
                         }
                     }
                     &.menu-item-user-talks a {
-                        color: @dark-blue;
+                        color: @navbar-main-default-color;
                         i {
                             color: @orange;
                             margin-right: 6px;
