@@ -99,11 +99,15 @@
                 },
                 multiple: true,
                 onFileComplete: function (evt, uiEvt) {
-                    /*jslint nomen: true*/
-                    // Специфическое поле FileAPI
-                    evt.widget.remove(evt.widget.__fileId);
-                    /*jslint nomen: false*/
-                    $this.addPhoto(uiEvt.result);
+                    if (uiEvt && uiEvt.status && uiEvt.status >= 400) {
+                        ls.msg.error('HTTP Error ' + uiEvt.status, uiEvt.statusText ? uiEvt.statusText : '');
+                    } else {
+                        /*jslint nomen: true*/
+                        // Специфическое поле FileAPI
+                        evt.widget.remove(evt.widget.__fileId);
+                        /*jslint nomen: false*/
+                        $this.addPhoto(uiEvt.result);
+                    }
                 },
                 onComplete: $this.options.onComplete,
                 elements: {
@@ -199,6 +203,8 @@
 
             if (!data) {
                 ls.msg.error(null, 'System error #1001');
+            } else if (typeof data === 'string') {
+                ls.msg.error(null, 'System error #1003');
             } else if (data.bStateError) {
                 ls.msg.error(data.sMsgTitle, data.sMsg);
             } else {
@@ -425,9 +431,9 @@
             option = {};
         }
 
-        if (typeof option === 'getUploaded') {
-            data[option]();
-        }
+        //if (typeof option === 'getUploaded') {
+        //    data[option]();
+        //}
 
         if (!data) {
             data = new altoMultiUploader(this, options);
