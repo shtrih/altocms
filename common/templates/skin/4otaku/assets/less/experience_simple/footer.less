@@ -21,6 +21,8 @@ __________________________________________________*/
 
     .right-copyright a {
         display: inline-block;
+        color: @navbar-main-default-color;
+        opacity: @navbar-main-default-link-opacity;
     }
 }
 
@@ -36,6 +38,7 @@ __________________________________________________*/
         h4 {
             font-weight: normal !important;
             font-size: @footer-header-font-size !important;
+            color: @navbar-main-default-color;
         }
 
         ul.social-icons i{
@@ -44,6 +47,13 @@ __________________________________________________*/
 
         .footer-column a {
             font-size: @footer-font-size !important;
+            color: @navbar-main-default-color;
+            opacity: @navbar-main-default-link-opacity;
+
+            &:hover {
+                color: @navbar-main-default-color;
+                opacity: 1;
+            }
         }
 
     }
