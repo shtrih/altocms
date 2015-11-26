@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TaskOptions>
+  <TaskOptions>
+    <option name="arguments" value="--no-color --clean-css=&quot;--advanced&quot; --source-map=theme.less.map ../less/theme.less --source-map-basepath=/var/www/altocms/ --source-map-rootpath=/" />
+    <option name="checkSyntaxErrors" value="true" />
+    <option name="description" value="Compiles .less files into .css files" />
+    <option name="exitCodeBehavior" value="ERROR" />
+    <option name="fileExtension" value="less" />
+    <option name="immediateSync" value="true" />
+    <option name="name" value="theme_4otaku" />
+    <option name="output" value="$FileNameWithoutExtension$.dark.min.css" />
+    <option name="outputFilters">
+      <array>
+        <FilterInfo>
+          <option name="description" value="lessc error format" />
+          <option name="name" value="lessc" />
+          <option name="regExp" value="$MESSAGE$$FILE_PATH$?:$LINE$:$COLUMN$" />
+        </FilterInfo>
+      </array>
+    </option>
+    <option name="outputFromStdout" value="true" />
+    <option name="passParentEnvs" value="true" />
+    <option name="program" value="/usr/local/lib/node_modules/less/bin/lessc" />
+    <!-- file:common/templates/skin/4otaku/themes/dark/less/* -->
+    <option name="scopeName" value="theme" />
+    <option name="trackOnlyRoot" value="true" />
+    <option name="workingDir" value="/var/www/altocms/common/templates/skin/4otaku/themes/dark/css" />
+    <envs />
+  </TaskOptions>
+  <TaskOptions>
+    <option name="arguments" value="--no-color ../less/$FileName$ --clean-css=&quot;--advanced&quot; --source-map=$FileName$.map --source-map-basepath=$ProjectFileDir$ --source-map-rootpath=/" />
+    <option name="checkSyntaxErrors" value="true" />
+    <option name="description" value="Compiles .less files into .css files" />
+    <option name="exitCodeBehavior" value="ERROR" />
+    <option name="fileExtension" value="less" />
+    <option name="immediateSync" value="true" />
+    <option name="name" value="project_watcher" />
+    <option name="output" value="$FileNameWithoutExtension$.min.css" />
+    <option name="outputFilters">
+      <array>
+        <FilterInfo>
+          <option name="description" value="lessc error format" />
+          <option name="name" value="lessc" />
+          <option name="regExp" value="$MESSAGE$$FILE_PATH$?:$LINE$:$COLUMN$" />
+        </FilterInfo>
+      </array>
+    </option>
+    <option name="outputFromStdout" value="true" />
+    <option name="passParentEnvs" value="true" />
+    <option name="program" value="/usr/local/bin/lessc" />
+    <!-- file:common/templates/skin/4otaku/assets/less/style.experience.less||file:common/templates/skin/4otaku/assets/less/style.bootstrap.less||file:common/templates/skin/4otaku/assets/less/style.experience_simple.less -->
+    <option name="scopeName" value="skin_4otaku" />
+    <option name="trackOnlyRoot" value="false" />
+    <option name="workingDir" value="$FileDir$/../css" />
+    <envs />
+  </TaskOptions>
+</TaskOptions>
+

@@ -52,6 +52,7 @@ $config['assets']['default']['css'] = array(
     '___path.skin.dir___/assets/css/style.bootstrap.min.css',
     //'___path.skin.dir___/assets/css/style.bootstrap.min.map',
     '___path.skin.dir___/assets/css/style.experience.min.css',
+    '___path.skin.dir___/assets/css/style.experience_simple.min.css',
     //'___path.skin.dir___/assets/css/style.experience.min.map',
     '___path.skin.dir___/assets/css/animate.min.css',
     '___path.skin.dir___/assets/css/hover.css',
@@ -70,7 +71,7 @@ $config['assets']['default']['css'] = array(
     '___path.skin.dir___/assets/css/custom.css',
 
     /* Theme */
-    '___path.skin.dir___/themes/___view.theme___/css/theme.___view.theme___.css',
+    '___path.skin.dir___/themes/___view.theme___/css/theme.___view.theme___.min.css',
     //'___path.skin.dir___/themes/___view.theme___/css/theme.___view.theme___.css.map',
     '___path.skin.dir___/themes/___view.theme___/css/custom.___view.theme___.css',
 );
