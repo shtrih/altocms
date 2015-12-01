@@ -47,8 +47,32 @@
 		ctx.imageSmoothingEnabled = false;
 		var width = imgWidth * options.value,
 			height = imgHeight * options.value;
-		ctx.drawImage(element, 0, 0, width, height);
-		ctx.drawImage(canv, 0, 0, width, height, 0, 0, canv.width, canv.height);
+
+		var value_draft = options.value * 2,
+			canv_draft = document.createElement('canvas'),
+			width_draft = imgWidth * value_draft,
+			height_draft = imgHeight * value_draft
+		;
+		canv_draft.width = width_draft;
+		canv_draft.height = height_draft;
+
+		var ctx_draft = canv_draft.getContext('2d');
+		ctx_draft.mozImageSmoothingEnabled = false;
+		ctx_draft.webkitImageSmoothingEnabled = false;
+		ctx_draft.imageSmoothingEnabled = false;
+
+
+		ctx_draft.drawImage(element, 0, 0, width, height);
+		ctx.drawImage(canv_draft, 0, 0, width, height, 0, 0, canv.width, canv.height);
+
+		ctx_draft.clearRect(0, 0, width_draft, height_draft);
+		ctx_draft.globalAlpha = 0.6;
+		ctx_draft.drawImage(element, 0, 0, width_draft, height_draft);
+		ctx_draft.globalAlpha = 1;
+
+		ctx.drawImage(canv_draft, 0, 0, width_draft, height_draft, 0, 0, canv.width, canv.height);
+		canv_draft.remove();
+
 		element.style.display = 'none';
 		elementParent.insertBefore(canv, element);
 		if(options.revealonclick !== false && options.revealonclick !== 'false') {
@@ -97,6 +121,6 @@
 			img[i].addEventListener('load', function() {
 				this.pixelate();
 			});
-		};
+		}
 	});
 })(window, typeof jQuery === 'undefined' ? null : jQuery);
