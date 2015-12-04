@@ -74,7 +74,6 @@ class PluginAudiofilepreview extends Plugin {
 
     // Инициализация плагина
     public function Init() {
-        // Old Audiorecordslight for LS
         $sTemplatesDir = self::GetDir(__CLASS__);
         $sPlayerSkin = Config::Get('plugin.audiofilepreview.player-skin');
         E::ModuleViewer()->AppendStyle($sTemplatesDir . "templates/frontend/vendors/jPlayer-2.9.2/dist/skin/"
