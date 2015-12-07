@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="--no-color --clean-css=&quot;--advanced&quot; --source-map=theme.less.map ../less/theme.less --source-map-basepath=/var/www/altocms/ --source-map-rootpath=/" />
+    <option name="arguments" value="--no-color --clean-css=&quot;--advanced&quot; --source-map=theme.dark.min.css.map ../less/theme.less --source-map-basepath=$ProjectFileDir$ --source-map-rootpath=/" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" value="Compiles .less files into .css files" />
     <option name="exitCodeBehavior" value="ERROR" />
@@ -24,11 +24,11 @@
     <!-- file:common/templates/skin/4otaku/themes/dark/less/* -->
     <option name="scopeName" value="theme" />
     <option name="trackOnlyRoot" value="true" />
-    <option name="workingDir" value="/var/www/altocms/common/templates/skin/4otaku/themes/dark/css" />
+    <option name="workingDir" value="$ProjectFileDir$/common/templates/skin/4otaku/themes/dark/css" />
     <envs />
   </TaskOptions>
   <TaskOptions>
-    <option name="arguments" value="--no-color ../less/$FileName$ --clean-css=&quot;--advanced&quot; --source-map=$FileName$.map --source-map-basepath=$ProjectFileDir$ --source-map-rootpath=/" />
+    <option name="arguments" value="--no-color ../less/$FileName$ --clean-css=&quot;--advanced&quot; --source-map=$FileNameWithoutExtension$.min.css.map --source-map-basepath=$ProjectFileDir$ --source-map-rootpath=/" />
     <option name="checkSyntaxErrors" value="true" />
     <option name="description" value="Compiles .less files into .css files" />
     <option name="exitCodeBehavior" value="ERROR" />
