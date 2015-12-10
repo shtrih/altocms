@@ -22,7 +22,7 @@ class PluginCustomtemplates extends Plugin {
             'tpls/topics/topic.type_nsfw_toggleable-edit.tpl' => '_tpls/topics/topic.type_nsfw_toggleable-edit.tpl',
             'tpls/topics/topic.type_nsfw_toggleable-list.tpl' => '_tpls/topics/topic.type_nsfw_toggleable-list.tpl',
             'tpls/topics/topic.type_nsfw_toggleable-show.tpl' => '_tpls/topics/topic.type_nsfw_toggleable-show.tpl',
-            'tpls/widgets/widget.stream_comment.tpl' => '_tpls/widgets/widget.stream_comment.tpl',
+            'widgets/widget.stream_comment.tpl' => '_widgets/widget.stream_comment.tpl',
         )
     );
 
@@ -71,4 +71,3 @@ class PluginCustomtemplates extends Plugin {
         //E::ModuleViewer()->AddMenu('blog',Plugin::GetTemplateDir(__CLASS__).'/menu.blog.tpl'); // например, задаем свой вид меню
     }
 }
-

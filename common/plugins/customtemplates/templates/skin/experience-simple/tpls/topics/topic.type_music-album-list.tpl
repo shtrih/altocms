@@ -27,13 +27,6 @@
                 {if $oTopic->getType() == 'link'}
                     &nbsp;<span class="fa fa-globe" title="{$aLang.topic_link}"></span>
                 {/if}
-
-                {if $bNsfw}
-                    &nbsp;<span class="label label-danger label-nsfw" title="Not Safe For Work">nsfw</span>
-                {/if}
-                {if $oTopic->getPublishIndex()}
-                    &nbsp;<span class="label label-success label-publish-index" title="">Одобрено</span>
-                {/if}
             </h2>
 
             <div class="topic-info">
@@ -59,6 +52,15 @@
                     <li class="topic-date-block">
                         <span class="topic-date">{$oTopic->getDate()|date_format:'d.m.Y'}</span>
                         <span class="topic-time">{$oTopic->getDate()|date_format:"H:i"}</span>
+                    </li>
+                    <li>
+                        &nbsp;&nbsp;&nbsp;
+                        {if $oNsfw}
+                            &nbsp;<span class="label label-danger label-nsfw" title="Not Safe For Work">nsfw</span>
+                        {/if}
+                        {if $oTopic->getPublishIndex()}
+                            &nbsp;<span class="label label-success label-publish-index" title="">Одобрено</span>
+                        {/if}
                     </li>
                 </ul>
 

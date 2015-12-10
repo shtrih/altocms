@@ -23,7 +23,6 @@
                 <li data-alto-role="popover"
                     data-api="user/{$oUser->getId()}/info"
                     class="user-block">
-                    <img src="{$oUser->getAvatarUrl('small')}" alt="{$oUser->getDisplayName()}"/>
                     <a class="userlogo link link-dual link-lead link-clear mal0" href="{$oUser->getProfileUrl()}">
                         {$oUser->getDisplayName()}
                     </a>
