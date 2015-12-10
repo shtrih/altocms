@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <id>mfu_permissions</id>
+    <name>
+        <lang name="default">MFU: Permissions</lang>
+    </name>
+    <author>
+        <lang name="default">shtrih</lang>
+    </author>
+    <homepage>http://4otaku.org</homepage>
+    <version>1.0.0</version>
+    <dirname>mfu-permissions</dirname>
+    <requires>
+        <alto>
+             <version>1.0.0</version>
+        </alto>
+        <system>
+            <php>5.4.0</php>
+        </system>
+        <plugins>
+            <!-- Атрибуты name, version и condition необязательны -->
+            <!-- Возможные значения атрибута condition соответствуют описанию параметра «operator» на странице http://php.net/manual/ru/function.version-compare.php  -->
+             <plugin name="Multiple File Upload" version="1.1.0" condition=">=">multiplefileupload</plugin>
+             <plugin name="Content Fields eXtended" version="1.1.1" condition=">=">contentfieldsx</plugin>
+        </plugins>
+    </requires>
+    <description>
+        <lang name="default">Description of plugin MfuPermissions</lang>
+        <lang name="russian">Описание плагина MfuPermissions</lang>
+    </description>
+</plugin>

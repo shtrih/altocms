@@ -24,7 +24,7 @@ $config = array(
     'disallowed-elements' => array(
         'profile'  => array(),
         'comments' => array(),
-        'multiplefileupload' => array(),
+//        'multiplefileupload' => array(),
     )
 );
 

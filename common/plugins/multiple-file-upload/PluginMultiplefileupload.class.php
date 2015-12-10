@@ -77,8 +77,6 @@ class PluginMultiplefileupload extends Plugin {
     }
 
     public function Init() {
-        Config::Set('router.page.multiplefileupload', 'PluginMultiplefileupload_ActionMultiplefileupload');
-
         $sPluginLibDir = Plugin::GetDir(__CLASS__) . 'templates/vendor/';
         $sTemplateDir = Plugin::GetTemplateDir(__CLASS__);
         $oModuleViewer = E::ModuleViewer();

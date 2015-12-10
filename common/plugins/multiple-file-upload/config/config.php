@@ -47,7 +47,7 @@ $aConfig = [
     /* Расширения файлов, которые можно прикреплять к топикам.
      * Закомментируйте настройку, чтобы использовать набор расширений, которые указаны в основном конфиге сайта (['module']['uploader']['files']['default'])
      */
-    'accept-file-types' => array('zip'),
+    // 'accept-file-types' => array('zip', 'rar'),
 
     /* Использовать ли XSendFile для отдачи файлов. Установите true напротив опции соответствующего сервера.
      * Подробнее http://wiki.nginx.org/NginxXSendfile или https://tn123.org/mod_xsendfile/
@@ -78,6 +78,9 @@ $aConfig[Config::KEY_ROOT]['module']['uploader']['files']['multiple-file-upload'
     Config::KEY_RESET => true,
     'file_extensions' => empty($aConfig['accept-file-types']) ? array() : $aConfig['accept-file-types'],
 ];
+
+$aConfig['action'] = 'multiplefileupload';
+$aConfig[Config::KEY_ROOT]['router']['page'][ $aConfig['action'] ] = 'PluginMultiplefileupload_ActionMultiplefileupload';
 
 Config::Set(
     'router.uri',

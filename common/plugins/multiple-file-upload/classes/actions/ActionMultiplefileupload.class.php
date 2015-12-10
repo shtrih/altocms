@@ -147,6 +147,11 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
             return parent::EventNotFound();
         }
 
+        $xHookResult = E::ModuleHook()->Run('multiplefileupload_get_before', array('iMresourceId' => $iMresourceId));
+        if ($xHookResult) {
+            return $xHookResult;
+        }
+
         $sFilePath = $oMresource->GetFile();
         if (file_exists($sFilePath)) {
             $iFileSize = filesize($sFilePath);
