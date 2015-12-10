@@ -1,10 +1,7 @@
 <?php
 
-/**
- * Запрещаем напрямую через браузер обращение к этому файлу.
- */
 if (!class_exists('Plugin')) {
-    die('Hacking attemp!');
+    die('Hacking attempt!');
 }
 
 class PluginCustomtemplates extends Plugin {
@@ -25,6 +22,7 @@ class PluginCustomtemplates extends Plugin {
             'tpls/topics/topic.type_nsfw_toggleable-edit.tpl' => '_tpls/topics/topic.type_nsfw_toggleable-edit.tpl',
             'tpls/topics/topic.type_nsfw_toggleable-list.tpl' => '_tpls/topics/topic.type_nsfw_toggleable-list.tpl',
             'tpls/topics/topic.type_nsfw_toggleable-show.tpl' => '_tpls/topics/topic.type_nsfw_toggleable-show.tpl',
+            'tpls/widgets/widget.stream_comment.tpl' => '_tpls/widgets/widget.stream_comment.tpl',
         )
     );
 
@@ -56,26 +54,14 @@ class PluginCustomtemplates extends Plugin {
         */
     );
 
-    // Активация плагина
     public function Activate() {
-        /*
-        if (!$this->isTableExists('prefix_tablename')) {
-            $this->ExportSQL(dirname(__FILE__).'/install.sql'); // Если нам надо изменить БД, делаем это здесь.
-        }
-        */
         return true;
     }
 
-    // Деактивация плагина
     public function Deactivate(){
-        /*
-        $this->ExportSQL(dirname(__FILE__).'/deinstall.sql'); // Выполнить деактивационный sql, если надо.
-        */
         return true;
     }
 
-
-    // Инициализация плагина
     public function Init() {
         $sTemplateDir = Plugin::GetTemplateDir(__CLASS__);
         E::ModuleViewer()->AppendStyle($sTemplateDir . "assets/css/styles.css");

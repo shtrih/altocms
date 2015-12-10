@@ -191,18 +191,17 @@
 
                     </div>
 
-
-                    <!-- Соцсети и счетчики -->
-                    <div id="footer-other" class="col-xs-8">
-                        <ul class="social-icons pull-right">
-                            <li><a class="link link-dark link-lead link-clear" href="#"><i class="fa fa-facebook-square"></i></a></li>
-                            <li><a class="link link-dark link-lead link-clear" href="#"><i class="fa fa-instagram"></i></a></li>
-                            <li><a class="link link-dark link-lead link-clear" href="#"><i class="fa fa-github-alt"></i></a></li>
-                            <li><a class="link link-dark link-lead link-clear" href="#"><i class="fa fa-vk"></i></a></li>
-                            <li><a class="link link-dark link-lead link-clear" href="#"><i class="fa fa-skype"></i></a></li>
-                        </ul>
+                    {*<!-- Соцсети и счетчики -->*}
+                    {*<div id="footer-other" class="col-xs-8">*}
+                        {*<ul class="social-icons pull-right">*}
+                            {*<li><a class="link link-dark link-lead link-clear" href="#"><i class="fa fa-facebook-square"></i></a></li>*}
+                            {*<li><a class="link link-dark link-lead link-clear" href="#"><i class="fa fa-instagram"></i></a></li>*}
+                            {*<li><a class="link link-dark link-lead link-clear" href="#"><i class="fa fa-github-alt"></i></a></li>*}
+                            {*<li><a class="link link-dark link-lead link-clear" href="#"><i class="fa fa-vk"></i></a></li>*}
+                            {*<li><a class="link link-dark link-lead link-clear" href="#"><i class="fa fa-skype"></i></a></li>*}
+                        {*</ul>*}
                         {*<img src="{asset file="images/counter.png" theme=true}" alt="counter" class="pull-right counter"/>*}
-                    </div>
+                    {*</div>*}
 
                 </div>
 

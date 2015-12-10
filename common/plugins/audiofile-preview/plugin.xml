@@ -21,7 +21,7 @@
             <!-- Атрибуты name, version и condition необязательны -->
             <!-- Возможные значения атрибута condition соответствуют описанию параметра «operator» на странице http://php.net/manual/ru/function.version-compare.php  -->
             <!-- <plugin name="plugin_name" version="1.0.0" condition="eq">plugin_id</plugin> -->
-            <plugin name="Multiple File Upload">multiplefileupload</plugin>
+            <plugin name="Multiple File Upload" version="1.0.0" condition=">=">multiplefileupload</plugin>
         </plugins>
     </requires>
     <description>
