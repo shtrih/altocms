@@ -1,0 +1,34 @@
+#logo {
+	position: relative;
+	height: 58px;
+	width: 102px;
+	overflow: hidden;
+	padding: 0;
+}
+
+#logo > div {
+	width: 100%;
+	height: 100%;
+	display: inline-block;
+	position: absolute;
+}
+
+#logo .four {
+	text-indent: 0;
+	background: url(../images/logo/four.png) no-repeat center center;
+}
+
+#logo .portal {
+	display: none;
+	background: url(../images/logo/portal.png) no-repeat left bottom;
+}
+
+#logo .portal-mask {
+	display: none;
+	background: url(../images/logo/mask.png) no-repeat left 33px;
+}
+
+#logo .yukari {
+	top: 62px;
+	background: url(../images/logo/yukari.png) no-repeat center top;
+}

@@ -55,11 +55,11 @@
                     </li>
                     <li>
                         &nbsp;&nbsp;&nbsp;
-                        {if $bNsfw}
-                            &nbsp;<span class="label label-danger label-nsfw" title="Not Safe For Work">nsfw</span>
-                        {/if}
                         {if $oTopic->getPublishIndex()}
                             &nbsp;<span class="label label-success label-publish-index" title="">Одобрено</span>
+                        {/if}
+                        {if $bNsfw}
+                            &nbsp;<span class="label label-danger label-nsfw" title="Not Safe For Work">nsfw</span>
                         {/if}
                     </li>
                 </ul>

@@ -15,6 +15,7 @@
  */
 
 $config['assets']['default']['js'] = Config::Get('assets.default.js');
+$config['assets']['default']['js'][] = "___path.skin.dir___/assets/js/logo.js";
 //$config['assets']['default']['js']["___path.skin.dir___/assets/js/experience/dropdown.min.js"] = array('name' => 'bootstrap');
 //$config['assets']['default']['js'][] = "___path.skin.dir___/assets/js/experience/menu.min.js";
 //$config['assets']['default']['js'][] = "___path.skin.dir___/assets/js/experience/menu-l2.min.js";
@@ -54,6 +55,7 @@ $config['assets']['default']['css'] = array(
     '___path.skin.dir___/assets/css/style.experience.min.css',
     '___path.skin.dir___/assets/css/style.experience_simple.min.css',
     //'___path.skin.dir___/assets/css/style.experience.min.map',
+    '___path.skin.dir___/assets/css/logo.css',
     '___path.skin.dir___/assets/css/animate.min.css',
     '___path.skin.dir___/assets/css/hover.css',
     '___path.frontend.dir___/libs/vendor/prettyphoto/css/prettyphoto.css',

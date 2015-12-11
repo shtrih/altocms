@@ -16,19 +16,27 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <h1>
-            <a class="logo navbar-brand" href="{Config::Get('path.root.url')}">
-                {if Config::Get('view.header.logo.file')}
-                    {$sFile = Config::Get('view.header.logo.file')}
-                    <img src="{asset file="images/$sFile" theme=true}" alt="{Config::Get('view.name')}" class="logo-img" />
-                {elseif Config::Get('view.header.logo.url')}
-                    <img src="{Config::Get('view.header.logo.url')}" alt="{Config::Get('view.name')}" class="logo-img" />
-                {/if}
-                {if Config::Get('view.header.logo.name')}
-                    <span class="logo-name" >{Config::Get('view.header.logo.name')}</span>
-                {/if}
-            </a>
-            </h1>
+            {*<h1>*}
+            {*<a class="logo navbar-brand" href="{Config::Get('path.root.url')}">*}
+                {*{if Config::Get('view.header.logo.file')}*}
+                    {*{$sFile = Config::Get('view.header.logo.file')}*}
+                    {*<img src="{asset file="images/$sFile" theme=true}" alt="{Config::Get('view.name')}" class="logo-img" />*}
+                {*{elseif Config::Get('view.header.logo.url')}*}
+                    {*<img src="{Config::Get('view.header.logo.url')}" alt="{Config::Get('view.name')}" class="logo-img" />*}
+                {*{/if}*}
+                {*{if Config::Get('view.header.logo.name')}*}
+                    {*<span class="logo-name" ></span>*}
+                {*{/if}*}
+            {*</a>*}
+            {*</h1>*}
+            <hgroup class="site-info">
+                <a class="logo navbar-brand brand" id="logo" href="{Config::Get('path.root.url')}" title="{Config::Get('view.header.logo.name')}">
+                    <div class="portal"></div>
+                    <div class="four"></div>
+                    <div class="yukari"></div>
+                    <div class="portal-mask"></div>
+                </a>
+            </hgroup>
         </div>
 
 

@@ -120,7 +120,8 @@
         {include file='modals/modal.empty.tpl'}
 
         {* Строим менюшки *}
-        {include file='commons/common.header_nav_pages.tpl'}
+        {$tplDir = Plugin::GetTemplateDir('customtemplates')}
+        {include file="`$tplDir`tpls/commons/common.header_nav_pages.tpl"}
         {include file='commons/common.header_nav.tpl'}
         {if Config::Get('view.header.banner')}
             {wgroup group="topbanner"}
@@ -203,6 +204,9 @@
                         {*<img src="{asset file="images/counter.png" theme=true}" alt="counter" class="pull-right counter"/>*}
                     {*</div>*}
 
+                    <div id="footer-other" class="col-xs-8">
+                        <div class="mascot"><img src="{asset file="assets/images/umbrella.png"}" width="143" height="120" /></div>
+                    </div>
                 </div>
 
             </div>
@@ -218,7 +222,7 @@
                 </div>
 
                 <div class="right-copyright pull-right">
-                    <span>Desight by</span>
+                    <span>Design by</span>
                     <a href="http://creatime.org" class="link link-blue link-lead link-clear" title="design studio creatime.org">
                         <img src="{asset file="images/creatime-logo.png" theme=true}" alt="студия дизайна creatime.org">
                     </a>
