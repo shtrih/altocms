@@ -57,7 +57,7 @@ $aConfig = [
      * Таким образом, для nginx, например, нужно в настройки хоста прописать правило:
      *      location /common/plugins/multiple-file-uploads/ {
      *          internal;
-     *          root /var/www/altocms; # путь к папке сайта
+     *          alias /var/www/altocms/; # путь к папке сайта
      *      }
      */
     // Если установлен и настроен мод mod_xsendfile для Apache
