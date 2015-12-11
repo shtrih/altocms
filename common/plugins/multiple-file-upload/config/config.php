@@ -52,6 +52,13 @@ $aConfig = [
     /* Использовать ли XSendFile для отдачи файлов. Установите true напротив опции соответствующего сервера.
      * Подробнее http://wiki.nginx.org/NginxXSendfile или https://tn123.org/mod_xsendfile/
      * (!) Прежде чем включать настройку, нужно сначала настроить сервер. Как это сделать, см. приведенные выше ссылки, инструкции в интернете.
+     *
+     * В заголовок XSendFile передаётся путь: /common/plugins/multiple-file-uploads/uploads/files/00/00/01/2015/08/12/0u73b903ac-78531e29-486b6694.zip
+     * Таким образом, для nginx, например, нужно в настройки хоста прописать правило:
+     *      location /common/plugins/multiple-file-uploads/ {
+     *          internal;
+     *          root /var/www/altocms; # путь к папке сайта
+     *      }
      */
     // Если установлен и настроен мод mod_xsendfile для Apache
     'apache2-xsendfile' => false,

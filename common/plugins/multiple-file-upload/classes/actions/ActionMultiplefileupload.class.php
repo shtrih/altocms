@@ -181,10 +181,13 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
                 header('Content-Disposition: attachment; filename="' . $sFileName . '"');
             }
 
+            // /common/plugins/mfu/uploads/…
+            $sFilePathXSend = '/' . str_replace(Config::Get('path.root.dir'), '', Plugin::GetPath(__CLASS__) . $sFilePath);
+
             // Apache XSendFile
             // https://tn123.org/mod_xsendfile/
             if (in_array('mod_xsendfile', apache_get_modules()) && Config::Get('plugin.multiplefileupload.apache2-xsendfile')) {
-                header('X-Sendfile: ' . $sFilePath);
+                header('X-Sendfile: ' . $sFilePathXSend);
                 header("X-mfu: sendfile");
             }
             // Nginx as frontend server
@@ -196,7 +199,7 @@ class PluginMultiplefileupload_ActionMultiplefileupload extends Action {
                 header("Accept-Ranges: bytes");
                 header("Content-Range: bytes 0-");
                 */
-                header("X-Accel-Redirect: " . $sFilePath);
+                header("X-Accel-Redirect: " . $sFilePathXSend);
             }
             else {
                 // TODO: Поддержка заголовка Range
