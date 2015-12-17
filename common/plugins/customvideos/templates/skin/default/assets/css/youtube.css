@@ -1,7 +1,7 @@
 /* youtube thumbnails */
 [data-youtube-id] {
-	max-width: 560px;
-	height: 315px;
+	/*max-width: 560px;*/
+	height: 400px;
 	cursor: pointer;
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -15,6 +15,7 @@ iframe {
 	/*background-color: #000;*/
 	margin: 5px auto;
 	display: block;
+	background-size: contain;
 }
 iframe[src=""] {
 	display: none;
