@@ -326,6 +326,10 @@ $config['data']['topics'] = array(
         ),
 
         'newall'    => array(
+            'text'    => array(
+                '{{blog_menu_all_new}}',
+                'new_topics_count' => array('red'),
+            ),
             'options' => array(
                 'class'      => 'menu-topics-all',
                 'link_title' => '{{blog_menu_top_period_24h}}',
