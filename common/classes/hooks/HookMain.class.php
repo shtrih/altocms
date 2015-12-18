@@ -35,7 +35,7 @@ class HookMain extends Hook {
         $this->AddHook('template_form_add_content', 'insertFields', __CLASS__, -1);
 
         // * Показывавем поля при просмотре топика
-        $this->AddHook('template_topic_content_end', 'showFields', __CLASS__, 150);
+//        $this->AddHook('template_topic_content_end', 'showFields', __CLASS__, 150);
         $this->AddHook('template_topic_preview_content_end', 'showFields', __CLASS__, 150);
 
         // * Упрощенный вывод JS в футере, для проблемных файлов
