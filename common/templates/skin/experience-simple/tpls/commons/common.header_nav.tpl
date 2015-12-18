@@ -26,5 +26,12 @@
                 </li>
             </ul>
         </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="#" data-toggle="modal" data-target="#modal-write" class="btn">
+                    <span class="fa fa-pencil"></span> Написать
+                </a>
+            </li>
+        </ul>
     </div>
 </nav>

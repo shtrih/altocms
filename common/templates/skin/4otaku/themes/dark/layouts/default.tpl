@@ -205,7 +205,7 @@
                     {*</div>*}
 
                     <div id="footer-other" class="col-xs-8">
-                        <div class="mascot"><img src="{asset file="assets/images/umbrella.png"}" width="143" height="120" /></div>
+                        <div class="mascot pull-right"><img src="{asset file="assets/images/umbrella.png"}" width="143" height="120" /></div>
                     </div>
                 </div>
 
@@ -223,7 +223,7 @@
 
                 <div class="right-copyright pull-right">
                     <span>Design by</span>
-                    <a href="http://creatime.org" class="link link-blue link-lead link-clear" title="design studio creatime.org">
+                    <a href="http://creatime.org" class="link link-blue link-lead link-clear" title="design studio creatime.org" target="_blank">
                         <img src="{asset file="images/creatime-logo.png" theme=true}" alt="студия дизайна creatime.org">
                     </a>
                 </div>

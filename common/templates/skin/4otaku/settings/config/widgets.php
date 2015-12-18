@@ -24,6 +24,11 @@ $config['widgets']['toolbar_search'] = array(
     'wgroup'   => 'toolbar',
     'priority' => 10000,
 );
+$config['widgets']['toolbar_search_right'] = array(
+    'name'     => 'toolbar_search_right.tpl',
+    'wgroup'   => 'right',
+    'priority' => 10000,
+);
 
 $config['widgets']['toolbar_login'] = array(
     'name'     => 'toolbar_login.tpl',

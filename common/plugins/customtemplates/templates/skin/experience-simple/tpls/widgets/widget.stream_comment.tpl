@@ -24,7 +24,7 @@
                     data-api="user/{$oUser->getId()}/info"
                     class="user-block">
                     <a class="userlogo link link-dual link-lead link-clear mal0" href="{$oUser->getProfileUrl()}">
-                        {$oUser->getDisplayName()}
+                        <i class="fa fa-user"></i>&nbsp;{$oUser->getDisplayName()}
                     </a>
                 </li>
                 <li class="date-block">

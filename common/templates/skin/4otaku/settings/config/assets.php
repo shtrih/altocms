@@ -53,7 +53,7 @@ $config['assets']['default']['css'] = array(
     '___path.skin.dir___/assets/css/style.bootstrap.min.css',
     //'___path.skin.dir___/assets/css/style.bootstrap.min.map',
     '___path.skin.dir___/assets/css/style.experience.min.css',
-    '___path.skin.dir___/assets/css/style.experience_simple.min.css',
+//    '___path.skin.dir___/assets/css/style.experience_simple.min.css',
     //'___path.skin.dir___/assets/css/style.experience.min.map',
     '___path.skin.dir___/assets/css/logo.css',
     '___path.skin.dir___/assets/css/animate.min.css',
