@@ -29,7 +29,7 @@
         <ul class="nav navbar-nav navbar-right">
             <li>
                 <a href="#" data-toggle="modal" data-target="#modal-write" class="btn">
-                    <span class="fa fa-pencil"></span> Написать
+                    <span class="fa fa-pencil"></span>&nbsp;{$aLang.block_create}
                 </a>
             </li>
         </ul>
