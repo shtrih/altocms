@@ -167,6 +167,7 @@
                     </li>
                 {/if}
 
+                {if $oTopic->getTextShort() != $oTopic->getText()}
                 <li class="pull-right read-more">
                     <a href="{$oTopic->getUrl()}#cut" title="{$aLang.topic_read_more}" class="btn btn-gray hidden-xxs">
                         {if $oTopic->getCutText()}
@@ -179,6 +180,7 @@
                         <i class="fa fa-chevron-right"></i>
                     </a>
                 </li>
+                {/if}
 
                 {if !$bPreview}
                     <li class="pull-right topic-controls">
