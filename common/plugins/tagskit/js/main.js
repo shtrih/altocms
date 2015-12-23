@@ -12,10 +12,14 @@ ls.plugin.tagskit = (function ($) {
 		var tags=$form.find('.js-tag-search').val();
 		var how=$('.js-tagskit-search').find(':radio[name=tk_how]').filter(":checked").val();
 		var where=$('.js-tagskit-search').find(':radio[name=tk_where]').filter(":checked").val();
+		var blog_id=$('.js-tagskit-search').find(':checkbox[name=blog_id]').filter(":checked").val();
 		/**
 		 * Формируем URL для поиска тегов и открываем его
 		 */
 		var url=aRouter.tag+'?tags='+encodeURIComponent(tags)+'&tk_how='+how+'&tk_where='+where;
+		if (blog_id) {
+			url=url+'&blog_id='+blog_id;
+		}
 		window.location.href=url;
 		return false;
 	};
@@ -28,8 +32,7 @@ ls.plugin.tagskit = (function ($) {
 		$(".autocomplete-tags").autocomplete("destroy");
 		ls.autocomplete.add($(".autocomplete-tags"), aRouter['ajax']+'autocompleter/tag/', true);
 
-		$(".js-tag-search-form").unbind("submit");
-		$(".js-tag-search-form").submit(function(){
+		$(".js-tag-search-form").unbind("submit").submit(function(){
 			return ls.plugin.tagskit.search(this);
 		});
 	};
@@ -38,6 +41,13 @@ ls.plugin.tagskit = (function ($) {
 		$('#modal_tk_white_list').jqm();
 		$('input[name=topic_tags]').autocomplete("destroy").bind('focus',function(){
 			this.showWindowWhite();
+		}.bind(this));
+	};
+
+	this.initFormSearchCategory = function() {
+		$('#modal_tk_search_category').jqm();
+		$('.js-tagskit-tag-search').autocomplete("destroy").bind('focus',function(){
+			this.showWindowSearchCategory();
 		}.bind(this));
 	};
 
@@ -72,6 +82,11 @@ ls.plugin.tagskit = (function ($) {
 		$('#modal_tk_white_list').jqmShow();
 	};
 
+	this.showWindowSearchCategory = function() {
+		this.highlightTags('.js-tagskit-tag-search');
+		$('#modal_tk_search_category').jqmShow();
+	};
+
 	this.clickWhiteTag = function(sTag,obj) {
 		obj=$(obj);
 		var terms = $('#topic_tags').val().split( /,\s*/ );
@@ -93,19 +108,67 @@ ls.plugin.tagskit = (function ($) {
 		$('#topic_tags').val(terms.join(", "));
 	};
 
+	this.clickSearchCategoryTag = function(obj) {
+		obj=$(obj);
+		obj.toggleClass('active');
+
+		var sTag=obj.html();
+
+		if ($('.js-tagskit-tag-search').length) {
+			var terms = $('.js-tagskit-tag-search').val().split( /,\s*/ );
+			/**
+			 * Если такой тег уже есть, то удаляем его, иначе добавляем
+			 */
+			if (this.in_array(sTag,terms)) {
+				terms=this.array_diff(terms,[sTag]);
+				obj.removeClass('active');
+			} else {
+				if (terms.length==1 && !terms[0]) {
+					terms=[sTag];
+				} else {
+					terms.push(sTag);
+				}
+				obj.addClass('active');
+			}
+			this.array_unique(terms);
+			$('.js-tagskit-tag-search').val(terms.join(", "));
+		}
+	};
+
+	this.submitSearchCategoryTags = function(blogId) {
+		var tags=[];
+		$('#modal_tk_search_category .tk-tags-white.active').each(function(k,v){
+			tags.push($(v).html());
+		});
+
+		if ($('.js-tagskit-tag-search').length) {
+			this.searchButton();
+		} else {
+			var url=aRouter.tag+'?tags='+encodeURIComponent(tags.join(','))+'&tk_how=and';
+			if (blogId) {
+				url=url+'&blog_id='+blogId;
+			}
+			window.location.href=url;
+		}
+	};
+
 	this.clearTags = function() {
 		$('#topic_tags').val('');
 		this.highlightTags();
 	};
 
-	this.highlightTags = function() {
+	this.highlightTags = function(selecter) {
+		selecter=selecter || '#topic_tags';
 		$this=this;
-		var terms = $('#topic_tags').val().split( /,\s*/ );
-		$('#tk-white-tags-area .tk-tags-white').removeClass('active').each(function(k,v){
-			if ($this.in_array($(v).text(),terms)) {
-				$(this).addClass('active');
-			}
-		});
+
+		if ($(selecter).length) {
+			var terms = $(selecter).val().split(/,\s*/);
+			$('#tk-white-tags-area .tk-tags-white').removeClass('active').each(function (k, v) {
+				if ($this.in_array($(v).text(), terms)) {
+					$(this).addClass('active');
+				}
+			});
+		}
 	};
 
 	this.loadPageWhiteTag = function(iPage) {

@@ -30,10 +30,17 @@ class PluginTagskit_HookMain extends Hook
     public function RegisterHook() {
         $this->AddHook('template_tagskit_after_tag_form_search', 'AfterTagFormSearch');
         if (Config::Get('plugin.tagskit.type_tags_create') == 'white') {
-            $this->AddHook('template_add_topic_topic_end', 'AddTopicEnd');
-            $this->AddHook('template_add_topic_link_end', 'AddTopicEnd');
-            $this->AddHook('template_add_topic_photoset_end', 'AddTopicEnd');
-            $this->AddHook('template_add_topic_question_end', 'AddTopicEnd');
+            $this->AddHook('template_add_topic_topic_end', 'AddTopicEndWhite');
+            $this->AddHook('template_add_topic_link_end', 'AddTopicEndWhite');
+            $this->AddHook('template_add_topic_photoset_end', 'AddTopicEndWhite');
+            $this->AddHook('template_add_topic_question_end', 'AddTopicEndWhite');
+        }
+        if (Config::Get('plugin.tagskit.type_tags_create') == 'white_category') {
+            $this->AddHook('template_tagskit_after_tag_form_search', 'AfterTagFormSearchWindow', __CLASS__, -100);
+            $this->AddHook('template_add_topic_topic_end', 'AddTopicEndWhiteCategory');
+            $this->AddHook('template_add_topic_link_end', 'AddTopicEndWhiteCategory');
+            $this->AddHook('template_add_topic_photoset_end', 'AddTopicEndWhiteCategory');
+            $this->AddHook('template_add_topic_question_end', 'AddTopicEndWhiteCategory');
         }
     }
 
@@ -46,12 +53,20 @@ class PluginTagskit_HookMain extends Hook
         return $this->Viewer_Fetch(Plugin::GetTemplatePath(__CLASS__) . 'inject.tags.search.options.tpl');
     }
 
+    public function AfterTagFormSearchWindow()
+    {
+        $aResult = $this->PluginTagskit_Main_GetTopicTagsByTagsCategory(Config::Get('plugin.tagskit.tags_list_white_category'), Config::Get('plugin.tagskit.white_list_sort'));
+
+        $this->Viewer_Assign('aTagsTkWhiteCategory', $aResult);
+        return $this->Viewer_Fetch(Plugin::GetTemplatePath(__CLASS__) . 'window.search_category.tpl');
+    }
+
     /**
      * Добавляет модальное окно со списком белых тегов
      *
      * @return string
      */
-    public function AddTopicEnd() {
+    public function AddTopicEndWhite() {
         $aResult = $this->PluginTagskit_Main_GetTopicTagsByTags(
             Config::Get('plugin.tagskit.tags_list_white'),
             Config::Get('plugin.tagskit.white_list_sort'),
@@ -70,5 +85,18 @@ class PluginTagskit_HookMain extends Hook
         $this->Viewer_Assign('aPagingTagsTkWhite', $aPaging);
 
         return $this->Viewer_Fetch(Plugin::GetTemplatePath(__CLASS__) . 'inject.tags.form.white.tpl');
+    }
+
+    /**
+     * Добавляет модальное окно со списком белых тегов по категориям
+     *
+     * @return string
+     */
+    public function AddTopicEndWhiteCategory()
+    {
+        $aResult = $this->PluginTagskit_Main_GetTopicTagsByTagsCategory(Config::Get('plugin.tagskit.tags_list_white_category'), Config::Get('plugin.tagskit.white_list_sort'));
+
+        $this->Viewer_Assign('aTagsTkWhiteCategory', $aResult);
+        return $this->Viewer_Fetch(Plugin::GetTemplatePath(__CLASS__) . 'inject.tags.form.white_category.tpl');
     }
 }

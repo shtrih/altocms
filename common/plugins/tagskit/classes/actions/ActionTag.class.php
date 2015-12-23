@@ -43,6 +43,12 @@ class PluginTagskit_ActionTag extends PluginTagskit_Inherit_ActionTag
             'how'              => $sHow,
             'where'            => $sWhere,
         );
+
+        if ($iBlogId = getRequestStr('blog_id') and $oBlog = $this->Blog_GetBlogById($iBlogId) and $oBlog->getType() != 'personal') {
+            $aParams['blog_id'] = $iBlogId;
+            $this->Viewer_Assign('oBlog', $oBlog);
+        }
+
         $aResult = $this->PluginTagskit_Main_GetTopicsByTags(
             $aTags,
             $aParams,

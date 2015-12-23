@@ -1,4 +1,9 @@
 <div class="js-tagskit-search">
+	{if $oBlog}
+		<div style="margin-bottom: 10px;">
+			<label><input type="checkbox" name="blog_id" value="{$oBlog->getId()}" checked> &mdash; {$aLang.plugin.tagskit.tags_search_category.in_blog} &laquo;{$oBlog->getTitle()|escape}&raquo;</label>
+		</div>
+	{/if}
 	<fieldset>
         <legend>{$aLang.plugin.tagskit.tags_search.how.title}</legend>
         <label><input type="radio" name="tk_how" value="or" {if $_aRequest.tk_how=='or' or !$_aRequest.tk_how}checked="checked" {/if}> &mdash; {$aLang.plugin.tagskit.tags_search.how.or}</label>

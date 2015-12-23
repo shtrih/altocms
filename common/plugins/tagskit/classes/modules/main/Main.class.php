@@ -35,10 +35,14 @@ class PluginTagskit_ModuleMain extends ModuleORM
 
         $sWho   = isset($aParams['how']) ? $aParams['how'] : 'or';
         $sWhere = isset($aParams['where']) ? $aParams['where'] : 'all';
+        $aBlog = isset($aParams['blog_id']) ? $aParams['blog_id'] : null;
 
         $s = serialize(array($aCloseBlogs, $aTag, $iPage, $iPerPage));
         //if (false === ($data = $this->Cache_Get("topic_by_tags_{$s}"))) {
-        $data = array('collection' => $this->oMapper->GetTopicsByTags($aTag, $sWho, $sWhere, $aCloseBlogs, $iCount, $iPage, $iPerPage), 'count' => $iCount);
+        $data = array(
+            'collection' => $this->oMapper->GetTopicsByTags($aTag, $sWho, $sWhere, $aBlog, $aCloseBlogs, $iCount, $iPage, $iPerPage),
+            'count'      => $iCount
+        );
         $this->Cache_Set($data, "topic_by_tags_{$s}", array('topic_update', 'topic_new'), 60 * 60 * 24 * 2);
         //}
         $data['collection'] = $this->Topic_GetTopicsAdditionalData($data['collection']);
@@ -112,6 +116,18 @@ class PluginTagskit_ModuleMain extends ModuleORM
          */
 
         return array('collection' => $this->GetPageFromArray($aTags, $iPage, $iPerPage), 'count' => count($aTags));
+    }
+
+    public function GetTopicTagsByTagsCategory($aTagsCategory, $sOrder = 'text') {
+        if (!$aTagsCategory) {
+            return array();
+        }
+        foreach ($aTagsCategory as $k => $aCategory) {
+            $aResult                   = $this->GetTopicTagsByTags($aCategory['tags'], $sOrder, 1, 500);
+            $aTagsCategory[$k]['tags'] = $aResult['collection'];
+        }
+
+        return $aTagsCategory;
     }
 
     /**

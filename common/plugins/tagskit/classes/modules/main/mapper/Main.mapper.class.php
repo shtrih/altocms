@@ -28,6 +28,7 @@ class PluginTagskit_ModuleMain_MapperMain extends Mapper
      * @param $aTag
      * @param $sWho
      * @param $sWhere
+     * @param $aBlog
      * @param $aExcludeBlog
      * @param $iCount
      * @param $iCurrPage
@@ -35,9 +36,13 @@ class PluginTagskit_ModuleMain_MapperMain extends Mapper
      *
      * @return array
      */
-    public function GetTopicsByTags($aTag, $sWho, $sWhere, $aExcludeBlog, &$iCount, $iCurrPage, $iPerPage) {
+    public function GetTopicsByTags($aTag, $sWho, $sWhere, $aBlog, $aExcludeBlog, &$iCount, $iCurrPage, $iPerPage) {
         if (!is_array($aTag)) {
             $aTag = array($aTag);
+        }
+
+        if ($aBlog and !is_array($aBlog)) {
+            $aBlog = array($aBlog);
         }
 
         if (!$aTag) {
@@ -104,6 +109,7 @@ class PluginTagskit_ModuleMain_MapperMain extends Mapper
             WHERE
                 1 = 1
                 { {$sFilterTags} }
+                { AND t.blog_id IN (?a) }
                 { AND t.blog_id NOT IN (?a) }
                 AND t.blog_id = b.blog_id
                 { AND b.blog_type IN (?a) }
@@ -116,6 +122,7 @@ class PluginTagskit_ModuleMain_MapperMain extends Mapper
             $iCount,
             $sql,
             $aFilterTags ? $aFilterTags : DBSIMPLE_SKIP,
+            (is_array($aBlog) && count($aBlog)) ? $aBlog : DBSIMPLE_SKIP,
             (is_array($aExcludeBlog) && count($aExcludeBlog)) ? $aExcludeBlog : DBSIMPLE_SKIP,
             $aBlogTypes ? $aBlogTypes : DBSIMPLE_SKIP,
             $aBlogTypesExlude ? $aBlogTypesExlude : DBSIMPLE_SKIP,
@@ -145,7 +152,7 @@ class PluginTagskit_ModuleMain_MapperMain extends Mapper
         if (!$aTags) {
             return array();
         }
-        $sql       = "SELECT
+        $sql = "SELECT
 			topic_tag_text,
 			count(topic_tag_text)	as count
 			FROM
@@ -193,8 +200,7 @@ class PluginTagskit_ModuleMain_MapperMain extends Mapper
         /**
          * Получаем основной тег
          */
-        $sql = "
-            SELECT
+        $sql = "SELECT
                 main_text,
                 text
             FROM
@@ -215,8 +221,7 @@ class PluginTagskit_ModuleMain_MapperMain extends Mapper
         /**
          * Получаем все дочерние теги
          */
-        $sql = "
-            SELECT
+        $sql = "SELECT
                 text,
                 main_text
             FROM

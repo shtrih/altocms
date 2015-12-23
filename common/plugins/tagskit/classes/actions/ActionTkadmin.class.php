@@ -8,7 +8,7 @@ class PluginTagskit_ActionTkadmin extends ActionPlugin
      */
     public function Init() {
         $this->oUserCurrent = $this->User_GetUserCurrent();
-        if (!$this->oUserCurrent || !($this->oUserCurrent->isAdministrator() || $this->oUserCurrent->isModerator())) {
+        if (!$this->oUserCurrent or !($this->oUserCurrent->isAdministrator() || $this->oUserCurrent->isModerator())) {
             return $this->EventNotFound();
         }
 

@@ -8,7 +8,7 @@
 	</author>
 	<homepage>https://catalog.livestreetcms.com/addon/view/423/</homepage>
 	<settings>{tk_admin}</settings>
-	<version>1.0.2</version>
+	<version>1.1.0</version>
 	<requires>
 		<livestreet>1.0</livestreet>
 		<plugins>

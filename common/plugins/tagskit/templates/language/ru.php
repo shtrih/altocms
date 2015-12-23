@@ -52,6 +52,12 @@ return array(
         ),
         'submit' => 'Найти',
     ),
-    'close'                 => 'Закрыть',
-    'save'                  => 'Сохранить',
+    'tags_search_category' => array(
+        'title'   => 'Поиск по тегам',
+        'submit'  => 'Найти',
+        'in_blog' => 'Искать только в блоге ',
+    ),
+
+    'close' => 'Закрыть',
+    'save'  => 'Сохранить',
 );

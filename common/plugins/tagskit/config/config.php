@@ -9,9 +9,10 @@ $config['search_tags_max'] = 4;
  *
  * standart - стандартный режим LS, пользователь может вводить любые теги
  * white - белый список, пользователь может вводить теги только из белого списка
+ * white_category - белый список c разделением по категориям, пользователь может вводить теги только из белого списка
  * black - черный список, пользователь может вводить любые теги, кроме тех, что находятся в черном списке
  */
-$config['type_tags_create'] = 'standart';
+$config['type_tags_create'] = 'white_category';
 /**
  * Белый список тегов
  */
@@ -20,6 +21,23 @@ $config['tags_list_white'] = array(
     'google',
     'ios',
     'android'
+);
+/**
+ * Белый список тегов по категроиям
+ */
+$config['tags_list_white_category'] = array(
+    array(
+        'title' => 'Обивка',
+        'tags'  => array(
+            'Ткань', 'Натуральная кожа'
+        ),
+    ),
+    array(
+        'title' => 'Механизм трансформации',
+        'tags'  => array(
+            'Высоковыкатной', 'Седафлекс'
+        ),
+    ),
 );
 /**
  * Сортировка белого списка тегов
@@ -44,6 +62,20 @@ $config['tags_list_black'] = array(
     'нах'
 );
 
+
+if ($config['type_tags_create'] == 'white_category') {
+
+    $config['$root$']['block']['tagskit_search_category'] = array(
+        'action' => array(
+            'index',
+            'blog' => array('{blog}'),
+        ),
+        'blocks' => array(
+            'right' => array('searchCategory' => array('priority' => 300, 'params' => array('plugin' => 'tagskit')))
+        ),
+        'clear'  => false,
+    );
+}
 
 /**
  * Системные настройки
