@@ -20,6 +20,6 @@
     </requires>
     <description>
         <lang name="default">It allows to create the "multiple-file-upload" fields for content types.</lang>
-        <lang name="russian">Позволяет в админке создавать поле «Множественная загрузка файлов» для типов контента.</lang>
+        <lang name="ru">Позволяет в админке создавать поле «Множественная загрузка файлов» для типов контента.</lang>
     </description>
 </plugin>
