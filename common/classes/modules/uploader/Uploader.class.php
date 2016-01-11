@@ -821,7 +821,7 @@ class ModuleUploader extends Module {
                     $xSize['h'] = $oImg->getHeight();
                 }
                 if (!isset($xSize['w']) && isset($xSize['h'])) {
-                    $xSize['h'] = $oImg->getWeight();
+                    $xSize['w'] = $oImg->getWidth();
                 }
                 if ((isset($xSize['w']) && isset($xSize['h'])) && !(isset($xSize['x1']) && isset($xSize['y1']))) {
                     $oImg = E::ModuleImg()->CropCenter($oImg, $xSize['w'], $xSize['h']);
@@ -1187,8 +1187,8 @@ class ModuleUploader extends Module {
      */
     public function GetTargetUrl($sTargetType, $iTargetId) {
 
-        if (mb_strpos($sTargetType, 'single-image-uploader') === 0 || $sTargetType = 'photoset' || $sTargetType = 'topic') {
-            /** @var $oTopic ModuleTopic_EntityTopic */
+        if (mb_strpos($sTargetType, 'single-image-uploader') === 0 || $sTargetType == 'photoset' || $sTargetType == 'topic') {
+            /** @var ModuleTopic_EntityTopic $oTopic */
             if (!$oTopic = E::ModuleTopic()->GetTopicById($iTargetId)) {
                 return '';
             }
