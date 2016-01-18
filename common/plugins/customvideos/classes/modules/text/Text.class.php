@@ -12,7 +12,7 @@ class PluginCustomvideos_ModuleText extends PluginCustomvideos_Inherit_ModuleTex
      */
     public function VideoParser($sText) {
 
-        $aConfig = E::ModuleUploader()->GetConfig('*', 'video');
+        $aConfig = E::ModuleUploader()->GetConfig('*', 'images.video');
         if (!empty($aConfig['transform']['max_width'])) {
             $iWidth = intval($aConfig['transform']['max_width']);
         } else {
