@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <id>markitup_video_upload</id>
+    <name>
+        <lang name="default">MarkItUp! Video Upload</lang>
+    </name>
+    <author>
+        <lang name="default">shtrih</lang>
+    </author>
+    <homepage>http://altocms.ru</homepage>
+    <version>1.0.0</version>
+    <dirname>markitup-video-upload</dirname>
+    <requires>
+        <alto>
+             <version>1.1.17</version>
+        </alto>
+        <system>
+            <php>5.4.0</php>
+        </system>
+        <plugins>
+            <!-- Атрибуты name, version и condition необязательны -->
+            <!-- Возможные значения атрибута condition соответствуют описанию параметра «operator» на странице http://php.net/manual/ru/function.version-compare.php  -->
+            <!-- <plugin name="plugin_name" version="1.0.0" condition="eq">plugin_id</plugin> -->
+
+            <!-- Использование js-хука ls_editor_berfore_init -->
+            <plugin name="Better Spoilers" version="1.1.0" condition="gte">betterspoilers</plugin>
+        </plugins>
+    </requires>
+    <description>
+        <lang name="default">Description of plugin MarkitupVideoUpload</lang>
+        <lang name="ru">Добавляет в редактор MarkItUp! диалог загрузки видео в формате webm. Возможность загрузки в тексты топиков и в комментарии.</lang>
+    </description>
+</plugin>
