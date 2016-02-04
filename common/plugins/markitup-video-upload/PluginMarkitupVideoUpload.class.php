@@ -1,8 +1,5 @@
 <?php
 
-/**
- * Запрещаем напрямую через браузер обращение к этому файлу.
- */
 if (!class_exists('Plugin')) {
     die('Hacking attempt!');
 }
@@ -50,14 +47,7 @@ class PluginMarkitupVideoUpload extends Plugin {
 
     // Активация плагина
     public function Activate() {
-        /*
-        if (!$this->isTableExists('prefix_tablename')) {
-            $this->ExportSQL(dirname(__FILE__).'/install.sql'); // Если нам надо изменить БД, делаем это здесь.
-        }
-        */
-        // TODO check ffmpeg version
-        $sResult = exec('ffmpeg -version', $aOutput, $iResultCode);
-        var_dump($sResult, $aOutput);
+        exec('ffmpeg -version', $aOutput, $iResultCode);
         if ($iResultCode > 0) {
             E::ModuleMessage()->AddError('На сервере не установлен пакет «ffmpeg», работа плагина без этого пакета невозможна.');
 
@@ -69,15 +59,12 @@ class PluginMarkitupVideoUpload extends Plugin {
 
     // Деактивация плагина
     public function Deactivate(){
-        /*
-        $this->ExportSQL(dirname(__FILE__).'/deinstall.sql'); // Выполнить деактивационный sql, если надо.
-        */
         return true;
     }
 
-
     // Инициализация плагина
     public function Init() {
+        // TODO: При удалении постов, проверять и удалять видео с картинками
         $sTemplateDir = Plugin::GetTemplateDir(__CLASS__);
         if ($sTemplateDir) {
             E::ModuleViewer()->AppendStyle($sTemplateDir . "assets/css/mrktp-video-upload.css"); // Добавление своего CSS
@@ -89,5 +76,3 @@ class PluginMarkitupVideoUpload extends Plugin {
         return true;
     }
 }
-
-// EOF
