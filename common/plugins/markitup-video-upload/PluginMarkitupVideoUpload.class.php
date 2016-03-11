@@ -43,6 +43,10 @@ class PluginMarkitupVideoUpload extends Plugin {
         * PluginAbcplugin_ModuleTopic_EntityTopic (/plugins/abcplugin/classes/modules/entity/Topic.entity.class.php) - новые или замена существующих
         *
         */
+        'module' => [
+            'ModuleTopic',
+//            'ModuleMresource',
+        ]
     );
 
     // Активация плагина
