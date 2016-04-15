@@ -27,7 +27,7 @@ $(function () {
 
             <header class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
-                <h4 class="modal-title">{$aLang.uploadimg}</h4>
+                <h4 class="modal-title">{$aLang.plugin.markitup_video_upload['dialog-title']}</h4>
             </header>
 
             <div class="modal-body">
@@ -54,13 +54,18 @@ $(function () {
                                             <i class="fa fa-file fileinput-exists"></i>
                                             <span class="fileinput-filename"></span>
                                         </div>
-                                       <span class="input-group-addon btn btn-default btn-file" >
-                                           <span style="cursor: pointer"  class="fileinput-new">{$aLang.select}</span>
-                                           <span style="cursor: pointer"  class="fileinput-exists">{$aLang.select}</span>
-                                           <input type="file" name="file" id="video-file" />
-                                       </span>
+                                        <span class="input-group-addon btn btn-default btn-file" >
+                                            <span style="cursor: pointer"  class="fileinput-new">{$aLang.select}</span>
+                                            <span style="cursor: pointer"  class="fileinput-exists">{$aLang.select}</span>
+                                            <input type="file" name="file" id="video-file" />
+                                        </span>
                                     </div>
                                 </div>
+                                <small class="control-notice">{$aLang.plugin.markitup_video_upload['notice-file-extension']}
+                                    {join(', ', Config::Get('module.uploader.video.webm.file_extensions'))}
+                                    <br />
+                                    {$aLang.plugin.markitup_video_upload['notice-max-file-size']}
+                                    {Config::Get('module.uploader.video.webm.file_maxsize')}</small>
                             </div>
 
                             {*{hook run="uploadimg_source"}*}
@@ -76,6 +81,11 @@ $(function () {
                                     <span class="input-group-addon">{$aLang.topic_link_create_url}</span>
                                     <input type="text" name="url" id="url" value="" class="form-control" placeholder="http://" />
                                 </div>
+                                <small class="control-notice">{$aLang.plugin.markitup_video_upload['notice-file-extension']}
+                                    {join(', ', Config::Get('module.uploader.video.webm.file_extensions'))}
+                                    <br />
+                                    {$aLang.plugin.markitup_video_upload['notice-max-file-size']}
+                                    {Config::Get('module.uploader.video.webm.url_maxsize')}</small>
                             </div>
                         </div>
                     </div>
@@ -95,7 +105,7 @@ $(function () {
 
                     <div class="form-group js-video-width">
                         <div class="input-group">
-                            <span class="input-group-addon">{$aLang.uploadimg_size_width_max}</span>
+                            <span class="input-group-addon">{$aLang.plugin.markitup_video_upload['dialog-size-width-max']}</span>
                             <input type="text" name="img_width" value="100" class="form-control"/>
                             <span class="input-group-addon">%</span>
                         </div>
