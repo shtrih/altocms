@@ -35,12 +35,12 @@
     });
 
     // удаляем ссылку, навешанный на нее лайтбокс
-    $('a > img.webm').each(function () {
+    $('a > img.mvu-webm').each(function () {
         var $this = $(this);
         $this.closest('a').after($this).remove();
     });
 
-    $(document).on('click', '.webm', function(e) {
+    $(document).on('click', '.mvu-webm', function(e) {
         e.preventDefault();
         if (e.which != 1)
             return;
