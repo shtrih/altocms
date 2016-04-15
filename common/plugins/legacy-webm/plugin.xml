@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+    <id>legacy_webm</id>
+    <name>
+        <lang name="default">LegacyWebm</lang>
+    </name>
+    <author>
+        <lang name="default">shtrih</lang>
+    </author>
+    <homepage>http://4otaku.org/</homepage>
+    <version>1.0.0</version>
+    <dirname>legacy-webm</dirname>
+    <requires>
+        <alto>
+             <version>1.1.0</version>
+        </alto>
+        <system>
+            <php>5.4.0</php>
+        </system>
+        <plugins>
+            <!-- Атрибуты name, version и condition необязательны -->
+            <!-- Возможные значения атрибута condition соответствуют описанию параметра «operator» на странице http://php.net/manual/ru/function.version-compare.php  -->
+            <!-- <plugin name="plugin_name" version="1.0.0" condition="eq">plugin_id</plugin> -->
+        </plugins>
+    </requires>
+    <description>
+        <lang name="default">Поддержка воспроизведения webm со старого сайта (в комментариях, постах)</lang>
+    </description>
+</plugin>
