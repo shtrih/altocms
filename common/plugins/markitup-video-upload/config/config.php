@@ -15,7 +15,7 @@ $aConfig[Config::KEY_ROOT]['module']['uploader']['video']['webm'] = [
     // TODO: Выводить макс. размеры файлов в модальном диалоге
     //
 
-    'file_maxsize' => '10Mb',
+    'file_maxsize' => '12Mb',
     'url_maxsize' => '10Mb',
 
     'transform' => [
@@ -40,8 +40,8 @@ $aConfig[Config::KEY_ROOT]['module']['uploader']['video']['webm'] = [
 
     'file_extensions' => [
         'webm',
-        'webma',
-        'webmv',
+        //'webma',
+        //'webmv',
     ],
 
     // Дальше ничего не трогать
