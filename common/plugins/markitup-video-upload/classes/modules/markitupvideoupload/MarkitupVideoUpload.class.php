@@ -16,7 +16,11 @@ class PluginMarkitupVideoUpload_ModuleMarkitupVideoUpload extends Module {
         $sSuffix = $this->GetFileSuffix($sVideoFile, $sType);
         $sOriginalScreenshotFile = $sVideoFile . $sSuffix . '.jpg';
 
-        $sFfmpegResult = shell_exec('ffmpeg -n -i ' . escapeshellarg($sVideoFile)
+        $sFfmpegPath = Config::Get('plugin.markitup_video_upload.ffmpeg_static_build_path');
+        if (!$sFfmpegPath) {
+            $sFfmpegPath = 'ffmpeg';
+        }
+        $sFfmpegResult = shell_exec(escapeshellarg($sFfmpegPath) . ' -n -i ' . escapeshellarg($sVideoFile)
                                     . ' -vframes 1 ' . escapeshellarg($sOriginalScreenshotFile)
                                     . ' </dev/null 2>&1 1>/dev/null');
         if ($sFfmpegResult) {
