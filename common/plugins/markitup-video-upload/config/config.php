@@ -38,7 +38,7 @@ $aConfig[Config::KEY_ROOT]['module']['uploader']['video']['webm'] = [
         ],
     ],
 
-    // наследуем из module.uploader.images.video
+    // наследуем из module.uploader.images.video, можно переопределить
     /*
     'original' => array(
         'save' => false,            // надо ли сохранять оригинальное изображение

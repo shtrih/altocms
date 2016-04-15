@@ -47,7 +47,7 @@
 
         var thumb = $(this),
             thumb_nsfw = thumb.prev('canvas'), // pixelate on nsfw
-            src = thumb.attr('src') + '_full.webm',
+            src = thumb.attr('src') + VIDEO_UPLOAD_ORIGINAL_SUFFIX + '.webm',
             video = $('<video controls="1" loop="1" onloadedmetadata="this.volume=0.5" src="' + src + '"></video>'),
             link = $('<a href="' + src + '" target="_blank">На отдельной вкладке</a>'),
             close = $('<a href="#">Свернуть</a>'),
