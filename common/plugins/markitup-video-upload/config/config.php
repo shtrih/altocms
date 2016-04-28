@@ -20,8 +20,6 @@ $aConfig = [
 ];
 
 $aConfig[Config::KEY_ROOT]['module']['uploader']['video']['webm'] = [
-    // TODO: Выводить макс. размеры файлов в модальном диалоге
-    //
 
     'file_maxsize' => '12Mb',
     'url_maxsize' => '10Mb',

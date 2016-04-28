@@ -53,9 +53,10 @@ class PluginMarkitupVideoUpload extends Plugin {
     public function Activate() {
         exec('ffmpeg -version', $aOutput, $iResultCode);
         if ($iResultCode > 0) {
-            E::ModuleMessage()->AddError('На сервере не установлен пакет «ffmpeg», работа плагина без этого пакета невозможна.');
+            E::ModuleMessage()->AddError('На сервере не установлен пакет «ffmpeg», работа плагина без этого пакета невозможна. Настройте параметр <code>ffmpeg_static_build_path</code> в конфиге.');
 
-            return false;
+            // всё равно активируем, ибо может использоваться ffmpeg_static_build_path в конфиге
+            // return false;
         }
 
         return true;
