@@ -46,7 +46,6 @@ class ActionUploader extends Action {
         $this->AddEvent('description', 'EventDescription'); // Установка описания ресурса
         $this->AddEvent('cover', 'EventCover'); // Установка обложки фотосета
         $this->AddEvent('sort', 'EventSort'); // Меняет сортировку элементов фотосета
-
     }
 
     /**
@@ -260,7 +259,13 @@ class ActionUploader extends Action {
 
         // Проверяем, загружен ли файл
         if (!($aUploadedFile = $this->GetUploadedFile('uploader-upload-image'))) {
-            E::ModuleMessage()->AddError(E::ModuleLang()->Get('error_upload_image'), E::ModuleLang()->Get('error'));
+            $sError = $this->GetUploadedFileError('uploader-upload-image');
+            if ($sError) {
+                $sError = E::ModuleLang()->Get('error_upload_image') . ' (' . $sError . ')';
+            } else {
+                $sError = E::ModuleLang()->Get('error_upload_image') . ' (Error #3001)';
+            }
+            E::ModuleMessage()->AddError($sError, E::ModuleLang()->Get('error'));
 
             return;
         }
@@ -325,7 +330,7 @@ class ActionUploader extends Action {
             // Ошибки загрузки картинки
             $sError = E::ModuleUploader()->GetErrorMsg();
             if (!$sError) {
-                $sError = E::ModuleLang()->Get('error_upload_image');
+                $sError = E::ModuleLang()->Get('error_upload_image') . ' (Error #3002)';
             }
         }
 
@@ -334,13 +339,13 @@ class ActionUploader extends Action {
 
         // Удалим ранее загруженый файл
         F::File_Delete($sTmpFile);
-
     }
 
     /**
      * Обработка обрезки изображения
      */
     public function EventResizeImage() {
+
         // * Устанавливаем формат Ajax ответа
         E::ModuleViewer()->SetResponseAjax('json');
 
@@ -417,7 +422,7 @@ class ActionUploader extends Action {
             E::ModuleViewer()->AssignAjax('sFilePreview', $sFileWebPreview);
             E::ModuleViewer()->AssignAjax('sTitleUpload', E::ModuleLang()->Get('uploader_upload_success'));
         } else {
-            E::ModuleMessage()->AddError(E::ModuleLang()->Get('error_upload_image'), E::ModuleLang()->Get('error'));
+            E::ModuleMessage()->AddError(E::ModuleLang()->Get('error_upload_image') . ' (Error #3021)', E::ModuleLang()->Get('error'));
         }
     }
 
@@ -459,7 +464,6 @@ class ActionUploader extends Action {
 
         // * Возвращает сообщение
         E::ModuleViewer()->AssignAjax('sTitleUpload', E::ModuleLang()->Get('uploader_upload_success'));
-
     }
 
     /**
@@ -511,7 +515,13 @@ class ActionUploader extends Action {
 
         // Проверяем, загружен ли файл
         if (!($aUploadedFile = $this->GetUploadedFile('uploader-upload-image'))) {
-            E::ModuleMessage()->AddError(E::ModuleLang()->Get('error_upload_image'), E::ModuleLang()->Get('error'));
+            $sError = $this->GetUploadedFileError('uploader-upload-image');
+            if ($sError) {
+                $sError = E::ModuleLang()->Get('error_upload_image') . ' (' . $sError . ')';
+            } else {
+                $sError = E::ModuleLang()->Get('error_upload_image') . ' (Error #3001)';
+            }
+            E::ModuleMessage()->AddError($sError, E::ModuleLang()->Get('error'));
 
             return false;
         }
@@ -534,7 +544,6 @@ class ActionUploader extends Action {
 
                 return false;
             }
-
         }
 
         // Ошибок пока нет
@@ -564,7 +573,7 @@ class ActionUploader extends Action {
 
             // Определим, существует ли объект или он будет создан позже
             if (!($sTmpKey = E::ModuleSession()->GetCookie(ModuleUploader::COOKIE_TARGET_TMP)) && $sTargetId == '0' && $bTmp) {
-                E::ModuleMessage()->AddError(E::ModuleLang()->Get('error_upload_image'), E::ModuleLang()->Get('error'));
+                E::ModuleMessage()->AddError(E::ModuleLang()->Get('error_upload_image') . ' (Error #3012)', E::ModuleLang()->Get('error'));
 
                 return FALSE;
             }
@@ -574,7 +583,7 @@ class ActionUploader extends Action {
             $oImg = E::ModuleImg()->Read($sTmpFile);
             $sExtension = strtolower(pathinfo($sTmpFile, PATHINFO_EXTENSION));
             if (!$sSavedTmpFile = $oImg->Save(F::File_UploadUniqname($sExtension))) {
-                E::ModuleMessage()->AddError(E::ModuleLang()->Get('error_upload_image'), E::ModuleLang()->Get('error'));
+                E::ModuleMessage()->AddError(E::ModuleLang()->Get('error_upload_image') . ' (Error #3013)', E::ModuleLang()->Get('error'));
 
                 F::File_Delete($sTmpFile);
                 return FALSE;
@@ -622,7 +631,7 @@ class ActionUploader extends Action {
             // Ошибки загрузки картинки
             $sError = E::ModuleUploader()->GetErrorMsg();
             if (!$sError) {
-                $sError = E::ModuleLang()->Get('error_upload_image');
+                $sError = E::ModuleLang()->Get('error_upload_image')  . ' (Error #3014)';
             }
         }
 
@@ -631,7 +640,6 @@ class ActionUploader extends Action {
 
         // Удалим ранее загруженый файл
         F::File_Delete($sTmpFile);
-
     }
 
 
@@ -749,6 +757,10 @@ class ActionUploader extends Action {
             $oResource->setType(ModuleMresource::TYPE_PHOTO_PRIMARY);
             E::ModuleMessage()->AddNoticeSingle(E::ModuleLang()->Get('topic_photoset_is_preview'));
             E::ModuleViewer()->AssignAjax('bPreview', true);
+            if ($oTarget) {
+                $oTarget->setPreviewImage(null, false);
+                E::Topic_UpdateTopic($oTarget);
+            }
         } else {
             $oResource->setType(ModuleMresource::TYPE_PHOTO);
             E::ModuleMessage()->AddNoticeSingle(E::ModuleLang()->Get('topic_photoset_mark_is_not_preview'));
@@ -756,7 +768,6 @@ class ActionUploader extends Action {
         }
 
         E::ModuleMresource()->UpdatePrimary($oResource, $sTargetType, $sTargetId);
-
     }
 
 

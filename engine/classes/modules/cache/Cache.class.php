@@ -435,13 +435,18 @@ class ModuleCache extends Module {
         return md5($this->sCachePrefix . $sKey);
     }
 
+    /**
+     * @param array|string $aTags
+     *
+     * @return array
+     */
     protected function _prepareTags($aTags) {
 
         // Теги - это массив строковых значений
         if (empty($aTags)) {
             $aTags = array();
         } elseif (!is_array($aTags)) {
-            if (!is_string($aTags)) {
+            if (!is_scalar($aTags)) {
                 $aTags = array();
             } else {
                 $aTags = array((string)$aTags);
@@ -463,14 +468,15 @@ class ModuleCache extends Module {
     }
 
     /**
-     * Make cache key
+     * Make cache key from array
+     *
+     * @param array $aArgs
      *
      * @return string
      */
-    public function Key() {
+    public function Array2Key($aArgs) {
 
         $sKey = '';
-        $aArgs = func_get_args();
         foreach($aArgs as $xVal) {
             if (is_null($xVal)) {
                 $sVal = '';
@@ -480,13 +486,23 @@ class ModuleCache extends Module {
                 $sVal = (string)$xVal;
             } elseif (is_array($xVal)) {
                 ksort($xVal);
-                $sVal = serialize($xVal);
+                $sVal = $this->Array2Key($xVal);
             } else {
                 $sVal = serialize($xVal);
             }
-            $sKey .= '[' . $sVal . ']';
+            $sKey .= '[[[' . $sVal . ']]]';
         }
         return $sKey;
+    }
+
+    /**
+     * Make cache key from arguments
+     *
+     * @return string
+     */
+    public function Key() {
+
+        return $this->Array2Key(func_get_args());
     }
 
     /**
@@ -517,6 +533,9 @@ class ModuleCache extends Module {
      */
     public function Set($xData, $sCacheKey, $aTags = array(), $nTimeLife = false, $sCacheType = null) {
 
+        if (empty($sCacheKey)) {
+            return false;
+        }
         if ($sCacheType && strpos($sCacheType, ',') !== false) {
             $aCacheTypes = explode(',', $sCacheType);
             $bResult = false;
@@ -586,6 +605,9 @@ class ModuleCache extends Module {
      */
     public function Get($xCacheKey, $sCacheType = null) {
 
+        if (empty($xCacheKey)) {
+            return false;
+        }
         if ($sCacheType && strpos($sCacheType, ',') !== false) {
             $aCacheTypes = explode(',', $sCacheType);
             $xResult = false;
@@ -758,20 +780,20 @@ class ModuleCache extends Module {
     /**
      * Clear cache by tags
      *
-     * @param array       $aTags      - Array of tags
-     * @param string|null $sCacheType - Type of cache (if null then clear in all cache types)
+     * @param array|string $xTags      - Array of tags
+     * @param string|null  $sCacheType - Type of cache (if null then clear in all cache types)
      *
      * @return bool
      */
-    public function CleanByTags($aTags, $sCacheType = null) {
+    public function CleanByTags($xTags, $sCacheType = null) {
 
-        $aTags = $this->_prepareTags($aTags);
+        $aTags = $this->_prepareTags($xTags);
 
         if ($sCacheType && strpos($sCacheType, ',') !== false) {
             $aCacheTypes = explode(',', $sCacheType);
             $bResult = false;
-            foreach($aCacheTypes as $sCacheType) {
-                $bResult = $bResult || $this->CleanByTags($aTags, $sCacheType ? $sCacheType : null);
+            foreach($aCacheTypes as $sCacheTypeId) {
+                $bResult = $bResult || $this->CleanByTags($aTags, $sCacheTypeId ? $sCacheTypeId : null);
             }
             return $bResult;
         }
@@ -789,10 +811,10 @@ class ModuleCache extends Module {
 
         $this->aStats['time'] += $iTime;
         $this->aStats['count']++;
-        if ($sMethod == 'Dklab_Cache_Backend_Profiler::load') {
+        if ($sMethod === 'Dklab_Cache_Backend_Profiler::load') {
             $this->aStats['count_get']++;
         }
-        if ($sMethod == 'Dklab_Cache_Backend_Profiler::save') {
+        if ($sMethod === 'Dklab_Cache_Backend_Profiler::save') {
             $this->aStats['count_set']++;
         }
     }

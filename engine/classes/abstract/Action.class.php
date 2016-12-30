@@ -430,8 +430,8 @@ abstract class Action extends LsObject {
 
                 return $xResult;
             } else {
-                $this->AccessDenied(R::GetActionEvent());
-                return null;
+                return $this->AccessDenied(R::GetActionEvent());
+                //return null;
             }
         }
 
@@ -752,6 +752,30 @@ abstract class Action extends LsObject {
     }
 
     /**
+     * @param string|null $sName
+     *
+     * @return array
+     */
+    protected function GetUploadedFileData($sName = null) {
+
+        $aFileData = array();
+        $aFiles = $this->_getRequestData('FILES');
+        if (!empty($aFiles)) {
+            if (null === $sName) {
+                $aFileData = reset($aFiles);
+            } elseif (!empty($aFiles) && is_array($aFiles)) {
+                foreach($aFiles as $sKey => $aData) {
+                    if (strtolower($sKey) === strtolower($sName)) {
+                        $aFileData = $aData;
+                        break;
+                    }
+                }
+            }
+        }
+        return $aFileData;
+    }
+
+    /**
      * Returns information about the uploaded file with form validation
      * If a field name is omitted it returns the first of uploaded files
      *
@@ -761,15 +785,8 @@ abstract class Action extends LsObject {
      */
     protected function GetUploadedFile($sName = null) {
 
-        $aFiles = $this->_getRequestData('FILES');
-        if (E::ModuleSecurity()->ValidateSendForm(false) && !empty($aFiles)) {
-            if (is_null($sName)) {
-                $aFileData = reset($aFiles);
-            } elseif (isset($aFiles[$sName])) {
-                $aFileData = $aFiles[$sName];
-            } else {
-                $aFileData = false;
-            }
+        if (E::ModuleSecurity()->ValidateSendForm(false)) {
+            $aFileData = $this->GetUploadedFileData($sName);
             if ($aFileData && isset($aFileData['tmp_name']) && is_uploaded_file($aFileData['tmp_name'])) {
                 return $aFileData;
             }
@@ -778,6 +795,26 @@ abstract class Action extends LsObject {
         return false;
     }
 
+    /**
+     * @param string|null $sName
+     *
+     * @return string
+     */
+    protected function GetUploadedFileError($sName = null) {
+
+        $sResult = null;
+        $aFileData = $this->GetUploadedFileData($sName);
+        if ($aFileData && !empty($aFileData['error'])) {
+            $iErrorCode = $aFileData['error'];
+            $sError = E::ModuleLang()->Get('error_upload_file_' . $iErrorCode);
+            if ($sError) {
+                $sResult = $sError;
+            } else {
+                $sResult = E::ModuleLang()->Get('error_upload_file_unknown');
+            }
+        }
+        return $sResult;
+    }
 
     /**
      * Метод проверки прав доступа пользователя к конкретному ивенту

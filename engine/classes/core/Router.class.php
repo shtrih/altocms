@@ -364,7 +364,7 @@ class Router extends LsObject {
     /**
      * Возвращает массив реквеста
      *
-     * @param string $sReq    Строка реквеста
+     * @param string $sReq Строка реквеста
      * @return array
      */
     protected function GetRequestArray($sReq) {
@@ -416,6 +416,7 @@ class Router extends LsObject {
         }
 
         // STAGE 1: Rewrite rules for domains
+        // $config['router']['domain'] = ...
         if (!empty($this->aConfigRoute['domains']['forward']) && !F::AjaxRequest()) {
             // если в запросе есть контроллер и он есть в списке страниц, то доменный маппинг не выполняется
             if (empty($aRequestUrl[0]) || empty($this->aConfigRoute['page'][$aRequestUrl[0]])) {
@@ -437,6 +438,7 @@ class Router extends LsObject {
         }
 
         // STAGE 2: Rewrite rules for REQUEST_URI
+        // $config['router']['uri'] = ...
         $sRequest = implode('/', $aRequestUrl);
 
         $aRouterUriRules = $this->GetRouterUriRules();
@@ -452,6 +454,10 @@ class Router extends LsObject {
                 if ($sRegExp && preg_match($sRegExp, $sRequest)) {
                     // regex pattern
                     $sRequest = preg_replace($sRegExp, $sReplace, $sRequest);
+                    break;
+                } elseif ($sRegExp && preg_match($sRegExp, $sRequest . '/')) {
+                    // regex pattern
+                    $sRequest = preg_replace($sRegExp, $sReplace, $sRequest . '/');
                     break;
                 } else {
                     if (substr($sPattern, -2) == '/*') {
@@ -472,6 +478,7 @@ class Router extends LsObject {
         }
 
         // STAGE 3: Internal rewriting (topic URLs etc.)
+        // $config['router']['rewrite'] = ...
         $aRequestUrl = (trim($sRequest, '/') == '') ? array() : explode('/', $sRequest);
         if ($aRequestUrl) {
             $aRequestUrl = $this->RewriteInternal($aRequestUrl);
@@ -642,9 +649,22 @@ class Router extends LsObject {
     protected function FindActionClass() {
 
         if (!static::$sAction) {
-            $sActionClass = $this->DetermineClass($this->aConfigRoute['config']['action_default'], static::$sActionEvent);
-            if ($sActionClass) {
-                static::$sAction = $this->aConfigRoute['config']['action_default'];
+            if (empty($this->aConfigRoute['config']['action_default'])) {
+                $sActionClass = $this->DetermineClass('homepage', static::$sActionEvent);
+                if ($sActionClass) {
+                    static::$sAction = 'homepage';
+                }
+            } else {
+                $aDefaultAction = explode('/', $this->aConfigRoute['config']['action_default']);
+                if (count($aDefaultAction) > 1) {
+                    $sActionClass = $this->DetermineClass($aDefaultAction[0], $aDefaultAction[1]);
+                } else {
+                    $sActionClass = $this->DetermineClass($aDefaultAction[0]);
+                }
+                if ($sActionClass) {
+                    static::$sAction = $aDefaultAction[0];
+                    static::$sActionEvent = (!empty($aDefaultAction[1]) ? $aDefaultAction[1] : null);
+                }
             }
         } else {
             $sActionClass = $this->DetermineClass(static::$sAction, static::$sActionEvent);
@@ -709,10 +729,6 @@ class Router extends LsObject {
     protected function DetermineClass($sAction, $sEvent = null) {
 
         $sActionClass = null;
-
-        if ($sAction && !$sEvent && strpos($sAction, '/')) {
-            list($sAction, $sEvent, $sParams) = explode('/', $sAction, 3);
-        }
 
         if ($sAction) {
             // Сначала ищем экшен по таблице роутинга
@@ -962,19 +978,30 @@ class Router extends LsObject {
     }
 
     /**
-     * Возвращает правильную адресацию по переданому названию страницы (экшену)
+     * Возвращает правильную адресацию (URL) по переданому названию страницы (экшену)
      *
      * @param  string $sAction Экшен
      *
      * @return string
      */
-    static public function GetPath($sAction) {
+    static public function GetLink($sAction) {
 
         if (empty(static::$aActionPaths[$sAction])) {
-            $sAction = trim($sAction, '/');
-            static::$aActionPaths[$sAction] = static::getInstance()->_getPath($sAction);
+            static::$aActionPaths[$sAction] = static::getInstance()->_getLink(trim($sAction, '/'));
         }
         return static::$aActionPaths[$sAction];
+    }
+
+    /**
+     * Alias of GetLink()
+     *
+     * @param $sAction
+     *
+     * @return string
+     */
+    static public function GetPath($sAction) {
+
+        return self::GetLink($sAction);
     }
 
     /**
@@ -982,10 +1009,10 @@ class Router extends LsObject {
      *
      * @return string
      */
-    public function _getPath($sAction) {
+    public function _getLink($sAction) {
 
         // Если пользователь запросил action по умолчанию
-        $sPage = (($sAction == 'default') ? $this->aConfigRoute['config']['action_default'] : $sAction);
+        $sPage = (($sAction === 'default') ? $this->aConfigRoute['config']['action_default'] : $sAction);
 
         // Смотрим, есть ли правило rewrite
         $sPage = static::getInstance()->RestorePath($sPage);
@@ -993,7 +1020,7 @@ class Router extends LsObject {
         if (!empty($this->aConfigRoute['domains']['backward'])) {
             if (isset($this->aConfigRoute['domains']['backward'][$sPage])) {
                 $sResult = $this->aConfigRoute['domains']['backward'][$sPage];
-                if ($sResult[1] != '/') {
+                if ($sResult[1] !== '/') {
                     $sResult = '//' . $sResult;
                     if (substr($sResult, -1) !== '/') {
                         $sResult .= '/';
@@ -1017,7 +1044,7 @@ class Router extends LsObject {
                 return $sResult;
             }
         }
-        return rtrim(F::File_RootUrl(true), '/') . "/$sPage/";
+        return rtrim(F::File_RootUrl(true), '/') . ($sPage ? "/$sPage/" : '/');
     }
 
     /**
@@ -1353,6 +1380,18 @@ class Router extends LsObject {
     }
 
     /**
+     * Alias of CmpControllerPath()
+     * @param      $aPaths
+     * @param null $bDefault
+     *
+     * @return string
+     */
+    static public function CompareWithLocalPath($aPaths, $bDefault = null) {
+
+        return static::CmpControllerPath($aPaths, $bDefault);
+    }
+    
+    /**
      * Compare each item of array with controller path
      *
      * @see GetControllerPath
@@ -1362,7 +1401,7 @@ class Router extends LsObject {
      *
      * @return string
      */
-    static public function CompareWithLocalPath($aPaths, $bDefault = null) {
+    static public function CmpControllerPath($aPaths, $bDefault = null) {
 
         if ($aPaths) {
             $sControllerPath = static::GetControllerPath();
@@ -1384,6 +1423,46 @@ class Router extends LsObject {
     }
 
     /**
+     * Compare each item of array with request path
+     * 
+     * @param string|array $aPaths
+     * @param bool         $bDefault
+     *
+     * @return string
+     */
+    static public function CmpRequestPath($aPaths, $bDefault = null) {
+
+        if ($aPaths) {
+            $sComparePath = trim(static::Url('path'), '/');
+            $aPaths = F::Val2Array($aPaths);
+            if ($aPaths) {
+                foreach($aPaths as $nKey => $sPath) {
+                    if ($sPath == '*') {
+                        return $sPath;
+                    } elseif(strpos($sPath, '*') === false && trim($sPath, '/') == $sComparePath) {
+                        return $sPath;
+                    }
+                }
+                return F::File_InPath($sComparePath, $aPaths);
+            }
+        }
+        return $bDefault;
+    }
+
+    /**
+     * Alias of AllowControllerPath()
+     *
+     * @param $aAllowPaths
+     * @param $aDisallowPaths
+     *
+     * @return bool
+     */
+    static public function AllowLocalPath($aAllowPaths, $aDisallowPaths) {
+        
+        return static::AllowControllerPath($aAllowPaths, $aDisallowPaths);
+    }
+    
+    /**
      * Check the local path by allow/disallow rules
      *
      * @param string|array|null $aAllowPaths
@@ -1391,9 +1470,9 @@ class Router extends LsObject {
      *
      * @return bool
      */
-    static public function AllowLocalPath($aAllowPaths, $aDisallowPaths) {
+    static public function AllowControllerPath($aAllowPaths, $aDisallowPaths) {
 
-        if (static::CompareWithLocalPath($aAllowPaths, true) && !static::CompareWithLocalPath($aDisallowPaths, false)) {
+        if (static::CmpControllerPath($aAllowPaths, true) && !static::CmpControllerPath($aDisallowPaths, false)) {
             return true;
         }
         return false;
@@ -1420,31 +1499,35 @@ class Router extends LsObject {
                 // приводим к виду action=>array(events)
                 if (is_int($sAction) && !is_array($aEvents)) {
                     $sAction = (string)$aEvents;
-                    $aEvents = array();
+                    if (strpos($sAction, '/')) {
+                        list($sAction, $sEvent) = explode('/', $sAction);
+                        $aEvents = array($sEvent);
+                    } else {
+                        $aEvents = array();
+                    }
                 }
                 if ($sAction == $sCurrentAction) {
                     if (!$aEvents) {
-                        $bResult = true;
-                        break;
+                        return true;
                     }
-                }
-                $aEvents = (array)$aEvents;
-                foreach ($aEvents as $sEventPreg) {
-                    if (($sCurrentEventName && $sEventPreg == $sCurrentEventName) || $sEventPreg == $sCurrentEvent) {
-                        // * Это название event`a
-                        $bResult = true;
-                        break 2;
-                    } elseif ((substr($sEventPreg, 0, 1) == '{') && (trim($sEventPreg, '{}') == $sCurrentEventName)) {
-                        // LS-compatibility
-                        // * Это имя event'a (именованный евент, если его нет, то совпадает с именем метода евента в экшене)
-                        $bResult = true;
-                        break 2;
-                    } elseif ((substr($sEventPreg, 0, 1) == '[')
-                        && (substr($sEventPreg, -1) == ']')
-                        && preg_match(substr($sEventPreg, 1, strlen($sEventPreg) - 2), $sCurrentEvent)) {
-                        // * Это регулярное выражение
-                        $bResult = true;
-                        break 2;
+                    $aEvents = (array)$aEvents;
+                    if (in_array('*', $aEvents)) {
+                        return true;
+                    }
+                    foreach ($aEvents as $sEventPreg) {
+                        if (($sCurrentEventName && $sEventPreg == $sCurrentEventName) || $sEventPreg == $sCurrentEvent) {
+                            // * Это название event`a
+                            return true;
+                        } elseif ((substr($sEventPreg, 0, 1) == '{') && (trim($sEventPreg, '{}') == $sCurrentEventName)) {
+                            // LS-compatibility
+                            // * Это имя event'a (именованный евент, если его нет, то совпадает с именем метода евента в экшене)
+                            return true;
+                        } elseif ((substr($sEventPreg, 0, 1) == '[')
+                            && (substr($sEventPreg, -1) == ']')
+                            && preg_match(substr($sEventPreg, 1, strlen($sEventPreg) - 2), $sCurrentEvent)) {
+                            // * Это регулярное выражение
+                            return true;
+                        }
                     }
                 }
             }

@@ -37,7 +37,9 @@ abstract class Hook extends LsObject {
             $sClassNameHook = null;
         }
         if (is_null($sClassNameHook)) {
-            $sCallBack = array($this, $sCallBack);
+            if (is_string($sCallBack) && strpos($sCallBack, '::') === false && !function_exists($sCallBack)) {
+                $sCallBack = array($this, $sCallBack);
+            }
             E::ModuleHook()->AddExecFunction($sName, $sCallBack, $iPriority);
         } else {
             E::ModuleHook()->AddExecHook($sName, $sCallBack, $iPriority, array('sClassName' => $sClassNameHook));
@@ -66,7 +68,7 @@ abstract class Hook extends LsObject {
             $sClassNameHook = null;
         }
         if (is_null($sClassNameHook)) {
-            if (is_string($sCallBack)) {
+            if (is_string($sCallBack) && strpos($sCallBack, '::') === false && !function_exists($sCallBack)) {
                 $sCallBack = array($this, $sCallBack);
             }
             E::ModuleHook()->AddExecFunction($sName, $sCallBack, $iPriority);
@@ -86,8 +88,15 @@ abstract class Hook extends LsObject {
      */
     public function AddDelegateHook($sName, $sCallBack, $iPriority = 1, $aParams = array()) {
 
+        if (is_string($iPriority) && !is_numeric($iPriority)) {
+            $sClassName = $iPriority;
+            $iPriority = $aParams;
+            $aParams = array();
+        } else {
+            $sClassName = __CLASS__;
+        }
         $aParams['delegate'] = true;
-        $aParams['sClassName'] = __CLASS__;
+        $aParams['sClassName'] = $sClassName;
         E::ModuleHook()->AddExecHook($sName, $sCallBack, $iPriority, $aParams);
     }
 

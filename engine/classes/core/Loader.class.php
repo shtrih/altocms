@@ -12,7 +12,7 @@ set_include_path(get_include_path() . PATH_SEPARATOR . __DIR__);
 
 class Loader {
 
-    static $bConfigLoaded = false;
+    static protected $bConfigLoaded = false;
 
     /**
      * @param array $aConfig
@@ -68,7 +68,8 @@ class Loader {
         );
         Config::Set('path.root.seek', $aSeekDirClasses);
 
-        if (is_null(Config::Get('path.root.subdir'))) {
+        $sPathSubdir = Config::Get('path.root.subdir');
+        if (is_null($sPathSubdir)) {
             if (isset($_SERVER['DOCUMENT_ROOT'])) {
                 $sPathSubdir = '/' . F::File_LocalPath(ALTO_DIR, $_SERVER['DOCUMENT_ROOT']);
             } elseif ($iOffset = Config::Get('path.offset_request_url')) {
@@ -78,6 +79,14 @@ class Loader {
                 $sPathSubdir = '';
             }
             Config::Set('path.root.subdir', $sPathSubdir);
+        } elseif ($sPathSubdir) {
+            if ($sPathSubdir[0] !== '/' || substr($sPathSubdir, -1) === '/') {
+                $sPathSubdir = '/' . trim($sPathSubdir, '/');
+                Config::Set('path.root.subdir', $sPathSubdir);
+            }
+        }
+        if ($sPathSubdir && is_null(Config::Get('path.offset_request_url'))) {
+            Config::Set('path.offset_request_url', substr_count($sPathSubdir, '/'));
         }
 
         // Подгружаем конфиг из файлового кеша, если он есть
@@ -90,7 +99,7 @@ class Loader {
         F::IncludeLib('UserLocale/UserLocale.class.php');
         // Устанавливаем признак того, является ли сайт многоязычным
         $aLangsAllow = (array)Config::Get('lang.allow');
-        if (sizeof($aLangsAllow) > 1) {
+        if (count($aLangsAllow) > 1) {
             UserLocale::initLocales($aLangsAllow);
             Config::Set('lang.multilang', true);
         } else {
@@ -165,7 +174,7 @@ class Loader {
                 $aConfigFiles = glob($sPluginsDir . '/' . $aPluginInfo['dirname'] . '/config/*.php');
                 if ($aConfigFiles) {
                     // move config.php to begin of array
-                    if (sizeof($aConfigFiles) > 1) {
+                    if (count($aConfigFiles) > 1) {
                         $sConfigFile = $sPluginsDir . '/' . $aPluginInfo['dirname'] . '/config/config.php';
                         $iIndex = array_search($sConfigFile, $aConfigFiles);
                         if ($iIndex) {
@@ -197,6 +206,8 @@ class Loader {
                                 Config::Set($aConfigRoot, false, null, $nConfigLevel, $sConfigFile);
                             }
                             if (!empty($aConfig)) {
+                                Config::Set('plugin', array($sPlugin => $aConfig), null, $nConfigLevel, $sConfigFile);
+                                /*
                                 // Если конфиг этого плагина пуст, то загружаем массив целиком
                                 $sKey = 'plugin.' . $sPlugin;
                                 if (!Config::isExist($sKey)) {
@@ -204,9 +215,10 @@ class Loader {
                                 } else {
                                     // Если уже существуют привязанные к плагину ключи,
                                     // то сливаем старые и новое значения ассоциативно-комбинированно
-                                    /** @see AltoFunc_Array::MergeCombo() */
+                                    //** @see AltoFunc_Array::MergeCombo() * /
                                     Config::Set($sKey, F::Array_MergeCombo(Config::Get($sKey), $aConfig), null, $nConfigLevel, $sConfigFile);
                                 }
+                                */
                             }
                         }
                     }

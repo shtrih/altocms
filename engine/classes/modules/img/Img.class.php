@@ -450,8 +450,17 @@ class ModuleImg extends Module {
         if (!$oImg || !$oImgMark) {
             return false;
         }
-        if (!$bTopLeft) {
+
+        if ('center' == $iCoordX) {
+            $iCoordX = round($oImg->GetWidth() / 2  - $oImgMark->GetWidth() / 2);
+        }
+        elseif (!$bTopLeft) {
             $iCoordX = $oImg->GetWidth() - $oImgMark->GetWidth() - $iCoordX;
+        }
+        if ('center' == $iCoordY) {
+            $iCoordY = round($oImg->GetHeight() / 2 - $oImgMark->GetHeight() / 2);
+        }
+        elseif (!$bTopLeft) {
             $iCoordY = $oImg->GetHeight() - $oImgMark->GetHeight() - $iCoordY;
         }
         $oImg->Overdraw($oImgMark, $iCoordX, $iCoordY);
@@ -855,7 +864,7 @@ class ModuleImg extends Module {
 
         $sImageFile = '';
         $sName = basename($sFile);
-        if (preg_match('/^' . preg_quote($sPrefix) . '_([a-z0-9-]+)(_(male|female))?(\.([\-0-9a-z]+))?(\.([a-z]+))$/i', $sName, $aMatches)) {
+        if (preg_match('/^' . preg_quote($sPrefix) . '_([a-z0-9-]+)(_(male|female|[a-z]+))?(\.([\-0-9a-z]+))?(\.([a-z]+))$/i', $sName, $aMatches)) {
             $sSkin = $aMatches[1];
             $sType = $aMatches[3];
             if ($sSkin) {

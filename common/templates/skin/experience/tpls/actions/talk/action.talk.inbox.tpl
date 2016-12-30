@@ -81,7 +81,7 @@
                                     {$oUser=$oTalkUser->getUser()}
                                     {if !$oTalkUser@first}, {/if}
                                     <span class="nowrap">
-                                        <img src="{$oUser->getAvatarUrl('mini')}" alt="{$oUser->getDisplayName()}"/>&nbsp;
+                                        <img src="{$oUser->getAvatarUrl('mini')}" {$oUser->getAvatarImageSizeAttr('mini')} alt="{$oUser->getDisplayName()}"/>&nbsp;
                                     <a href="{$oUser->getProfileUrl()}" class="user {if $oTalkUser->getUserActive()!=$TALK_USER_ACTIVE}inactive{/if}">{$oUser->getDisplayName()}</a>
                                     </span>
                                 {/foreach}
@@ -117,7 +117,7 @@
                             {/if}
                             <p class="text-muted text small">{$oTalk->getTextLast()|strip_tags|truncate:200:'...'|escape:'html'}</p>
                         </td>
-                        <td class="text-muted cell-date tac text small">{date_format date=$oTalk->getDate() format="j F Y, H:i"}</td>
+                        <td class="text-muted cell-date tac text small">{date_format date=$oTalk->getDateLast() format="j F Y, H:i"}</td>
                     </tr>
                 {/foreach}
                 </tbody>

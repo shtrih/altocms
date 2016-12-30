@@ -39,7 +39,7 @@ class ModuleViewerAsset_EntityPackageJs extends ModuleViewerAsset_EntityPackage 
     protected function InitCompressor() {
 
         if (Config::Get('compress.js.use')) {
-            F::IncludeLib('JShrink-1.0.1/src/JShrink/Minifier.php');
+            //F::IncludeLib('JShrink-1.0.1/src/JShrink/Minifier.php');
             // * Получаем параметры из конфигурации
             return true;
         }
@@ -111,6 +111,23 @@ class ModuleViewerAsset_EntityPackageJs extends ModuleViewerAsset_EntityPackage 
     }
 
     /**
+     * @param $aFileParams
+     * @param $sAssetName
+     *
+     * @return string
+     */
+    protected function _defineAssetName($aFileParams, $sAssetName) {
+
+        $sAssetName = parent::_defineAssetName($aFileParams, $sAssetName);
+        if (!empty($aFileParams['defer'])) {
+            $sAssetName = '@defer|' . $sAssetName;
+        } elseif (!empty($aFileParams['async'])) {
+            $sAssetName = '@async|' . $sAssetName;
+        }
+        return $sAssetName;
+    }
+
+    /**
      * @param string $sDestination
      *
      * @return bool
@@ -121,6 +138,21 @@ class ModuleViewerAsset_EntityPackageJs extends ModuleViewerAsset_EntityPackage 
             return false;
         }
         return parent::CheckDestination($sDestination);
+    }
+
+    public function AddLink($sOutType, $sLink, $aParams = array()) {
+
+        if (!empty($aParams['asset'])) {
+            if (!isset($aParams['attr'])) {
+                $aParams['attr'] = array();
+            }
+            if (strpos($aParams['asset'], '@defer|') === 0) {
+                $aParams['attr'][] = 'defer';
+            } elseif (strpos($aParams['asset'], '@async|') === 0) {
+                $aParams['attr'][] = 'async';
+            }
+        }
+        parent::AddLink($sOutType, $sLink, $aParams);
     }
 
     /**

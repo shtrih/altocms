@@ -226,6 +226,13 @@ class Engine extends LsObject {
     static protected $aClassesInfo = array();
 
     /**
+     * Hash of active plugins
+     *
+     * @var string
+     */
+    static protected $sPluginsHash = null;
+
+    /**
      * Список загруженных модулей
      *
      * @var array
@@ -459,7 +466,7 @@ class Engine extends LsObject {
 
         // * Создаем объект модуля
         $oModule = new $sModuleClass();
-        $oModuleDecorator = Decorator::Create($oModule);
+        $oModuleDecorator = Decorator::CreateComponent($oModule);
         $this->aModules[$sModuleClass] = $oModuleDecorator;
         if ($bInit || $sModuleClass == 'ModuleCache') {
             $this->InitModule($oModuleDecorator);
@@ -771,26 +778,44 @@ class Engine extends LsObject {
     /**
      * Получает объект маппера
      *
-     * @param string                 $sClassName Класс модуля маппера
-     * @param string|null            $sName      Имя маппера
-     * @param DbSimple_Driver_Mysqli $oConnect   Объект коннекта к БД,
-     *                                           который может быть получен так <pre>E::ModuleDatabase()->GetConnect($aConfig);</pre>
+     * @param string      $sClassName  Класс модуля маппера
+     * @param string|null $sMapperName Имя маппера
      *
-     * @return null|Mapper
+     * @return null|string
      */
-    public static function GetMapper($sClassName, $sName = null, $oConnect = null) {
+    public static function GetMapperClass($sClassName, $sMapperName = null) {
 
         $sModuleName = static::GetClassInfo($sClassName, self::CI_MODULE, true);
         if ($sModuleName) {
-            if (!$sName) {
-                $sName = $sModuleName;
+            if (!$sMapperName) {
+                $sMapperName = $sModuleName;
             }
-            $sClass = $sClassName . '_Mapper' . $sName;
+            $sClass = $sClassName . '_Mapper' . $sMapperName;
+            $sMapperClass = static::Module('Plugin')->GetDelegate('mapper', $sClass);
+
+            return $sMapperClass;
+        }
+        return null;
+    }
+
+    /**
+     * Получает объект маппера
+     *
+     * @param string                 $sClassName  Класс модуля маппера
+     * @param string|null            $sMapperName Имя маппера
+     * @param DbSimple_Driver_Mysqli $oConnect    Объект коннекта к БД,
+     *                                            который может быть получен так <pre>E::ModuleDatabase()->GetConnect($aConfig);</pre>
+     *
+     * @return null|Mapper
+     */
+    public static function GetMapper($sClassName, $sMapperName = null, $oConnect = null) {
+
+        $sMapperClass = static::GetMapperClass($sClassName, $sMapperName);
+        if ($sMapperClass) {
             if (!$oConnect) {
                 $oConnect = static::Module('Database')->GetConnect();
             }
-            $sClass = static::Module('Plugin')->GetDelegate('mapper', $sClass);
-            return new $sClass($oConnect);
+            return new $sMapperClass($oConnect);
         }
         return null;
     }
@@ -1241,7 +1266,7 @@ class Engine extends LsObject {
             if ($aInfo[self::CI_PLUGIN]) {
                 // Сущность модуля плагина
                 $sFile = 'plugins/' . $sPluginDir
-                    . '/classes/modules/' . strtolower($aInfo[self::CI_MODULE])
+                    . '/classes/modules/' . F::StrUnderscore($aInfo[self::CI_MODULE])
                     . '/entity/' . $aInfo[self::CI_ENTITY] . '.entity.class.php';
             } else {
                 // Сущность модуля ядра
@@ -1253,7 +1278,7 @@ class Engine extends LsObject {
             if ($aInfo[self::CI_PLUGIN]) {
                 // Маппер модуля плагина
                 $sFile = 'plugins/' . $sPluginDir
-                    . '/classes/modules/' . strtolower($aInfo[self::CI_MODULE])
+                    . '/classes/modules/' . F::StrUnderscore($aInfo[self::CI_MODULE])
                     . '/mapper/' . $aInfo[self::CI_MAPPER] . '.mapper.class.php';
             } else {
                 // Маппер модуля ядра
@@ -1275,7 +1300,7 @@ class Engine extends LsObject {
             if ($aInfo[self::CI_PLUGIN]) {
                 // Модуль плагина
                 $sFile = 'plugins/' . $sPluginDir
-                    . '/classes/modules/' . strtolower($aInfo[self::CI_MODULE])
+                    . '/classes/modules/' . F::StrUnderscore($aInfo[self::CI_MODULE])
                     . '/' . $aInfo[self::CI_MODULE] . '.class.php';
                 ;
             } else {
@@ -1357,8 +1382,15 @@ class Engine extends LsObject {
      * @return null|object
      */
     public static function Module($sModuleName) {
+        static $aModules = array();
 
-        return Engine::getInstance()->GetModule($sModuleName);
+        if (!empty($aModules[$sModuleName])) {
+            $oModule = $aModules[$sModuleName];
+        } else {
+            $oModule = Engine::getInstance()->GetModule($sModuleName);
+            $aModules[$sModuleName] = $oModule;
+        }
+        return $oModule;
     }
 
     /**
@@ -1368,7 +1400,7 @@ class Engine extends LsObject {
      */
     public static function User() {
 
-        return static::ModuleUser()->GetUserCurrent();
+        return static::Module('User')->GetUserCurrent();
     }
 
     /**
@@ -1379,7 +1411,7 @@ class Engine extends LsObject {
     public static function IsUser() {
 
         $oUser = static::User();
-        return $oUser;
+        return !empty($oUser);
     }
 
     /**
@@ -1450,9 +1482,68 @@ class Engine extends LsObject {
         return static::Module('Plugin')->IsActivePlugin($sPlugin);
     }
 
+    /**
+     * @return array
+     */
     public static function GetActivePlugins() {
 
         return static::getInstance()->GetPlugins();
+    }
+
+    /**
+     * @return string
+     */
+    public static function GetActivePluginsHash() {
+
+        if (self::$sPluginsHash === null) {
+            self::$sPluginsHash = '';
+            $aPlugins = static::GetActivePlugins();
+            foreach($aPlugins as $oPlugin) {
+                $oPluginEntity = $oPlugin->GetPluginEntity();
+                if (self::$sPluginsHash) {
+                    self::$sPluginsHash .= ',';
+                }
+                self::$sPluginsHash .= $oPluginEntity->GetId() . '(' . $oPluginEntity->GetVersion() . ')';
+            }
+        }
+        return self::$sPluginsHash;
+    }
+
+    /**
+     * hook:hook_name
+     * text:just_a_text
+     * func:func_name
+     * conf:some.config.key
+     * 
+     * @param mixed $xExpression
+     * @param array $aParams
+     *
+     * @return mixed
+     */
+    public static function evaluate($xExpression, $aParams = array()) {
+
+        if (is_bool($xExpression)) {
+            return $xExpression;
+        } elseif (is_numeric($xExpression)) {
+            return (int)$xExpression;
+        } elseif (is_object($xExpression)) {
+            return $xExpression();
+        } elseif (is_string($xExpression) && strpos($xExpression, ':')) {
+            list($sType, $sName) = explode(':', $xExpression, 2);
+            if ($sType === 'hook') {
+                return E::ModuleHook()->Run($sName, $aParams, false);
+            } elseif ($sType === 'text') {
+                return $sName;
+            } elseif ($sType === 'func') {
+                return call_user_func($sName, $aParams);
+            } elseif ($sType === 'call') {
+                return call_user_func($sName, $aParams);
+            } elseif ($sType === 'conf') {
+                return C::Get($sName);
+            }
+        }
+        
+        return $xExpression;
     }
 }
 

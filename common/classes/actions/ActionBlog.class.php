@@ -248,7 +248,7 @@ class ActionBlog extends Action {
             $oBlog->setTitle(E::ModuleTools()->RemoveAllTags(F::GetRequestStr('blog_title')));
 
             // * Парсим текст на предмет разных HTML-тегов
-            $sText = E::ModuleText()->Parser(F::GetRequestStr('blog_description'));
+            $sText = E::ModuleText()->Parse(F::GetRequestStr('blog_description'));
             $oBlog->setDescription($sText);
             $oBlog->setType(F::GetRequestStr('blog_type'));
             $oBlog->setDateAdd(F::Now());
@@ -365,7 +365,7 @@ class ActionBlog extends Action {
             $oBlog->setTitle(E::ModuleTools()->RemoveAllTags(F::GetRequestStr('blog_title')));
 
             // Парсим описание блога
-            $sText = E::ModuleText()->Parser(F::GetRequestStr('blog_description'));
+            $sText = E::ModuleText()->Parse(F::GetRequestStr('blog_description'));
             $oBlog->setDescription($sText);
 
             // Если меняется тип блога, фиксируем это
@@ -804,7 +804,7 @@ class ActionBlog extends Action {
         }
 
         // Если номер топика правильный, но URL блога неверный, то корректируем его и перенаправляем на нужный адрес
-        if ($sBlogUrl != '' && $this->oCurrentTopic->getBlog()->getUrl() != $sBlogUrl) {
+        if ($sBlogUrl !== '' && $this->oCurrentTopic->getBlog()->getUrl() !== $sBlogUrl) {
             R::Location($this->oCurrentTopic->getUrl());
         }
 
@@ -812,7 +812,7 @@ class ActionBlog extends Action {
         // но ссылка на топик и ЧПУ url разные, и это не запрос RSS
         // то перенаправляем на страницу для вывода топика (во избежание дублирования контента по разным URL)
         if ($sTopicUrlMask && $sBlogUrl == '' 
-            && $this->oCurrentTopic->getUrl() != R::GetPathWebCurrent() . (substr($this->oCurrentTopic->getUrl(), -1) == '/' ? '/' : '')
+            && $this->oCurrentTopic->getUrl() != R::GetPathWebCurrent() . (substr($this->oCurrentTopic->getUrl(), -1) === '/' ? '/' : '')
             && substr(R::RealUrl(true), 0, 4) !== 'rss/'
         ) {
             R::Location($this->oCurrentTopic->getUrl());
@@ -1140,22 +1140,30 @@ class ActionBlog extends Action {
             }
             $aTopics = $aResult['collection'];
             //  Формируем постраничность
-            $aPaging = ($this->sTopicFilter == 'good')
-                ? E::ModuleViewer()->MakePaging(
+            if (($this->sTopicFilter == 'good')) {
+                $aPaging = E::ModuleViewer()->MakePaging(
+                        $aResult['count'], $iPage, Config::Get('module.topic.per_page'),
+                        Config::Get('pagination.pages.count')
+                    );
+            } elseif (($this->sTopicFilter == 'all') || ($this->sTopicFilter == 'newall')) {
+                $aPaging = E::ModuleViewer()->MakePaging(
                     $aResult['count'], $iPage, Config::Get('module.topic.per_page'),
-                    Config::Get('pagination.pages.count'), rtrim($oBlog->getUrlFull(), '/')
-                )
-                : E::ModuleViewer()->MakePaging(
-                    $aResult['count'], $iPage, Config::Get('module.topic.per_page'),
-                    Config::Get('pagination.pages.count'), $oBlog->getUrlFull() . $this->sTopicFilter,
-                    array('period' => $this->sTopicFilterPeriod)
+                    Config::Get('pagination.pages.count'), $oBlog->getLink() . $this->sTopicFilter
                 );
+            } else {
+                $aPaging = E::ModuleViewer()->MakePaging(
+                        $aResult['count'], $iPage, Config::Get('module.topic.per_page'),
+                        Config::Get('pagination.pages.count'), $oBlog->getLink() . $this->sTopicFilter,
+                        array('period' => $this->sTopicFilterPeriod)
+                    );
+            }
 
             E::ModuleViewer()->Assign('aPaging', $aPaging);
             E::ModuleViewer()->Assign('aTopics', $aTopics);
+            E::ModuleViewer()->Assign('iTopicsTotal', $aResult['count']);
             if (in_array($this->sTopicFilter, array('discussed', 'top'))) {
                 E::ModuleViewer()->Assign('sPeriodSelectCurrent', $this->sTopicFilterPeriod);
-                E::ModuleViewer()->Assign('sPeriodSelectRoot', $oBlog->getUrlFull() . $this->sTopicFilter . '/');
+                E::ModuleViewer()->Assign('sPeriodSelectRoot', $oBlog->getLink() . $this->sTopicFilter . '/');
             }
         }
         //  Выставляем SEO данные
@@ -1272,7 +1280,7 @@ class ActionBlog extends Action {
         }
 
         // * Проверяем текст комментария
-        $sText = E::ModuleText()->Parser(F::GetRequestStr('comment_text'));
+        $sText = E::ModuleText()->Parse(F::GetRequestStr('comment_text'));
         if (!F::CheckVal($sText, 'text', Config::Val('module.comment.min_length', 2), Config::Val('module.comment.max_length', 10000))) {
             E::ModuleMessage()->AddErrorSingle(E::ModuleLang()->Get('topic_comment_text_len', array(
                 'min' => 2,
@@ -1560,7 +1568,7 @@ class ActionBlog extends Action {
         }
 
         // * Проверяем текст комментария
-        $sNewText = E::ModuleText()->Parser($this->GetPost('comment_text'));
+        $sNewText = E::ModuleText()->Parse($this->GetPost('comment_text'));
         $iMin = Config::Val('module.comment.min_length', 2);
         $iMax = Config::Val('module.comment.max_length', 0);
         if (!F::CheckVal($sNewText, 'text', $iMin, $iMax)) {

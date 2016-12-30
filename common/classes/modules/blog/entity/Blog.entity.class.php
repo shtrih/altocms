@@ -288,7 +288,7 @@ class ModuleBlog_EntityBlog extends Entity {
      *
      * @return string
      */
-    public function getAvatarUrl($xSize = 48) {
+    public function getAvatarUrl($xSize = null) {
 
         if (!$xSize) {
             if (Config::Get('module.user.profile_avatar_size')) {
@@ -316,17 +316,64 @@ class ModuleBlog_EntityBlog extends Entity {
             if (!$sUrl) {
                 // Old version compatibility
                 $sUrl = $this->getProp('blog_avatar');
-                if ($sUrl) {
-                    if ($xSize) {
-                        $sUrl = E::ModuleUploader()->ResizeTargetImage($sUrl, $xSize);
-                    }
-                } else {
+                if ($sUrl && ($sUrl[0] == '@') && $xSize) {
+                    $sUrl = E::ModuleUploader()->ResizeTargetImage($sUrl, $xSize);
+                } elseif (empty($sUrl)) {
                     $sUrl = $this->getDefaultAvatarUrl($xSize);
                 }
             }
             $this->setProp($sPropKey, $sUrl);
         }
         return $sUrl;
+    }
+
+    /**
+     * @param string     $sImageType
+     * @param string|int $xSize
+     *
+     * @return array
+     */
+    protected function _defineImageSize($sImageType, $xSize) {
+
+        $sSize = C::Val('module.uploader.images.' . $sImageType . '.size.' . $xSize, $xSize);
+        $aResult = F::File_ImgModAttr($sSize);
+        if (empty($aResult['width']) && empty($aResult['height'])) {
+            $sSize = C::Val('module.uploader.images.default.size.' . $xSize, $xSize);
+            $aResult = F::File_ImgModAttr($sSize);
+        }
+        return $aResult;
+    }
+
+    /**
+     * @param int|string $xSize
+     *
+     * @return string
+     */
+    public function getAvatarImageSizeAttr($xSize = null) {
+
+        // Gets default size from config or sets it to default
+        if (empty($xSize)) {
+            $xSize = self::DEFAULT_AVATAR_SIZE;
+        }
+        $aImgSize = $this->_defineImageSize('blog_avatar', $xSize);
+
+        return $aImgSize['attr'];
+    }
+
+    /**
+     * @param int|string $xSize
+     *
+     * @return string
+     */
+    public function getAvatarImageSizeStyle($xSize = null) {
+
+        // Gets default size from config or sets it to default
+        if (empty($xSize)) {
+            $xSize = self::DEFAULT_AVATAR_SIZE;
+        }
+        $aImgSize = $this->_defineImageSize('blog_avatar', $xSize);
+
+        return $aImgSize['style'];
     }
 
     /**

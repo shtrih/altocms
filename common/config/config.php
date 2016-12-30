@@ -73,7 +73,8 @@ $config['pagination']['pages']['count'] = 9;                  // количес�
 $config['path']['root']['url'] = F::UrlBase() . '/';
 $config['path']['root']['dir'] = ALTO_DIR . '/';
 
-$config['path']['offset_request_url']   = 0;                                   // иногда помогает если сервер использует внутренние реврайты
+//$config['path']['offset_request_url']   = 0;        // иногда помогает если сервер использует внутренние реврайты
+$config['path']['root']['subdir']       = '';         // Директория относительно корня домена
 
 /**
  * Параметры сервера для статики. По умолчанию совпадают с основным сервером
@@ -90,7 +91,7 @@ $config['path']['uploads']['files']     = '___path.uploads.root___/files/';
 $config['path']['tmp']['dir']           = '___path.root.dir___/_tmp/';         // путь к папке для временных файлов
 $config['path']['runtime']['dir']       = '___path.root.dir___/_run/';         // путь к папке для runtime-файлов
 //$config['path']['runtime']['url']       = '___path.root.url___/_run/';         // URL для runtime-файлов
-$config['path']['runtime']['url']       = '/_run/';         // URL для runtime-файлов
+$config['path']['runtime']['url']       = '___path.root.subdir___/_run/';         // URL для runtime-файлов
 
 $config['path']['templates']['dir']     = '___path.dir.common___/templates/';
 $config['path']['frontend']['dir']      = '___path.dir.common___/templates/frontend/';
@@ -362,7 +363,7 @@ $config['module']['uploader']['images']['default'] = array(
                 'path' => '___path.static.dir___/___path.uploads.root___',
                 'file' => 'altocms.png',
                 'topleft' => false,
-                'position' => '0,0',
+                'position' => '0,0', // вместо пикселей можно указать center для одной или обоих координат
             ),
         ),
         '@mime(jpeg)' => array(
@@ -431,6 +432,13 @@ $config['module']['uploader']['images']['video'] = array(
 );
 
 
+$config['module']['uploader']['drives'] = array(
+    'local' => array(
+        'dir' => '___path.root.dir___',
+        'url' => '___path.root.url___',
+    ),
+);
+
 // Модуль Image
 $config['module']['image']['autoresize'] = true;
 
@@ -470,7 +478,7 @@ $config['module']['user']['avatar_size'] = array(100,64,48,24,0); // ** Old temp
 $config['module']['user']['login']['min_size'] = 3;             // Минимальное количество символов в логине
 $config['module']['user']['login']['max_size'] = 30;            // Максимальное количество символов в логине
 $config['module']['user']['login']['charset'] = '0-9a-z_\-';    // Допустимые в логине пользователя символы
-$config['module']['user']['login']['disabled'] = array('admin', 'administrator', 'moderator', 'new');  // недопустимые имена логинов
+$config['module']['user']['login']['disabled'] = array('admin', 'administrator', 'moderator', 'new', 'guest', '@admin', '@guest');  // недопустимые имена логинов
 
 $config['module']['user']['display_name'] = '%%login%%';        // Допустимые подстановки - %%login%%, %%profilename%%
 
@@ -631,11 +639,6 @@ $config['router']['domain'] = array(
     //'public.site.com' => 'blog/public',
 );
 
-// Rewrite rules
-$config['router']['rewrite'] = array(
-    //'secret-admin' => 'admin',
-);
-
 // Правила реврайта для REQUEST_URI
 // Регулярные выражения необходимо заключать в квадратные скобки
 $config['router']['uri'] = array(
@@ -649,12 +652,17 @@ $config['router']['uri'] = array(
     '[~.+\.(js|css|png|jpg|gif|swf|ico|pdf|mov|fla|zip|rar)\/?$~i]' => '@404',
 );
 
+// Rewrite rules
+$config['router']['rewrite'] = array(
+    //'secret-admin' => 'admin',
+);
+
 // Распределение action
 $config['router']['page']['error']         = 'ActionError';
 $config['router']['page']['registration']  = 'ActionRegistration';
 $config['router']['page']['profile']       = 'ActionProfile';
 $config['router']['page']['my']            = 'ActionMy';
-//$config['router']['page']['blog']          = 'ActionBlog';
+$config['router']['page']['blog']          = 'ActionBlog';
 $config['router']['page']['page']          = 'ActionPage';
 $config['router']['page']['index']         = 'ActionIndex';
 $config['router']['page']['content']       = 'ActionContent';
@@ -719,10 +727,13 @@ $config['security']['user_session_key']  = 'user_key';
 /**
  * Локализация
  */
-// * Языковые настройки
-$config['lang']['allow'] = array('ru', 'en');                               // какие языки доступны на сайте; если не задано или задан только один язык, то настройки мультиязычности игнорируются
+// Языковые настройки
+// Какие языки доступны на сайте
+// Если не задано или задан только один язык, то настройки мультиязычности игнорируются
+$config['lang']['allow'] = 'ru';
+//$config['lang']['allow'] = array('ru', 'en');
 /*
-$config['lang']['aliases'] = array(                                         // набор алиасов для совместимости LS
+$config['lang']['aliases'] = array(              // набор алиасов для совместимости LS
     'ru' => 'russian',
     'en' => 'english',
 );

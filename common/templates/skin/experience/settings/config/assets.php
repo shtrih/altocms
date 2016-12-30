@@ -21,7 +21,8 @@ $config['assets']['default']['js'][] = "___path.skin.dir___/assets/js/experience
 $config['assets']['default']['js'][] = "___path.skin.dir___/assets/js/experience/script.js";
 $config['assets']['default']['js'][] = "___path.skin.dir___/assets/js/experience/toolbar.min.js";
 if (Config::Get('view.fix_menu')) {
-    $config['assets']['default']['js'][] = "___path.skin.dir___/assets/js/experience/fix-menu.min.js";
+    //$config['assets']['default']['js'][] = "___path.skin.dir___/assets/js/experience/fix-menu.min.js";
+    $config['assets']['default']['js'][] = "___path.skin.dir___/assets/js/experience/fix-menu.js";
 }
 
 $config['assets']['default']['js'][] = "___path.skin.dir___/assets/js/experience/userinfo.min.js";
@@ -41,11 +42,9 @@ $config['assets']['default']['js'][] = "___path.skin.dir___/assets/js/jasny/file
 $config['assets']['default']['js'][] = "___path.skin.dir___/assets/js/experience/editor.js";
 
 $config['assets']['default']['css'] = array(
-    '___path.skin.dir___/assets/css/style.min.css',
-    //'___path.skin.dir___/assets/css/style.min.css.map',
-    '___path.skin.dir___/assets/css/popover.css',
     '___path.frontend.dir___/libs/vendor/prettyphoto/css/prettyphoto.css',
     '___path.frontend.dir___/libs/vendor/jcrop/jquery.Jcrop.css',
+    '___path.skin.dir___/assets/css/style.experience.css',
     '___path.skin.dir___/themes/___view.theme___/css/custom.css',
 
     /* tinyMCE */
