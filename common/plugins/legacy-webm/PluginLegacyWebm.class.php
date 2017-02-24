@@ -1,10 +1,13 @@
 <?php
 
+/**
+ * Запрещаем напрямую через браузер обращение к этому файлу.
+ */
 if (!class_exists('Plugin')) {
     die('Hacking attempt!');
 }
 
-class PluginMarkitupVideoUpload extends Plugin {
+class PluginLegacyWebm extends Plugin {
 
     // Объявление делегирований (нужны для того, чтобы переопределить файлы шаблонов)
     public $aDelegates = array(
@@ -43,22 +46,10 @@ class PluginMarkitupVideoUpload extends Plugin {
         * PluginAbcplugin_ModuleTopic_EntityTopic (/plugins/abcplugin/classes/modules/entity/Topic.entity.class.php) - новые или замена существующих
         *
         */
-        'module' => [
-            'ModuleTopic',
-//            'ModuleMresource',
-        ]
     );
 
     // Активация плагина
     public function Activate() {
-        exec('ffmpeg -version', $aOutput, $iResultCode);
-        if ($iResultCode > 0) {
-            E::ModuleMessage()->AddError('На сервере не установлен пакет «ffmpeg», работа плагина без этого пакета невозможна. Настройте параметр <code>ffmpeg_static_build_path</code> в конфиге.');
-
-            // всё равно активируем, ибо может использоваться ffmpeg_static_build_path в конфиге
-            // return false;
-        }
-
         return true;
     }
 
@@ -67,15 +58,12 @@ class PluginMarkitupVideoUpload extends Plugin {
         return true;
     }
 
+
     // Инициализация плагина
     public function Init() {
-        // TODO: При удалении постов, проверять и удалять видео с картинками
         $sTemplateDir = Plugin::GetTemplateDir(__CLASS__);
         if ($sTemplateDir) {
-            E::ModuleViewer()->AppendStyle($sTemplateDir . "assets/css/mrktp-video-upload.css"); // Добавление своего CSS
-            E::ModuleViewer()->AppendScript($sTemplateDir . "assets/js/mrktp-video-upload.js"); // Добавление своего JS
-
-            //E::ModuleViewer()->AddMenu('blog', $sTemplateDir . 'menu.blog.tpl'); // например, задаем свой вид меню
+            E::ModuleViewer()->AppendScript($sTemplateDir . "assets/js/legacy-webm.js");
         }
 
         return true;

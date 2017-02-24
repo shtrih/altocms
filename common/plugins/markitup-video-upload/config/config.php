@@ -9,13 +9,19 @@ $aConfig = [
     // индекс позиций кнопки на панели редактора markItUp!
     'button_index_topic'    => 15,
     'button_index_comments' => 9,
+
+    // Путь к бинарному файлу ffmpeg, скомпилированного статически.
+    // Зааполнить при необходимости.
+    //    Такое может понадобиться, если на сервере невозможно по какой-то причине невозможно установить ffmpeg,
+    //    но можно использовать статический билд (напр. http://johnvansickle.com/ffmpeg/).
+    //    Также, если на сервере установлена утилита avconv от Libav, то она может иметь алиас ffmpeg, её параметры отличаются
+    //    от оригинального ffmpeg, поэтому с ней плагин работать не будет.
+    'ffmpeg_static_build_path' => ''
 ];
 
 $aConfig[Config::KEY_ROOT]['module']['uploader']['video']['webm'] = [
-    // TODO: Выводить макс. размеры файлов в модальном диалоге
-    //
 
-    'file_maxsize' => '10Mb',
+    'file_maxsize' => '12Mb',
     'url_maxsize' => '10Mb',
 
     'transform' => [
@@ -30,7 +36,7 @@ $aConfig[Config::KEY_ROOT]['module']['uploader']['video']['webm'] = [
         ],
     ],
 
-    // наследуем из module.uploader.images.video
+    // наследуем из module.uploader.images.video, можно переопределить
     /*
     'original' => array(
         'save' => false,            // надо ли сохранять оригинальное изображение
@@ -40,8 +46,8 @@ $aConfig[Config::KEY_ROOT]['module']['uploader']['video']['webm'] = [
 
     'file_extensions' => [
         'webm',
-        'webma',
-        'webmv',
+        //'webma',
+        //'webmv',
     ],
 
     // Дальше ничего не трогать

@@ -8,15 +8,19 @@ class PluginMarkitupVideoUpload_ModuleMarkitupVideoUpload extends Module {
 
     public function storeVideo($sVideoFile, $oUser, $sType, $aOptions = array()) {
         $sExtension = F::File_GetExtension($sVideoFile, true);
-        $aConfig = E::ModuleUploader()->GetConfig($sVideoFile, 'video.' . $sType);
+        $aConfig = $this->GetConfig($sVideoFile, $sType);
         if ($aOptions) {
             $aConfig['transform'] = F::Array_Merge($aConfig['transform'], $aOptions);
         }
 
-        $sSuffix = (!empty($aConfig['original']['suffix']) ? $aConfig['original']['suffix'] : '-original');
+        $sSuffix = $this->GetFileSuffix($sVideoFile, $sType);
         $sOriginalScreenshotFile = $sVideoFile . $sSuffix . '.jpg';
 
-        $sFfmpegResult = shell_exec('ffmpeg -n -i ' . escapeshellarg($sVideoFile)
+        $sFfmpegPath = Config::Get('plugin.markitup_video_upload.ffmpeg_static_build_path');
+        if (!$sFfmpegPath) {
+            $sFfmpegPath = 'ffmpeg';
+        }
+        $sFfmpegResult = shell_exec(escapeshellarg($sFfmpegPath) . ' -n -i ' . escapeshellarg($sVideoFile)
                                     . ' -vframes 1 ' . escapeshellarg($sOriginalScreenshotFile)
                                     . ' </dev/null 2>&1 1>/dev/null');
         if ($sFfmpegResult) {
@@ -40,5 +44,24 @@ class PluginMarkitupVideoUpload_ModuleMarkitupVideoUpload extends Module {
         }
 
         return false;
+    }
+
+    public function GetConfig($sFile, $sType) {
+        return E::ModuleUploader()->GetConfig($sFile, 'video.' . $sType);
+    }
+
+    public function GetFileSuffix($sFile, $sType) {
+        $aConfig = $this->GetConfig($sFile, $sType);
+
+        return (!empty($aConfig['original']['suffix']) ? $aConfig['original']['suffix'] : '-original');
+    }
+
+    public function removeVideo($sPictureFile, $sType) {
+        $aConfig = $this->GetConfig($sPictureFile, $sType);
+        $aExtensions = array_unique($aConfig['file_extensions']);
+        $sFilePath = $sPictureFile . $this->GetFileSuffix($sPictureFile, $sType) . '.';
+        foreach ($aExtensions as $sExtension) {
+            F::File_Delete($sFilePath . $sExtension);
+        }
     }
 }

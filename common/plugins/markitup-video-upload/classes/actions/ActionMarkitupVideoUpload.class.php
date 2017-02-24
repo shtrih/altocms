@@ -71,10 +71,10 @@ class PluginMarkitupVideoUpload_ActionMarkitupVideoUpload extends ActionPlugin {
         if ($sFile) {
             $sText = E::ModuleImg()->BuildHTML($sFile, $_REQUEST);
             if (strpos($sText, 'class="')) {
-                $sText = str_replace('class="', 'class="webm ', $sText);
+                $sText = str_replace('class="', 'class="mvu-webm ', $sText);
             }
             else {
-                $sText = str_replace('<img', '<img class="webm"', $sText);
+                $sText = str_replace('<img', '<img class="mvu-webm"', $sText);
             }
 
             E::ModuleViewer()->AssignAjax('sText', $sText);

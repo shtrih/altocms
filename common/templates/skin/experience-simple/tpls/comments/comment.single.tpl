@@ -108,7 +108,7 @@
                 </div>
 
 
-                <div id="comment_content_id_{$oComment->getId()}" class="comment-text comment-content">
+                <div id="comment_content_id_{$oComment->getId()}" class="clearfix comment-text comment-content">
                     {if $bCommentList == true}
                         <div class="small text-muted comment-path">
                             <a href="{$oBlog->getUrlFull()}" class="blog-name">{$oBlog->getTitle()|escape:'html'}</a>,&nbsp;
