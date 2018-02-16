@@ -869,21 +869,21 @@ class ModuleUploader extends Module {
      */
     public function DeleteImage($sTargetType, $iTargetId, $oCurrentUser) {
 
-        if ($sTargetType == 'profile_avatar') {
+        if ($sTargetType === 'profile_avatar') {
             if ($oCurrentUser && $oCurrentUser->getid() == $iTargetId) {
                 $oUser = $oCurrentUser;
             } else {
                 $oUser = E::ModuleUser()->GetUserById($iTargetId);
             }
             E::ModuleUser()->DeleteAvatar($oUser);
-        } elseif ($sTargetType == 'profile_photo') {
+        } elseif ($sTargetType === 'profile_photo') {
             if ($oCurrentUser && $oCurrentUser->getid() == $iTargetId) {
                 $oUser = $oCurrentUser;
             } else {
                 $oUser = E::ModuleUser()->GetUserById($iTargetId);
             }
             E::ModuleUser()->DeletePhoto($oUser);
-        } elseif ($sTargetType == 'blog_avatar') {
+        } elseif ($sTargetType === 'blog_avatar') {
             /** @var ModuleBlog_EntityBlog $oBlog */
             $oBlog = E::ModuleBlog()->GetBlogById($iTargetId);
             E::ModuleBlog()->DeleteAvatar($oBlog);
@@ -910,15 +910,18 @@ class ModuleUploader extends Module {
                 E::ModuleMresource()->UnlinkFile($sTargetType, $sTargetId, E::UserId());
             }
 
-            $oResource->setUrl(E::ModuleMresource()->NormalizeUrl($this->GetTargetUrl($sTargetType, $sTargetId)));
-            $oResource->setType($sTargetType);
-            $oResource->setUserId(E::UserId());
-            if ($sTargetId == '0') {
-                $oResource->setTargetTmp(E::ModuleSession()->GetCookie(self::COOKIE_TARGET_TMP));
-            }
-            E::ModuleMresource()->AddTargetRel(array($oResource), $sTargetType, $sTargetId);
+            $sTargetUrl = $this->GetTargetUrl($sTargetType, $sTargetId);
+            if ($sTargetUrl) {
+                $oResource->setUrl(E::ModuleMresource()->NormalizeUrl($sTargetUrl));
+                $oResource->setType($sTargetType);
+                $oResource->setUserId(E::UserId());
+                if ((int)$sTargetId === 0) {
+                    $oResource->setTargetTmp(E::ModuleSession()->GetCookie(self::COOKIE_TARGET_TMP));
+                }
+                E::ModuleMresource()->AddTargetRel(array($oResource), $sTargetType, $sTargetId);
 
-            return $oResource;
+                return $oResource;
+            }
         }
 
         return FALSE;
@@ -955,7 +958,7 @@ class ModuleUploader extends Module {
      */
     public function Dir2Url($sFilePath) {
 
-        if ($sFilePath[0] == '@') {
+        if ($sFilePath[0] === '@') {
             return Config::Get('path.root.url') . substr($sFilePath, 1);
         }
 
@@ -971,7 +974,7 @@ class ModuleUploader extends Module {
      */
     public function Url2Dir($sUrl) {
 
-        if ($sUrl[0] == '@') {
+        if ($sUrl[0] === '@') {
             return Config::Get('path.root.dir') . substr($sUrl, 1);
         }
 
@@ -1026,7 +1029,10 @@ class ModuleUploader extends Module {
                 $sRootUrl = C::Get('path.root.url');
             }
             if ($sRootUrl) {
-                return F::File_NormPath($sRootUrl . '/' . $sPath);
+                if (substr($sRootUrl, -1) !== '/') {
+                    $sRootUrl .= '/';
+                }
+                return F::File_NormPath($sRootUrl . $sPath);
             }
         }
         return $sUrl;
@@ -1063,8 +1069,8 @@ class ModuleUploader extends Module {
      */
     public function GetAllowedCount($sTargetType, $sTargetId = FALSE) {
 
-        if ($sTargetType == 'photoset') {
-            if ($iMaxCount = intval(Config::Get('module.topic.photoset.count_photos_max'))) {
+        if ($sTargetType === 'photoset') {
+            if ($iMaxCount = (int)Config::Get('module.topic.photoset.count_photos_max')) {
                 $aPhotoSetData = E::ModuleMresource()->GetPhotosetData($sTargetType, (int)$sTargetId);
                 return $aPhotoSetData['count'] < $iMaxCount;
             } else {
@@ -1072,19 +1078,19 @@ class ModuleUploader extends Module {
                 return TRUE;
             }
         }
-        if ($sTargetType == 'topic') {
+        if ($sTargetType === 'topic') {
             return TRUE;
         }
 
-        if ($sTargetType == 'topic_comment') {
+        if ($sTargetType === 'topic_comment') {
             return TRUE;
         }
 
-        if ($sTargetType == 'talk_comment') {
+        if ($sTargetType === 'talk_comment') {
             return TRUE;
         }
 
-        if ($sTargetType == 'talk') {
+        if ($sTargetType === 'talk') {
             return TRUE;
         }
 
@@ -1105,8 +1111,7 @@ class ModuleUploader extends Module {
     public function CheckAccessAndGetTarget($sTarget, $iTargetId = null) {
 
         // Проверяем право пользователя на прикрепление картинок к топику
-        if (mb_strpos($sTarget, 'single-image-uploader') === 0 || $sTarget == 'photoset') {
-
+        if (mb_strpos($sTarget, 'single-image-uploader') === 0 || $sTarget === 'photoset') {
             // Проверям, авторизован ли пользователь
             if (!E::IsUser()) {
                 return FALSE;
@@ -1124,8 +1129,7 @@ class ModuleUploader extends Module {
         }
 
         // Загружать аватарки можно только в свой профиль
-        if ($sTarget == 'profile_avatar') {
-
+        if ($sTarget === 'profile_avatar') {
             if ($iTargetId && E::IsUser() && $iTargetId == E::UserId()) {
                 return E::User();
             }
@@ -1134,7 +1138,7 @@ class ModuleUploader extends Module {
         }
 
         // Загружать аватарки можно только в свой профиль
-        if ($sTarget == 'profile_photo') {
+        if ($sTarget === 'profile_photo') {
 
             if ($iTargetId && E::IsUser() && $iTargetId == E::UserId()) {
                 return E::User();
@@ -1143,7 +1147,7 @@ class ModuleUploader extends Module {
             return FALSE;
         }
 
-        if ($sTarget == 'blog_avatar') {
+        if ($sTarget === 'blog_avatar') {
             /** @var ModuleBlog_EntityBlog $oBlog */
             $oBlog = E::ModuleBlog()->GetBlogById($iTargetId);
 
@@ -1163,7 +1167,7 @@ class ModuleUploader extends Module {
             return '';
         }
 
-        if ($sTarget == 'topic') {
+        if ($sTarget === 'topic') {
             if (!E::IsUser()) {
                 return false;
             }
@@ -1182,7 +1186,7 @@ class ModuleUploader extends Module {
             return '';
         }
 
-        if ($sTarget == 'topic_comment') {
+        if ($sTarget === 'topic_comment') {
             if (!E::IsUser()) {
                 return false;
             }
@@ -1201,7 +1205,7 @@ class ModuleUploader extends Module {
             return '';
         }
 
-        if ($sTarget == 'talk_comment') {
+        if ($sTarget === 'talk_comment') {
             if (!E::IsUser()) {
                 return false;
             }
@@ -1220,7 +1224,7 @@ class ModuleUploader extends Module {
             return '';
         }
 
-        if ($sTarget == 'talk') {
+        if ($sTarget === 'talk') {
             if (!E::IsUser()) {
                 return false;
             }

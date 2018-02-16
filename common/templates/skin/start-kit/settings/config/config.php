@@ -26,6 +26,28 @@ $config['view']['header']['banner'] = true;
 $config['view']['header']['logo'] = Config::Get('path.skin.url') . 'themes/___view.theme___/img/favicon.png';
 $config['view']['header']['name'] = 'START<span>KIT</span>';
 
+$config['view']['cfg']['set'] = array(
+    // Настройки отображения фотосета
+    'photoset' => array(
+        'gallery' => array(
+            'fillLastRow' => false, // заполнение последней строки изображений
+            'minHeight' => Config::Get('module.topic.photoset.thumb.height') / 2,  // минимальная высота изображений
+            'maxHeight' => Config::Get('module.topic.photoset.thumb.height'), // максимальная высота изображений
+            //'fixedHeight' => Config::Get('module.topic.photoset.thumb.height'), //
+            'fixedHeight' => null, //
+            'minWidth' => 70, // Минимальная ширина, которая должна быть у изображения
+            'margin' => 1, // отступ вокруг миниатюры
+        ),
+    ),
+    // Вставка в топик изображений из внешних источников
+    // настройки берутся из конфига шаблона
+    'module' => array(
+        'topic' => array(
+            'img_panel' => Config::Get('module.topic.img_panel'),
+        ),
+    ),
+);
+
 // Aliases for sizes of user avatar
 $config['module']['uploader']['images']['default']['size'] = array(
     'large'  => 100,

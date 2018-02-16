@@ -13,7 +13,7 @@
  *----------------------------------------------------------------------------
  */
 
-F::IncludeLib('phpMailer/class.phpmailer.php');
+F::IncludeLib('phpMailer/PHPMailerAutoload.php');
 
 /**
  * Модуль для отправки почты(e-mail) через phpMailer
@@ -167,7 +167,13 @@ class ModuleMail extends Module {
         // Вывод ошибок через ob_get_clean() возможен только с включением этой опции.
         // Иначе все ошибки будут с содержанием: «Cannot send email».
         // Однако, в случае ошибки отправки, в лог будет записан текст запросов к smtp-серверу, включая логин и пароль.
-        $this->oMailer->SMTPDebug = defined('DEBUG') && DEBUG;
+        //$this->oMailer->SMTPDebug = defined('DEBUG') && DEBUG;
+
+        // новый логгер ошибок
+        if ($this->GetLogFile()) {
+            $this->oMailer->Debugoutput = array($this, 'Logger');
+        }
+
         $this->oMailer->Host = $this->sHost;
         $this->oMailer->Port = $this->iPort;
         $this->oMailer->Username = $this->sUsername;
@@ -184,6 +190,25 @@ class ModuleMail extends Module {
         //$this->oMailer->FromName = $this->sFromName;
 
         $this->oMailer->SetFrom($this->sFrom, $this->sFromName);
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function GetLogFile() {
+
+        $sFileName = C::Get('sys.logs.email_file');
+        return $sFileName ? C::Get('sys.logs.dir') . $sFileName : false;
+    }
+
+    /**
+     * @param string $sStr
+     * @param int    $iLevel
+     */
+    public function Logger($sStr, $iLevel) {
+
+        $sLogFile = $this->GetLogFile();
+        E::ModuleLogger()->Dump($sLogFile, 'level: ' . $iLevel . "\nmessage: " . $sStr);
     }
 
     /**
@@ -231,12 +256,20 @@ class ModuleMail extends Module {
 
         $this->oMailer->Subject = $this->sSubject;
         $this->oMailer->Body = $this->sBody;
-        ob_start();
-        $bResult = $this->oMailer->Send();
-        $sError = ob_get_clean();
-        if (!$bResult && !$sError) {
-            // Письмо не отправлено, но ошибки нет - такое бывает
-            $sError = 'Cannot send email';
+        try {
+            $bResult = $this->oMailer->Send();
+            $sError = '';
+        } catch (phpmailerException $e) {
+            $sError = $e->getMessage();
+            $bResult = false;
+        }
+        if (!$bResult) {
+            if ($this->oMailer->ErrorInfo) {
+                $sError = $this->oMailer->ErrorInfo;
+            } else {
+                // Письмо не отправлено, но ошибки нет - такое раньше было
+                $sError = 'Cannot send email';
+            }
         }
         if ($sError) {
             $this->_addError($sError);

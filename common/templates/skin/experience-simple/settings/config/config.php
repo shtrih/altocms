@@ -65,6 +65,28 @@ $config['view']['header']['logo']['file'] = 'logo.png';
 //$config['view']['header']['logo']['url'] = 'http://site.com/logo.png';
 $config['view']['header']['logo']['name'] = Config::Get('view.name');
 
+$config['view']['cfg']['set'] = array(
+    // Настройки отображения фотосета
+    'photoset' => array(
+        'gallery' => array(
+            'fillLastRow' => false, // заполнение последней строки изображений
+            'minHeight' => Config::Get('module.topic.photoset.thumb.height') / 2,  // минимальная высота изображений
+            'maxHeight' => Config::Get('module.topic.photoset.thumb.height'), // максимальная высота изображений
+            //'fixedHeight' => Config::Get('module.topic.photoset.thumb.height'), //
+            'fixedHeight' => null, //
+            'minWidth' => 70, // Минимальная ширина, которая должна быть у изображения
+            'margin' => 1, // отступ вокруг миниатюры
+        ),
+    ),
+    // Вставка в топик изображений из внешних источников
+    // настройки берутся из конфига шаблона
+    'module' => array(
+        'topic' => array(
+            'img_panel' => Config::Get('module.topic.img_panel'),
+        ),
+    ),
+);
+
 $config['module']['user']['profile_photo_size'] = '240x';
 
 $config['module']['uploader']['images']['default']['size'] = array(
